@@ -7,8 +7,10 @@ jeanEude = Character()
 jeanEude.print()
 jeanEude.gain_xp(101)
 jeanEude.print()
-jeanEude.take_damage()
-jeanEude.print()
+
+for i in range(10):
+    jeanEude.take_damage(2)
+    jeanEude.print()
 
 
 
