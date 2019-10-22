@@ -11,8 +11,11 @@ class Room:
     x: int = 0
     y: int = 0
     inside = "du caca dans la salle"
+    # left, top, right, bottom
+    door = [0, 0, 0, 0]
+    discovered: bool = False
 
-    def __init__(self,x ,y) -> None:
+    def __init__(self, x, y) -> None:
         super().__init__()
         self.x = x
         self.y = y
@@ -22,3 +25,9 @@ class Room:
 
     def get_pos(self):
         return self.x, self.y
+
+    def is_discovered(self):
+        return self.discovered
+
+    def discover(self):
+        self.discovered = True

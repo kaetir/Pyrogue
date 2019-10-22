@@ -27,19 +27,21 @@ class MapDungeon:
 
     def gen_map(self, size: int = 15) -> None:
         self.map_size = size
-
-        while len(np.unique(np.array(self.pts), axis=0)) < self.map_size:
+        pts = self.pts
+        x = self.x
+        y = self.y
+        while len(np.unique(np.array(pts), axis=0)) < self.map_size:
             eps = 2 * floor(2 * random()) - 1
 
             if random() < .5:
-                self.x += eps
+                x += eps
             else:
-                self.y += eps
+                y += eps
 
-            self.pts += [[self.x, self.y]]
+            pts += [[x, y]]
 
         idx: int
-        for idx, val in enumerate(self.pts):
+        for idx, val in enumerate(pts):
             self.pts[idx] = Room(val[0], val[1])
 
     def disp_map(self):
@@ -53,7 +55,7 @@ class MapDungeon:
         # affichage des salles
         for rom in stp:
             plt.plot([rom[0] - 0.5, rom[0] - 0.5, rom[0] + 0.5, rom[0] + 0.5, rom[0] - 0.5],
-                     [rom[1] - 0.5, rom[1] + 0.5, rom[1] + 0.5, rom[1] - 0.5, rom[1] - 0.5]\
+                     [rom[1] - 0.5, rom[1] + 0.5, rom[1] + 0.5, rom[1] - 0.5, rom[1] - 0.5]
                      , color="black", lw=2)
         # plt.scatter(stp[:, 0], stp[:, 1])
 
