@@ -1,16 +1,15 @@
 """
 - Map has Rooms and are bound each other linearly,
-    -   containing
-        - characters, such as monsters to battle, real persons to interact with,
-        - find objects,
-        - or nothing happen while crossing rooms.
+
 """
 
 from math import floor
 from random import random
 
-import numpy as np
 import matplotlib.pyplot as plt
+import numpy as np
+
+from src.room import Room
 
 
 class MapDungeon:
@@ -19,7 +18,6 @@ class MapDungeon:
     y: int = 0
     pts = [[x, y]]
 
-
     def __init__(self) -> None:
         super().__init__()
         self.gen_map()
@@ -27,11 +25,10 @@ class MapDungeon:
     def __str__(self) -> str:
         return self.pts.__str__()
 
-    def gen_map(self, size: int = 15) -> np.array:
+    def gen_map(self, size: int = 15) -> None:
         self.map_size = size
 
         while len(np.unique(np.array(self.pts), axis=0)) < self.map_size:
-            #for i in range(size):
             eps = 2 * floor(2 * random()) - 1
 
             if random() < .5:
@@ -40,15 +37,32 @@ class MapDungeon:
                 self.y += eps
 
             self.pts += [[self.x, self.y]]
-            print(self.pts)
 
-        return  self.pts
+        idx: int
+        for idx, val in enumerate(self.pts):
+            self.pts[idx] = Room(val[0], val[1])
 
     def disp_map(self):
-        stp = np.array(self.pts)
 
-        plt.scatter(stp[:, 0], stp[:, 1])
+        stp = np.array([x.get_pos() for x in self.pts])
+
+        # Desctivation des axes
+        plt.axes(aspect='equal')
+        plt.axis('off')
+
+        # affichage des salles
+        for rom in stp:
+            plt.plot([rom[0] - 0.5, rom[0] - 0.5, rom[0] + 0.5, rom[0] + 0.5, rom[0] - 0.5],
+                     [rom[1] - 0.5, rom[1] + 0.5, rom[1] + 0.5, rom[1] - 0.5, rom[1] - 0.5]\
+                     , color="black", lw=2)
+        # plt.scatter(stp[:, 0], stp[:, 1])
+
+        # affichage des liaisons entre les salles
         plt.plot(stp[:, 0], stp[:, 1])
+
+        # affichage des liens entres les salles
         plt.scatter(stp[0, 0], stp[0, 1], color='r')
         plt.scatter(stp[-1, 0], stp[-1, 1], color='y')
+
+        # affichage du graph
         plt.show()
