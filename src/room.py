@@ -26,7 +26,8 @@ class Room:
         self.y = y
 
     def __str__(self) -> str:
-        print("pos :", self.x, self.y, "\n", self.inside)
+        return "pos :" + str(self.x) + " " + str(self.y) + "\n" + self.inside
+
 
     def get_pos(self) -> (int, int):
         """
