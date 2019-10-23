@@ -70,19 +70,19 @@ class MapDungeon:
         for rom in stp:
             plt.plot([rom[0] - 0.5, rom[0] - 0.5, rom[0] + 0.5, rom[0] + 0.5, rom[0] - 0.5],
                      [rom[1] - 0.5, rom[1] + 0.5, rom[1] + 0.5, rom[1] - 0.5, rom[1] - 0.5]
-                     , color="black", lw=2)
+                     , color="black", lw=4)
         # plt.scatter(stp[:, 0], stp[:, 1])
 
         # affichage des liaisons entre les salles
         plt.plot(stp[:, 0], stp[:, 1])
 
         # affichage des liens entres les salles
-        plt.scatter(stp[0, 0], stp[0, 1], color='r')   # entrée
-        plt.scatter(stp[-1, 0], stp[-1, 1], color='y') # sortie
+        plt.scatter(stp[0, 0], stp[0, 1], color='r' , lw=4)   # entrée
+        plt.scatter(stp[-1, 0], stp[-1, 1], color='y' , lw=4) # sortie
 
         # sauvegarde du graph
         if filename is not None:
-            plt.savefig(filename)
+            plt.savefig(filename, transparent=True)
 
         # affichage du graph
         plt.show()

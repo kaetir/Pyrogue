@@ -11,7 +11,7 @@ class Room:
     x: int = 0
     y: int = 0
     inside = "du caca dans la salle"
-    # left, top, right, bottom
+    # top, right, bottom, left
     door = [0, 0, 0, 0]
     discovered: bool = False
 

@@ -16,6 +16,6 @@ for i in range(10):
 """
 
 my_map = MapDungeon(15)
-my_map.disp_map("map.png")
+my_map.disp_map()
 
 

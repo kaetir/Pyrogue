@@ -37,6 +37,7 @@ class Character:
     armor: float = 0.1
     level: int = 1
     experience: int = 0
+    orientation: int = 0  # % 4 : orientation du personnage dans la salle
 
     def __init__(self, name: str = "billy"):
         """
