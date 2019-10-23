@@ -25,28 +25,28 @@ import math
 
 
 class Character:
-    Name: str = "billy"
-    Health: int = 20
-    Shield: int = 10
-    ChanceOfDodge: float = 0.05
-    ChanceOfParry: float = 0.05
-    ChanceOfCritical: float = 0.1
-    MP: int = 10
-    DamageMin: int = 1
-    DamageMax: int = 10000000
-    Armor: float = 0.1
-    Level: int = 1
-    Experience: int = 0
+    name: str = "billy"
+    health: int = 20
+    shield: int = 10
+    chance_of_dodge: float = 0.05
+    chance_of_parry: float = 0.05
+    chance_of_critical: float = 0.1
+    mana_points: int = 10
+    damage_min: int = 1
+    damage_max: int = 10000000
+    armor: float = 0.1
+    level: int = 1
+    experience: int = 0
 
     def __init__(self, name: str = "billy"):
         """
         @brief Constructeur
         @param : str nom du personnage
         """
-        self.Name = name
+        self.name = name
 
     def __str__(self) -> str:
-        return self.Name + " de niveau " + str(self.Level)
+        return self.name + " de niveau " + str(self.level)
 
     def gain_xp(self, amount: int) -> None:
         """
@@ -54,26 +54,26 @@ class Character:
         @brief On lui fait monter des nivreau si besoin et on lui ajoute le restant de l'xp
         @param : int nombre de points d'xp a donner au joueur
         """
-        while self.Experience + amount > fib_rec(self.Level) * 100:
-            amount -= fib_rec(self.Level) * 100
+        while self.experience + amount > fib_rec(self.level) * 100:
+            amount -= fib_rec(self.level) * 100
             self.level_up()
 
-        self.Experience += amount
+        self.experience += amount
 
     def level_up(self) -> None:
         """
         @brief Level up du perso et boost des stats
         @brief capage des states de chances a 80% (en vrai ca peut dépasser mais osef)
         """
-        print("### LEVEL UP {}###".format(self.Level + 1))
-        self.Level += 1
-        self.Health += randint(1, self.Level)
-        self.Shield += randint(1, self.Level)
-        self.ChanceOfDodge += random() / 10 if self.ChanceOfDodge < 0.8 else 0.
-        self.ChanceOfParry += random() / 10 if self.ChanceOfParry < 0.8 else 0
-        self.ChanceOfCritical += random() / 3 if self.ChanceOfParry < 0.8 else 0
-        self.MP += randint(1, self.Level)
-        self.DamageMin += randint(1, self.Level)
+        print("### LEVEL UP {}###".format(self.level + 1))
+        self.level += 1
+        self.health += randint(1, self.level)
+        self.shield += randint(1, self.level)
+        self.chance_of_dodge += random() / 10 if self.chance_of_dodge < 0.8 else 0.
+        self.chance_of_parry += random() / 10 if self.chance_of_parry < 0.8 else 0
+        self.chance_of_critical += random() / 3 if self.chance_of_parry < 0.8 else 0
+        self.mana_points += randint(1, self.level)
+        self.damage_min += randint(1, self.level)
 
     def take_damage(self, amount: int) -> bool:
         """
@@ -83,24 +83,24 @@ class Character:
         @param : int le nombre de degat que le joueur va prendre
         @return si le joueur est vivant -> true = alive
         """
-        if random() < self.ChanceOfDodge:
-            print(self.Name + " dodged")
+        if random() < self.chance_of_dodge:
+            print(self.name + " dodged")
             return True
-        if random() < self.ChanceOfParry:
-            print(self.Name + " parry")
-            if self.Shield - math.ceil(amount * 0.3) > 0:
-                self.Shield, amount = self.Shield - math.ceil(amount * 0.3), 0
+        if random() < self.chance_of_parry:
+            print(self.name + " parry")
+            if self.shield - math.ceil(amount * 0.3) > 0:
+                self.shield, amount = self.shield - math.ceil(amount * 0.3), 0
             else:
-                self.Shield, amount = 0, math.ceil(amount * 0.3) - self.Shield
-            self.Health -= (1 - self.Armor) * amount
+                self.shield, amount = 0, math.ceil(amount * 0.3) - self.shield
+            self.health -= (1 - self.armor) * amount
             return self.is_alive()
-        print(self.Name + " prend dans le cul")
-        if self.Shield - amount > 0:
-            self.Shield, amount = self.Shield - amount, 0
+        print(self.name + " prend dans le cul")
+        if self.shield - amount > 0:
+            self.shield, amount = self.shield - amount, 0
         else:
-            self.Shield, amount = 0, amount - self.Shield
+            self.shield, amount = 0, amount - self.shield
 
-        self.Health -= (1 - self.Armor) * amount
+        self.health -= (1 - self.armor) * amount
         return self.is_alive()
 
     def inflict_damage(self, other: Character, amount: int) -> None:
@@ -110,10 +110,10 @@ class Character:
         @param : Character l'autre perso a qui on veut en mettre sur le visage
         @param : int le nombre de dégats qu'on lui met sur le visage
         """
-        if amount < self.DamageMin:
-            other.take_damage(self.DamageMin)
-        elif amount > self.DamageMax:
-            other.take_damage(self.DamageMax)
+        if amount < self.damage_min:
+            other.take_damage(self.damage_min)
+        elif amount > self.damage_max:
+            other.take_damage(self.damage_max)
         else:
             other.take_damage(amount)
 
@@ -122,11 +122,11 @@ class Character:
         @brief Affiche un joli résumé formaté
         """
         print(self)
-        print("HP :", self.Health, " SP :", self.Shield, "MP :", self.MP)
+        print("HP :", self.health, " SP :", self.shield, "MP :", self.mana_points)
 
     def is_alive(self) -> bool:
         """
         @brief dit si le joueur et en vie
         @return booléen True = vivant
         """
-        return self.Health > 0
+        return self.health > 0

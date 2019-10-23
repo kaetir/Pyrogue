@@ -15,7 +15,7 @@ for i in range(10):
     jeanEude.print()
 """
 
-my_map = MapDungeon()
-my_map.disp_map()
+my_map = MapDungeon(15)
+my_map.disp_map("map.png")
 
 

@@ -18,14 +18,25 @@ class MapDungeon:
     y: int = 0
     pts = [[x, y]]
 
-    def __init__(self) -> None:
+    def __init__(self, size: int= 15) -> None:
+        """
+        @brief constructeur
+        @param : int taille de la map
+        """
         super().__init__()
-        self.gen_map()
+        self.gen_map(size)
 
     def __str__(self) -> str:
+        """
+        @brief fonciton pour le retour string
+        """
         return self.pts.__str__()
 
     def gen_map(self, size: int = 15) -> None:
+        """
+        @brief generateur de map aléatoire sur le model de l'algo du marcheur
+        @param : int taille de la map
+        """
         self.map_size = size
         pts = self.pts
         x = self.x
@@ -44,8 +55,11 @@ class MapDungeon:
         for idx, val in enumerate(pts):
             self.pts[idx] = Room(val[0], val[1])
 
-    def disp_map(self):
-
+    def disp_map(self, filename: str= None):
+        """
+        @brief affichage de la map et sauvegarde éventuelle
+        @param : str fichier de sauvegarde de l'image
+        """
         stp = np.array([x.get_pos() for x in self.pts])
 
         # Desctivation des axes
@@ -63,8 +77,12 @@ class MapDungeon:
         plt.plot(stp[:, 0], stp[:, 1])
 
         # affichage des liens entres les salles
-        plt.scatter(stp[0, 0], stp[0, 1], color='r')
-        plt.scatter(stp[-1, 0], stp[-1, 1], color='y')
+        plt.scatter(stp[0, 0], stp[0, 1], color='r')   # entrée
+        plt.scatter(stp[-1, 0], stp[-1, 1], color='y') # sortie
+
+        # sauvegarde du graph
+        if filename is not None:
+            plt.savefig(filename)
 
         # affichage du graph
         plt.show()

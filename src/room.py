@@ -16,6 +16,11 @@ class Room:
     discovered: bool = False
 
     def __init__(self, x, y) -> None:
+        """
+        @brief constructeur
+        @param x : int position de la room
+        @param y : int position de la room
+        """
         super().__init__()
         self.x = x
         self.y = y
@@ -23,11 +28,22 @@ class Room:
     def __str__(self) -> str:
         print("pos :", self.x, self.y, "\n", self.inside)
 
-    def get_pos(self):
+    def get_pos(self) -> (int, int):
+        """
+        @brief retourne les pos de la salle
+        @return : [int, int] x et y
+        """
         return self.x, self.y
 
-    def is_discovered(self):
+    def is_discovered(self) -> bool:
+        """
+        @brief retourne si la salle est découverte
+        @return : bool
+        """
         return self.discovered
 
-    def discover(self):
+    def discover(self) -> None:
+        """
+        @brief rend une salle visible
+        """
         self.discovered = True
