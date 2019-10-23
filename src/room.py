@@ -28,7 +28,6 @@ class Room:
     def __str__(self) -> str:
         return "pos :" + str(self.x) + " " + str(self.y) + "\n" + self.inside
 
-
     def get_pos(self) -> (int, int):
         """
         @brief retourne les pos de la salle
