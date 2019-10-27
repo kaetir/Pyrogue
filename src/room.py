@@ -7,6 +7,10 @@
 """
 from __future__ import annotations
 
+top = 0
+right = 1
+bottom = 2
+left = 3
 
 class Room:
     x: int = 0
@@ -38,6 +42,13 @@ class Room:
         @return : [int, int] x et y
         """
         return self.x, self.y
+
+    def set_porte(self, p: int) -> None:
+        """
+        @brief retourne les pos de la salle
+        @param le numéro de la porte a ouvrir
+        """
+        self.door[p] = 1
 
     def is_discovered(self) -> bool:
         """

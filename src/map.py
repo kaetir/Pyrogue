@@ -30,7 +30,7 @@ class MapDungeon:
         """
         @brief fonciton pour le retour string
         """
-        return self.pts.__str__()
+        return self.rooms.__str__()
 
     def gen_map(self, size: int = 15) -> None:
         """
@@ -52,9 +52,23 @@ class MapDungeon:
 
             pts += [[x, y]]
 
+        # patch de salles dupliqués
         idx: int
-        for idx, val in enumerate(pts):
+        for idx, val in enumerate(np.unique(np.array(pts), axis=0)):
             self.rooms += [Room(val[0], val[1])]
+
+        # Generation des portes
+        # parcours des salles
+        for idr, r in enumerate(self.rooms):
+            print(r)
+            # parcours des salles et si on se trouve dans la salle on affiche la salle suivante
+            for idx, val in enumerate(pts):
+                if val[0] == r.get_pos()[0] and val[1] == r.get_pos()[1]:
+                    # on exclus la salle finale
+                    if idx < len(pts) - 1:
+                        print(pts[idx+1])
+            print("===========")
+
 
     def disp_map(self, filename: str = None):
         """
@@ -74,7 +88,7 @@ class MapDungeon:
                      color="black", lw=4)
         # plt.scatter(stp[:, 0], stp[:, 1])
 
-        # affichage des liaisons entre les salles
+        # affichage des portes
         plt.plot(stp[:, 0], stp[:, 1])
 
         # affichage des liens entres les salles
