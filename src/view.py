@@ -37,6 +37,9 @@ class View:
         self.ceiling_tiles = load_tile_table("tiles/dungeon_ceiling.png", 4, 2)
         self.cases_hud = load_tile_table("hud/cases.png", 1, 4)
 
+    def print_clear(self):
+        pygame.draw.rect(self.window, (0, 0, 0), (0, 0, self.wwidth, self.wheight))
+
     def print_room(self, room, char):
         doors = room.doors
         orientation = char.get_orientation()

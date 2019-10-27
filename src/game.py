@@ -47,10 +47,14 @@ class Game:
                     elif event.key == pygame.K_LEFT and hud_cursor == 0:
                         self.character.set_orientation((self.character.get_orientation() - 1) % 4)
             # Calculating New sprites and Printing
-
+            # Background
+            self.view.print_clear()
+            # Room
             px, py = self.character.get_pos()
             self.view.print_room(self.map.get_room(px, py), self.character)
+            #HUD Right Cases
             self.view.print_cases_hud(hud_cursor)
+
             pygame.display.flip()
 
             # Ticking
