@@ -46,6 +46,7 @@ class Game:
         clock = pygame.time.Clock()
 
         self.map = MapDungeon(15)
+        self.map.disp_map("map.png")
         self.character = Character("Bob")
 
         hud_cursor = 0
