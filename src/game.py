@@ -16,6 +16,29 @@ class Game:
 
         self.view = View()
 
+    def change_room(self):
+        """
+        @brief On avance d'une salle selon la salle ou l'on est et l'orientation du personnage
+        """
+        px, py = self.character.get_pos()
+        room = self.map.get_room(px, py)
+        orient = self.character.get_orientation()
+        if room.get_doors()[orient] == 0:
+            return False  # On ne peut pas avancer, c'est un mur!
+        # else Calcul de la nouvel position selon l'orientation
+        if orient == 0:
+            py += 1
+        elif orient == 1:
+            px += 1
+        elif orient == 2:
+            py -= 1
+        elif orient == 3:
+            px -= 1
+
+        self.character.set_pos(px, py)
+        self.map.get_room(px, py).discover()
+        self.map.disp_map("map.png")
+
     def start_game(self):
         """
         @brief Algorithme principal du jeu, Main Loop algorithmique et visuelle
@@ -37,11 +60,13 @@ class Game:
                 elif event.type == VIDEORESIZE:
                     self.view.resize_event(event)
 
-                elif event.type == pygame.KEYDOWN: # On gere les boutons
-                    if event.key == pygame.K_UP: # Fleche du haut
+                elif event.type == pygame.KEYDOWN:  # On gere les boutons
+                    if event.key == pygame.K_UP:  # Fleche du haut
                         if hud_cursor > 0:
                             hud_cursor -= 1
-                    elif event.key == pygame.K_DOWN: # Fleche du bas
+                        if hud_cursor == 0:  # Si nous sommes sur la case de mouvement, on change de salle (si possible)
+                            self.change_room()
+                    elif event.key == pygame.K_DOWN:  # Fleche du bas
                         if hud_cursor < 3:
                             hud_cursor += 1
                     # Si nous sommes sur la case de mouvement et que nous effectuons une rotation
@@ -56,9 +81,8 @@ class Game:
             px, py = self.character.get_pos()
             self.view.print_room(self.map.get_room(px, py), self.character)
             # Map
-            self.map.disp_map("map.png")
             self.view.print_map()
-            #HUD Right Cases
+            # HUD Right Cases
             self.view.print_cases_hud(hud_cursor)
 
             pygame.display.flip()

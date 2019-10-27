@@ -51,6 +51,9 @@ class Character:
     def __str__(self) -> str:
         return self.name + " de niveau " + str(self.level)
 
+    def set_pos(self, x, y):
+        self.position = [x, y]
+
     def get_pos(self):
         return self.position
 

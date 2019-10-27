@@ -59,7 +59,7 @@ class View:
         @param room : salle a afficher
         @param char : personnage principal (pour avoir l'orientation de la salle)
         """
-        doors = room.doors
+        doors = room.get_doors()
         orientation = char.get_orientation()
 
         tempx, tempy = self.wall_tiles[0].get_size()  # Portes et murs ont la meme taille niveau sprite
@@ -86,12 +86,9 @@ class View:
         """
         map = load_tile_table("map.png", 1, 1)
         tempx, tempy = map[0].get_size()
-        size_width, size_height = int(self.wwidth * 0.25), int(self.wwidth * 0.25 * tempy / tempx)
-        self.window.blit(
-            pygame.transform.scale(map[0],
-                                   (size_width, size_height)
-                                   ), (self.wwidth - size_width, 0)
-        )
+        size_width, size_height = int(self.wheight * 0.30 * tempx / tempy), int(self.wheight * 0.30)
+        self.window.blit(pygame.transform.scale(map[0], (size_width, size_height)),
+                          (int(self.wwidth * (0.55 + 0.45/2) - size_width / 2), 0))
 
     def resize_event(self, event):
         """

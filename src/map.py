@@ -74,10 +74,16 @@ class MapDungeon:
             # Position de la porte
             door_position = 0 if y > oly else 1 if x > olx else 2 if y < oly else 3
             # Ajout des portes dans la salle precedente et la suivante
-            pts[len(pts) - 1][2][door_position] = 1  # Ancienne Salle
-            if not clone: # Creation de la salle si elle n'existait pas
+            for p in pts:  # On recherche la salle precedente
+                if (olx, oly) == (p[0], p[1]):
+                    p[2][door_position] = 1  # Ancienne Salle
+                    break
+            if not clone:  # Creation de la salle si elle n'existait pas
                 pts += [[x, y, [0, 0, 0, 0]]]
-            pts[len(pts) - 1][2][(door_position + 2) % 4] = 1  # Nouvelle Salle
+            for p in pts:  # On recherche la salle suivante
+                if (x, y) == (p[0], p[1]):
+                    p[2][(door_position + 2) % 4] = 1  # Nouvelle Salle
+                    break
 
         idx: int
         for val in pts:
