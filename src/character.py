@@ -37,7 +37,9 @@ class Character:
     armor: float = 0.1
     level: int = 1
     experience: int = 0
+    # Utiles pour le personnage Principal
     orientation: int = 0  # % 4 : orientation du personnage dans la salle
+    position = [0, 0]  # % 4 : position du personnage sur la map
 
     def __init__(self, name: str = "billy"):
         """
