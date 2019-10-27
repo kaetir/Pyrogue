@@ -7,10 +7,7 @@
 """
 from __future__ import annotations
 
-top = 0
-right = 1
-bottom = 2
-left = 3
+
 
 class Room:
     x: int = 0
@@ -20,21 +17,26 @@ class Room:
     doors = [0, 0, 0, 0]
     discovered: bool = False
 
+    # ne pas toucher
+    top: int = 0
+    right: int = 1
+    bottom: int = 2
+    left: int = 3
+
     def __init__(self, x: int, y: int, doors=None):
         """
         @brief constructeur
         @param x : int position de la room
         @param y : int position de la room
+        @param doors : list(int) les portes
         """
         super().__init__()
         if doors is None:
             doors = [0, 0, 0, 0]
-        self.x = x
-        self.y = y
-        if doors is None:
-            self.doors = [0, 0, 0, 0]
         else:
             self.doors = doors
+        self.x = x
+        self.y = y
 
     def __repr__(self) -> str:
         return "Room %d : %d" % (self.x, self.y)
@@ -52,7 +54,7 @@ class Room:
     def set_porte(self, p: int) -> None:
         """
         @brief retourne les pos de la salle
-        @param le numéro de la porte a ouvrir
+        @param p: le numéro de la porte a ouvrir
         """
         self.doors[p] = 1
 

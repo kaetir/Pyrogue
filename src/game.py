@@ -52,6 +52,9 @@ class Game:
             # Room
             px, py = self.character.get_pos()
             self.view.print_room(self.map.get_room(px, py), self.character)
+            # Map
+            self.map.disp_map("map.png")
+            self.view.print_map()
             #HUD Right Cases
             self.view.print_cases_hud(hud_cursor)
 

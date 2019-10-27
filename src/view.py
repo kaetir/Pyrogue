@@ -61,8 +61,15 @@ class View:
             self.window.blit(pygame.transform.scale(self.wall_tiles[6], (size_width, size_height)), (0, 0))
         self.window.blit(pygame.transform.scale(self.ceiling_tiles[7], (size_width, size_height)), (0, 0))
 
-    def print_map(map):
-        p = 1
+    def print_map(self):
+        map = load_tile_table("map.png", 1, 1)
+        tempx, tempy = map[0].get_size()
+        size_width, size_height = int(self.wwidth * 0.25), int(self.wwidth * 0.25 * tempy / tempx)
+        self.window.blit(
+            pygame.transform.scale(map[0],
+                                   (size_width, size_height)
+                                   ), (self.wwidth - size_width, 0)
+        )
 
     def resize_event(self, event):
         width, height = event.size
