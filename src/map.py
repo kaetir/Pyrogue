@@ -14,8 +14,6 @@ from src.room import Room
 
 class MapDungeon:
     map_size: int = 15
-    x: int = 0
-    y: int = 0
     rooms: list = []
 
     def __init__(self, size: int = 15) -> None:
@@ -38,21 +36,35 @@ class MapDungeon:
         @param : int taille de la map
         """
         self.map_size = size
-        x = self.x
-        y = self.y
-        pts = [[x, y]]
+        x = 0
+        y = 0
+        pts = [[x, y, [0, 0, 0, 0]]]
 
         while len(np.unique(np.array(pts), axis=0)) < self.map_size:
             eps = 2 * floor(2 * random()) - 1
+
+            olx = x  # Anciennes positions
+            oly = y
 
             if random() < .5:
                 x += eps
             else:
                 y += eps
 
-            pts += [[x, y]]
+            clone = False
+            for i in range(0, len(pts)):
+                if pts[i][0] == x and pts[i][1] == y:
+                    clone = True
+                    break
 
-        # patch de salles dupliqués
+            # Creation de la porte
+            door_position = 0 if y > oly else 1 if x > olx else 2 if y < oly else 3
+
+            pts[len(pts) - 1][2][door_position] = 1
+            if not clone:
+                pts += [[x, y, [0, 0, 0, 0]]]
+            pts[len(pts) - 1][2][(door_position + 2) % 4] = 1
+
         idx: int
         for idx, val in enumerate(np.unique(np.array(pts), axis=0)):
             self.rooms += [Room(val[0], val[1])]

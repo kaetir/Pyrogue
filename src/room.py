@@ -17,10 +17,10 @@ class Room:
     y: int = 0
     inside = "du caca dans la salle"
     # top, right, bottom, left
-    door = [0, 0, 0, 0]
+    doors = [0, 0, 0, 0]
     discovered: bool = False
 
-    def __init__(self, x: int, y: int):
+    def __init__(self, x: int, y: int, doors):
         """
         @brief constructeur
         @param x : int position de la room
@@ -29,6 +29,7 @@ class Room:
         super().__init__()
         self.x = x
         self.y = y
+        self.doors = doors
 
     def __repr__(self) -> str:
         return "Room %d : %d" % (self.x, self.y)
