@@ -27,14 +27,17 @@ import math
 class Character:
     name: str = "billy"
     health: int = 20
+    max_health: int = 20
     shield: int = 10
     chance_of_dodge: float = 0.05
     chance_of_parry: float = 0.05
     chance_of_critical: float = 0.1
-    mana_points: int = 10
+    mana: int = 10
+    max_mana: int = 10
     damage_min: int = 1
     damage_max: int = 10000000
     armor: float = 0.1
+    max_armor: float = 0.1
     level: int = 1
     experience: int = 0
     # Utiles pour le personnage Principal
@@ -56,6 +59,15 @@ class Character:
 
     def get_pos(self):
         return self.position
+
+    def get_life_percent(self):
+        return self.health / self.max_health
+
+    def get_mana_percent(self):
+        return self.mana / self.max_mana
+
+    def get_armor_percent(self):
+        return self.armor / self.max_armor
 
     def get_orientation(self):
         return self.orientation

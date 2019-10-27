@@ -29,6 +29,10 @@ class View:
     door_tiles = None
     ceiling_tiles = None
     cases_hud = None
+    fills_fillers = None
+    fills_tips = None
+    fills_main = None
+    fills_tubes = None
 
     def __init__(self) -> None:
         # Creation de la fenetre
@@ -45,7 +49,11 @@ class View:
         self.wall_tiles = load_tile_table("tiles/dungeon_wall.png", 4, 4)
         self.door_tiles = load_tile_table("tiles/dungeon_door.png", 4, 4)
         self.ceiling_tiles = load_tile_table("tiles/dungeon_ceiling.png", 4, 2)
-        self.cases_hud = load_tile_table("hud/cases.png", 1, 4)
+        self.cases_hud = load_tile_table("hud/cases.png", 1, 8)
+        self.fills_fillers = load_tile_table("hud/fills_fillers.png", 1, 3)
+        self.fills_tips = load_tile_table("hud/fills_tips.png", 1, 3)
+        self.fills_main = load_tile_table("hud/fills_main.png", 1, 1)
+        self.fills_tubes = load_tile_table("hud/fills_tubes.png", 1, 1)
 
     def print_clear(self):
         """
@@ -109,19 +117,49 @@ class View:
         tempx, tempy = self.cases_hud[0].get_size()
         size_width, size_height = int(self.wwidth * 0.25), int(self.wwidth * 0.25 * tempy / tempx)
 
-        texts = ["Inventory", "Save", "Quit"]
+        texts = 2
 
         if cursor == 0:
-            self.window.blit(pygame.transform.scale(self.cases_hud[3], (size_width, size_height)),
+            self.window.blit(pygame.transform.scale(self.cases_hud[1], (size_width, size_height)),
                              (int(self.wwidth * 0.56), int(self.wheight * 0.30)))
         else:
-            self.window.blit(pygame.transform.scale(self.cases_hud[2], (size_width, size_height)),
+            self.window.blit(pygame.transform.scale(self.cases_hud[0], (size_width, size_height)),
                              (int(self.wwidth * 0.56), int(self.wheight * 0.30)))
 
-        for i in range(0, len(texts)):
+        for i in range(0, texts):
             if cursor == i + 1:
-                self.window.blit(pygame.transform.scale(self.cases_hud[1], (size_width, size_height)),
+                self.window.blit(pygame.transform.scale(self.cases_hud[i*2+3], (size_width, size_height)),
                                  (int(self.wwidth * 0.56), int(self.wheight * 0.30 + self.wheight * 0.10 * (i + 1))))
             else:
-                self.window.blit(pygame.transform.scale(self.cases_hud[0], (size_width, size_height)),
+                self.window.blit(pygame.transform.scale(self.cases_hud[i*2+2], (size_width, size_height)),
                                  (int(self.wwidth * 0.56), int(self.wheight * 0.30 + self.wheight * 0.10 * (i + 1))))
+
+    def print_fillers(self, char = None):
+        """
+        @brief Affichage des fillers (Vie, Mana, Armure)
+        @param char : Personnage selon lequel on affiche les fillers
+        """
+        percentages = [char.get_life_percent(), char.get_mana_percent(), char.get_armor_percent()]
+
+        # On recupere la position sous l'affichage de la zone principale
+        tempx, tempy = self.wall_tiles[0].get_size()
+        starty = self.wwidth * 0.55 * tempy / tempx
+
+        # Fills Main
+        tempx_main, tempy_main = self.fills_main[0].get_size()
+        size_width_main, size_height_main = self.wheight * 0.25 * tempx_main / tempy_main, self.wheight * 0.25
+        self.window.blit(pygame.transform.scale(self.fills_main[0], (int(size_width_main), int(size_height_main))), (0, int(starty + self.wheight * 0.01)))
+        # Fills Tubes
+        size_width_tubes, size_height_tubes = self.wwidth * 0.55 - size_width_main - self.wwidth * 0.055, self.wheight * 0.25 * 0.25
+        for i in range(0, 3):
+            self.window.blit(pygame.transform.scale(self.fills_tubes[0], (int(size_width_tubes), int(size_height_tubes))), (int(size_width_main), int(starty + self.wheight * 0.01 + size_height_main / 16 + (5 * size_height_main / 16) * i)))
+        # Fills Filler
+        size_height_filler = size_height_tubes * 14/16
+        for i in range(0, 3):
+            size_width_filler = percentages[i] * size_width_tubes
+            self.window.blit(pygame.transform.scale(self.fills_fillers[i], (int(size_width_filler), int(size_height_filler))), (int(size_width_main), int(starty + self.wheight * 0.01 + size_height_main / 16 + (5 * size_height_main / 16) * i + size_height_main / 64)))
+        # Fills Filler
+        size_width_tips, size_height_tips = size_width_main * 32 / 84,  size_height_main * 20 / 64
+        for i in range(0, 3):
+            self.window.blit(pygame.transform.scale(self.fills_tips[i], (int(size_width_tips), int(size_height_tips))), (int(size_width_main + size_width_tubes), int(starty + self.wheight * 0.01 + size_height_main / 32 + size_height_main * 20 / 64 * i)))
+

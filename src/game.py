@@ -49,6 +49,9 @@ class Game:
         self.map.disp_map("map.png")
         self.character = Character("Bob")
 
+        self.character.health = 12
+        self.character.mana = 3
+
         hud_cursor = 0
 
         # Boucle infinie
@@ -65,10 +68,10 @@ class Game:
                     if event.key == pygame.K_UP:  # Fleche du haut
                         if hud_cursor > 0:
                             hud_cursor -= 1
-                        if hud_cursor == 0:  # Si nous sommes sur la case de mouvement, on change de salle (si possible)
+                        elif hud_cursor == 0:  # Si nous sommes sur la case de mouvement, on change de salle (si possible)
                             self.change_room()
                     elif event.key == pygame.K_DOWN:  # Fleche du bas
-                        if hud_cursor < 3:
+                        if hud_cursor < 2:
                             hud_cursor += 1
                     # Si nous sommes sur la case de mouvement et que nous effectuons une rotation
                     elif event.key == pygame.K_RIGHT and hud_cursor == 0:
@@ -85,6 +88,8 @@ class Game:
             self.view.print_map()
             # HUD Right Cases
             self.view.print_cases_hud(hud_cursor)
+            # HUD Fillers
+            self.view.print_fillers(self.character)
 
             pygame.display.flip()
 
