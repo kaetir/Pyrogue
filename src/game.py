@@ -17,6 +17,9 @@ class Game:
         self.view = View()
 
     def start_game(self):
+        """
+        @brief Algorithme principal du jeu, Main Loop algorithmique et visuelle
+        """
         clock = pygame.time.Clock()
 
         self.map = MapDungeon(15)
@@ -41,7 +44,7 @@ class Game:
                     elif event.key == pygame.K_DOWN: # Fleche du bas
                         if hud_cursor < 3:
                             hud_cursor += 1
-
+                    # Si nous sommes sur la case de mouvement et que nous effectuons une rotation
                     elif event.key == pygame.K_RIGHT and hud_cursor == 0:
                         self.character.set_orientation((self.character.get_orientation() + 1) % 4)
                     elif event.key == pygame.K_LEFT and hud_cursor == 0:

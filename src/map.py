@@ -64,17 +64,18 @@ class MapDungeon:
             else:
                 y += eps
 
+            # Nous verifions si la salle existe deja dans la liste selon sa position
             clone = False
             for i in range(0, len(pts)):
                 if pts[i][0] == x and pts[i][1] == y:
                     clone = True
                     break
 
-            # Creation de la porte
+            # Position de la porte
             door_position = 0 if y > oly else 1 if x > olx else 2 if y < oly else 3
-
+            # Ajout des portes dans la salle precedente et la suivante
             pts[len(pts) - 1][2][door_position] = 1  # Ancienne Salle
-            if not clone:
+            if not clone: # Creation de la salle si elle n'existait pas
                 pts += [[x, y, [0, 0, 0, 0]]]
             pts[len(pts) - 1][2][(door_position + 2) % 4] = 1  # Nouvelle Salle
 

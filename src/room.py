@@ -53,7 +53,7 @@ class Room:
 
     def set_porte(self, p: int) -> None:
         """
-        @brief retourne les pos de la salle
+        @brief assigne une porte a la salle
         @param p: le numéro de la porte a ouvrir
         """
         self.doors[p] = 1
