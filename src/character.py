@@ -57,6 +57,9 @@ class Character:
     def get_orientation(self):
         return self.orientation
 
+    def set_orientation(self, new_orient):
+        self.orientation = new_orient % 4
+
     def gain_xp(self, amount: int) -> None:
         """
         @brief Le perso viens faire une action qui lui rapporte de l'xp

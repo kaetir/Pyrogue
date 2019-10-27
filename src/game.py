@@ -22,6 +22,8 @@ class Game:
         self.map = MapDungeon(15)
         self.character = Character("Bob")
 
+        hud_cursor = 0
+
         # Boucle infinie
         close = False
         while not close:
@@ -32,10 +34,23 @@ class Game:
                 elif event.type == VIDEORESIZE:
                     self.view.resize_event(event)
 
+                elif event.type == pygame.KEYDOWN: # On gere les boutons
+                    if event.key == pygame.K_UP: # Fleche du haut
+                        if hud_cursor > 0:
+                            hud_cursor -= 1
+                    elif event.key == pygame.K_DOWN: # Fleche du bas
+                        if hud_cursor < 3:
+                            hud_cursor += 1
+
+                    elif event.key == pygame.K_RIGHT and hud_cursor == 0:
+                        self.character.set_orientation((self.character.get_orientation() + 1) % 4)
+                    elif event.key == pygame.K_LEFT and hud_cursor == 0:
+                        self.character.set_orientation((self.character.get_orientation() - 1) % 4)
             # Calculating New sprites and Printing
 
             px, py = self.character.get_pos()
             self.view.print_room(self.map.get_room(px, py), self.character)
+            self.view.print_cases_hud(hud_cursor)
             pygame.display.flip()
 
             # Ticking
