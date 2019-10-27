@@ -1,7 +1,6 @@
 print("Pyrogue : la commutativité de l’anneau")
 
-from src.character import Character
-from src.map import MapDungeon
+from src.game import Game
 
 """
 jeanEude = Character()
@@ -13,9 +12,10 @@ jeanEude.print()
 for i in range(10):
     jeanEude.take_damage(2)
     jeanEude.print()
-"""
-
 my_map = MapDungeon(15)
 my_map.disp_map()
+"""
 
+game = Game()
+game.start_game()
 

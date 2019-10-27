@@ -30,6 +30,13 @@ class MapDungeon:
         """
         return self.rooms.__str__()
 
+    def get_room(self, x, y):
+        for i in range(0, len(self.rooms)):
+            tx, ty = self.rooms[i].get_pos()
+            if tx == x and ty == y:
+                return self.rooms[i]
+        return None # Erreur Salle inexistante
+
     def gen_map(self, size: int = 15) -> None:
         """
         @brief generateur de map aléatoire sur le model de l'algo du marcheur
@@ -40,7 +47,7 @@ class MapDungeon:
         y = 0
         pts = [[x, y, [0, 0, 0, 0]]]
 
-        while len(np.unique(np.array(pts), axis=0)) < self.map_size:
+        while len(pts) < self.map_size:
             eps = 2 * floor(2 * random()) - 1
 
             olx = x  # Anciennes positions
@@ -60,15 +67,16 @@ class MapDungeon:
             # Creation de la porte
             door_position = 0 if y > oly else 1 if x > olx else 2 if y < oly else 3
 
-            pts[len(pts) - 1][2][door_position] = 1
+            pts[len(pts) - 1][2][door_position] = 1  # Ancienne Salle
             if not clone:
                 pts += [[x, y, [0, 0, 0, 0]]]
-            pts[len(pts) - 1][2][(door_position + 2) % 4] = 1
+            pts[len(pts) - 1][2][(door_position + 2) % 4] = 1  # Nouvelle Salle
 
         idx: int
-        for idx, val in enumerate(np.unique(np.array(pts), axis=0)):
-            self.rooms += [Room(val[0], val[1])]
+        for val in pts:
+            self.rooms += [Room(val[0], val[1], val[2])]
 
+        """
         # Generation des portes
         # parcours des salles
         for idr, r in enumerate(self.rooms):
@@ -80,7 +88,7 @@ class MapDungeon:
                     if idx < len(pts) - 1:
                         print(pts[idx+1])
             print("===========")
-
+        """
 
     def disp_map(self, filename: str = None):
         """

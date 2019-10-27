@@ -20,16 +20,21 @@ class Room:
     doors = [0, 0, 0, 0]
     discovered: bool = False
 
-    def __init__(self, x: int, y: int, doors):
+    def __init__(self, x: int, y: int, doors=None):
         """
         @brief constructeur
         @param x : int position de la room
         @param y : int position de la room
         """
         super().__init__()
+        if doors is None:
+            doors = [0, 0, 0, 0]
         self.x = x
         self.y = y
-        self.doors = doors
+        if doors is None:
+            self.doors = [0, 0, 0, 0]
+        else:
+            self.doors = doors
 
     def __repr__(self) -> str:
         return "Room %d : %d" % (self.x, self.y)
@@ -49,7 +54,7 @@ class Room:
         @brief retourne les pos de la salle
         @param le numéro de la porte a ouvrir
         """
-        self.door[p] = 1
+        self.doors[p] = 1
 
     def is_discovered(self) -> bool:
         """

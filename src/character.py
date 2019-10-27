@@ -39,7 +39,7 @@ class Character:
     experience: int = 0
     # Utiles pour le personnage Principal
     orientation: int = 0  # % 4 : orientation du personnage dans la salle
-    position = [0, 0]  # % 4 : position du personnage sur la map
+    position = [0, 0]  # position du personnage sur la map
 
     def __init__(self, name: str = "billy"):
         """
@@ -50,6 +50,12 @@ class Character:
 
     def __str__(self) -> str:
         return self.name + " de niveau " + str(self.level)
+
+    def get_pos(self):
+        return self.position
+
+    def get_orientation(self):
+        return self.orientation
 
     def gain_xp(self, amount: int) -> None:
         """
