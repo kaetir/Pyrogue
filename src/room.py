@@ -5,6 +5,7 @@
         - or nothing happen while crossing rooms.
 
 """
+from __future__ import annotations
 
 
 class Room:
@@ -15,7 +16,7 @@ class Room:
     door = [0, 0, 0, 0]
     discovered: bool = False
 
-    def __init__(self, x, y) -> None:
+    def __init__(self, x: int, y: int):
         """
         @brief constructeur
         @param x : int position de la room
@@ -24,6 +25,9 @@ class Room:
         super().__init__()
         self.x = x
         self.y = y
+
+    def __repr__(self) -> str:
+        return "Room %d : %d" % (self.x, self.y)
 
     def __str__(self) -> str:
         return "pos :" + str(self.x) + " " + str(self.y) + "\n" + self.inside

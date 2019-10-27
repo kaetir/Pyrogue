@@ -16,9 +16,9 @@ class MapDungeon:
     map_size: int = 15
     x: int = 0
     y: int = 0
-    pts = [[x, y]]
+    rooms: list = []
 
-    def __init__(self, size: int= 15) -> None:
+    def __init__(self, size: int = 15) -> None:
         """
         @brief constructeur
         @param : int taille de la map
@@ -38,9 +38,10 @@ class MapDungeon:
         @param : int taille de la map
         """
         self.map_size = size
-        pts = self.pts
         x = self.x
         y = self.y
+        pts = [[x, y]]
+
         while len(np.unique(np.array(pts), axis=0)) < self.map_size:
             eps = 2 * floor(2 * random()) - 1
 
@@ -53,14 +54,14 @@ class MapDungeon:
 
         idx: int
         for idx, val in enumerate(pts):
-            self.pts[idx] = Room(val[0], val[1])
+            self.rooms += [Room(val[0], val[1])]
 
-    def disp_map(self, filename: str= None):
+    def disp_map(self, filename: str = None):
         """
         @brief affichage de la map et sauvegarde éventuelle
         @param : str fichier de sauvegarde de l'image
         """
-        stp = np.array([x.get_pos() for x in self.pts])
+        stp = np.array([x.get_pos() for x in self.rooms])
 
         # Desctivation des axes
         plt.axes(aspect='equal')
@@ -69,16 +70,16 @@ class MapDungeon:
         # affichage des salles
         for rom in stp:
             plt.plot([rom[0] - 0.5, rom[0] - 0.5, rom[0] + 0.5, rom[0] + 0.5, rom[0] - 0.5],
-                     [rom[1] - 0.5, rom[1] + 0.5, rom[1] + 0.5, rom[1] - 0.5, rom[1] - 0.5]
-                     , color="black", lw=4)
+                     [rom[1] - 0.5, rom[1] + 0.5, rom[1] + 0.5, rom[1] - 0.5, rom[1] - 0.5],
+                     color="black", lw=4)
         # plt.scatter(stp[:, 0], stp[:, 1])
 
         # affichage des liaisons entre les salles
         plt.plot(stp[:, 0], stp[:, 1])
 
         # affichage des liens entres les salles
-        plt.scatter(stp[0, 0], stp[0, 1], color='r' , lw=4)   # entrée
-        plt.scatter(stp[-1, 0], stp[-1, 1], color='y' , lw=4) # sortie
+        plt.scatter(stp[0, 0], stp[0, 1], color='r', lw=4)  # entrée
+        plt.scatter(stp[-1, 0], stp[-1, 1], color='y', lw=4)  # sortie
 
         # sauvegarde du graph
         if filename is not None:
