@@ -22,6 +22,22 @@ def load_tile_table(filename, nbx: int, nby: int):
 
 
 class View:
+    items_id = {
+        "error": 77,
+        "no_helmet": 0,
+        "no_armor": 1,
+        "no_legs": 2,
+        "no_boots": 3,
+        "no_gloves": 4,
+        "no_bracelets": 5,
+        "no_amulets": 6,
+        "no_weapon": 7,
+        "no_shield": 8,
+        "amulet1": 9,
+        "amulet2": 19,
+        "amulet3": 29
+    }
+
     window = None
     wwidth, wheight = 0, 0
     # Assets
@@ -37,6 +53,7 @@ class View:
     inventory_tab = None
     inventory_cursor = None
     active_tab = None
+    items_tiles = None
 
     def __init__(self) -> None:
         # Creation de la fenetre
@@ -62,6 +79,7 @@ class View:
         self.inventory_tab = load_tile_table("inventory/inventory_tab.png", 1, 1)
         self.inventory_cursor = load_tile_table("inventory/inventory_cursor.png", 1, 1)
         self.active_tab = load_tile_table("inventory/active_tab.png", 1, 1)
+        self.items_tiles = load_tile_table("inventory/items.png", 10, 8)
 
     def print_clear(self):
         """
@@ -111,6 +129,7 @@ class View:
         temptx, tempty = self.inventory_tab[0].get_size()
         size_width, size_height = self.wwidth * 0.55, self.wwidth * 0.55 * tempty / temptx
         self.window.blit(pygame.transform.scale(self.inventory_tab[0], (int(size_width), int(size_height))), (0, 0))
+
         # Le curseur
         tempcx, tempcy = self.inventory_cursor[0].get_size()
         size_cursor_width, size_cursor_height = size_width * tempcx / temptx, size_height * tempcy / tempty
@@ -119,7 +138,15 @@ class View:
             int((cursor[0] + 1) * size_width * 4 / temptx + cursor[0] * size_cursor_width),
             int((cursor[1] + 1) * size_width * 4 / temptx + cursor[1] * size_cursor_height)))
 
-    def print_active_tab(self, char, cursor=-1):
+        # Objets de l'inventaire
+        inventory = char.get_inventory()
+        for i in range(0, len(inventory)):
+            self.window.blit(
+                pygame.transform.scale(self.items_tiles[inventory[i].get_icon_id()], (int(size_cursor_width), int(size_cursor_height))), (
+                    int((i%8 + 1) * size_width * 4 / temptx + (i%8) * size_cursor_width),
+                    int((i//8 + 1) * size_width * 4 / temptx + (i//8) * size_cursor_height)))
+
+    def print_active_tab(self, char, cursor=None):
         """
         @brief Affiche la barre active du joueur
         @param char : personnage dont on affiche la barre active
@@ -127,20 +154,20 @@ class View:
         """
         # On recupere la position sous l'affichage de la zone principale
         tempx, tempy = self.wall_tiles[0].get_size()
-        starty = self.wwidth * 0.55 * tempy / tempx
+        starty = self.wwidth * 0.55 * tempy / tempx + self.wheight * 0.01
 
         temptx, tempty = self.active_tab[0].get_size()
-        size_width, size_height = self.wwidth * 0.40, self.wwidth * 0.40 * tempty / temptx
-        self.window.blit(pygame.transform.scale(self.active_tab[0], (int(size_width), int(size_height))), (self.wwidth * 0.575, starty))
+        size_width, size_height = self.wwidth * 0.35, self.wwidth * 0.35 * tempty / temptx
+        self.window.blit(pygame.transform.scale(self.active_tab[0], (int(size_width), int(size_height))), (self.wwidth * 0.60, starty))
 
         # Le curseur
-        if 0 <= cursor < 4:
+        if cursor is not None:
             tempcx, tempcy = self.inventory_cursor[0].get_size()
             size_cursor_width, size_cursor_height = size_width * tempcx / temptx, size_height * tempcy / tempty
             self.window.blit(
                 pygame.transform.scale(self.inventory_cursor[0], (int(size_cursor_width), int(size_cursor_height))), (
-                int(self.wwidth * 0.575 + (cursor + 1) * size_width * 22 / temptx + cursor * size_cursor_width),
-                int(starty + size_width * 4 / temptx)))
+                int(self.wwidth * 0.60 + (cursor[0] + 1) * size_width * 22 / temptx + cursor[0] * size_cursor_width),
+                int(starty + size_width * 4 / temptx + cursor[1] * (size_width * 22 / temptx + size_cursor_width))))
 
     def print_map(self):
         """
@@ -236,8 +263,8 @@ class View:
         @brief Affichage des fillers (Vie, Mana, Armure)
         @param char : Personnage selon lequel on affiche les fillers
         """
-        percentages = [char.get_life_percent(), char.get_mana_percent(), char.get_armor_percent()]
-        plain_numbers = [char.get_health(), char.get_mana(), char.get_armor()]
+        percentages = [char.get_life_percent(), char.get_mana_percent(), char.get_experience_percent()]
+        plain_numbers = [char.get_health(), char.get_mana(), char.get_experience()]
 
         # On recupere la position sous l'affichage de la zone principale
         tempx, tempy = self.wall_tiles[0].get_size()

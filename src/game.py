@@ -3,7 +3,10 @@ from pygame.locals import *
 from src.view import View
 from src.character import Character
 from src.map import MapDungeon
+from src.item import Item
 
+from math import floor
+from random import random
 
 class Game:
     view = None
@@ -63,9 +66,16 @@ class Game:
 
         self.dungeon_restart(True)
 
+        # TESTS ------
         self.character.health = 12
         self.character.mana = 3
+        for i in range(0, floor(8*5 * random())):
+            it = Item()
+            it.set_icon_id(floor(random() * 70))
+            self.character.collect(it)
+        # FIN TESTS ---
 
+        # Constantes Semi-Globales de l'instance de jeu
         hud_cursor = 0
         max_hud_cursor = 2
         inventory_cursor = [0, 0]
@@ -101,6 +111,7 @@ class Game:
                                 i=1# SAVE
                             elif hud_cursor == 3 and current_room.is_exit():
                                 # CHANGEMENT DE DONJON
+                                hud_cursor = 0
                                 self.dungeon_restart(False)  # Sans RESET
 
                         elif event.key == pygame.K_UP:  # Fleche du haut

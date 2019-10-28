@@ -25,31 +25,33 @@ import math
 
 
 class Character:
-    name: str = "billy"
-    health: int = 20
-    max_health: int = 20
-    shield: int = 10
-    chance_of_dodge: float = 0.05
-    chance_of_parry: float = 0.05
-    chance_of_critical: float = 0.1
-    mana: int = 10
-    max_mana: int = 10
-    damage_min: int = 1
-    damage_max: int = 10000000
-    armor: float = 1
-    max_armor: float = 1
-    level: int = 1
-    experience: int = 0
-    # Utiles pour le personnage Principal
-    orientation: int = 0  # % 4 : orientation du personnage dans la salle
-    position = [0, 0]  # position du personnage sur la map
-
     def __init__(self, name: str = "billy"):
         """
         @brief Constructeur
         @param : str nom du personnage
         """
         self.name = name
+        self.health = 20
+        self.max_health = 20
+        self.chance_of_dodge = 0.05
+        self.chance_of_parry = 0.05
+        self.chance_of_critical = 0.1
+        self.mana = 10
+        self.max_mana = 10
+        self.damage_min = 1
+        self.damage_max = 4
+        self.armor = 0
+        self.level = 1
+        self.experience = 0
+        self.max_experience = 20
+
+        # Utiles pour le personnage Principal
+        self.orientation = 0  # % 4 : orientation du personnage dans la salle
+        self.position = [0, 0]  # position du personnage sur la map
+
+        self.inventory = []  # Rempli d'items
+        self.active_usables = []
+        self.active_spells = []
 
     def __str__(self) -> str:
         return self.name + " de niveau " + str(self.level)
@@ -66,8 +68,14 @@ class Character:
     def get_mana(self):
         return self.mana
 
+    def get_experience(self):
+        return self.experience
+
     def get_armor(self):
         return self.armor
+
+    def get_inventory(self):
+        return self.inventory
 
     def get_life_percent(self):
         return self.health / self.max_health
@@ -75,14 +83,26 @@ class Character:
     def get_mana_percent(self):
         return self.mana / self.max_mana
 
-    def get_armor_percent(self):
-        return self.armor / self.max_armor
+    def get_experience_percent(self):
+        return self.experience / self.max_experience
 
     def get_orientation(self):
         return self.orientation
 
     def set_orientation(self, new_orient):
         self.orientation = new_orient % 4
+
+    def collect(self, item):
+        """
+        @brief Recuperation d'un objet par le personnage
+        :param item: objet a recuperer
+        :return: false si l'inventaire est plein sinon true
+        """
+        if len(self.inventory) == 6*8:
+            return False
+        #Else
+        self.inventory.append(item)
+        return True
 
     def gain_xp(self, amount: int) -> None:
         """

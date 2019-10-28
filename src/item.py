@@ -17,10 +17,15 @@ from random import randint, random
 
 
 class Item:
-    name: str = "caca"
-
     def __init__(self):
-        print("item crée")
+        self.name = ""
+        self.icon_id = 0
+
+    def get_icon_id(self):
+        return self.icon_id
+
+    def set_icon_id(self, id):
+        self.icon_id = id
 
     def random(self):
         typ = randint(1, 3)
@@ -33,10 +38,13 @@ class Item:
 
 
 class Equipment(Item):
-    name = "équipement"
+    type = "equipment"
 
+    def __init__(self) -> None:
+        super().__init__()
 
 class Weapon(Equipment):
+    type = "weapon"
     damage: int = 1
     precission: float = 0.99
 
@@ -47,17 +55,23 @@ class Weapon(Equipment):
 
 
 class Armor(Equipment):
+    type = "armor"
     value: int = 1
+
+    def __init__(self) -> None:
+        super().__init__()
+        self.armor_type = ""
 
     def equiper(self) -> int:
         return self.value
 
 
 class Jewel(Equipment):
+    type = "jewel"
     color: str = "blueje"
 
 
-class consumables(Item):
+class Consumables(Item):
 
     def use(self) -> None:
         print("pouf")
