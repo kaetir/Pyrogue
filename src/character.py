@@ -36,8 +36,8 @@ class Character:
     max_mana: int = 10
     damage_min: int = 1
     damage_max: int = 10000000
-    armor: float = 0.1
-    max_armor: float = 0.1
+    armor: float = 1
+    max_armor: float = 1
     level: int = 1
     experience: int = 0
     # Utiles pour le personnage Principal
@@ -59,6 +59,15 @@ class Character:
 
     def get_pos(self):
         return self.position
+
+    def get_health(self):
+        return self.health
+
+    def get_mana(self):
+        return self.mana
+
+    def get_armor(self):
+        return self.armor
 
     def get_life_percent(self):
         return self.health / self.max_health

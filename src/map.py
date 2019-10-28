@@ -89,19 +89,7 @@ class MapDungeon:
         for val in pts:
             self.rooms += [Room(val[0], val[1], val[2])]
         self.rooms[0].discover()
-        """
-        # Generation des portes
-        # parcours des salles
-        for idr, r in enumerate(self.rooms):
-            print(r)
-            # parcours des salles et si on se trouve dans la salle on affiche la salle suivante
-            for idx, val in enumerate(pts):
-                if val[0] == r.get_pos()[0] and val[1] == r.get_pos()[1]:
-                    # on exclus la salle finale
-                    if idx < len(pts) - 1:
-                        print(pts[idx+1])
-            print("===========")
-        """
+        self.rooms[len(self.rooms)-1].set_exit() # La derniere salle est une sortie
 
     def _porte(self, centrex: int, centery: int, dir: int):
         # top, right, bottom, left

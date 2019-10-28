@@ -16,6 +16,7 @@ class Room:
     # top, right, bottom, left
     doors = [0, 0, 0, 0]
     discovered: bool = False
+    exit = False
 
     # ne pas toucher
     top: int = 0
@@ -46,6 +47,19 @@ class Room:
 
     def get_doors(self):
         return self.doors
+
+    def set_exit(self):
+        """
+        @brief La salle devient une sortie
+        """
+        self.exit = True
+
+    def is_exit(self):
+        """
+        @brief Demande  si la salle est une sortie
+        @:return True or False
+        """
+        return self.exit
 
     def get_pos(self) -> (int, int):
         """
