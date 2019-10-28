@@ -34,6 +34,8 @@ class View:
     fills_main = None
     fills_tubes = None
     numbers_tiles = None
+    inventory_tab = None
+    inventory_cursor = None
 
     def __init__(self) -> None:
         # Creation de la fenetre
@@ -56,6 +58,8 @@ class View:
         self.fills_main = load_tile_table("hud/fills_main.png", 4, 1)
         self.fills_tubes = load_tile_table("hud/fills_tubes.png", 1, 1)
         self.numbers_tiles = load_tile_table("hud/numbers.png", 11, 1)
+        self.inventory_tab = load_tile_table("inventory/inventory_tab.png", 1, 1)
+        self.inventory_cursor = load_tile_table("inventory/inventory_cursor.png", 1, 1)
 
     def print_clear(self):
         """
@@ -94,6 +98,21 @@ class View:
                              (0, 0))
         else:
             self.window.blit(pygame.transform.scale(self.ceiling_tiles[7], (size_width, size_height)), (0, 0))
+
+    def print_inventory(self, char, cursor):
+        """
+        @brief Affiche l'inventaire du joueur
+        @param char : personnage dont on affiche l'inventaire
+        @param cursor : curseur (2D) dans l'inventaire
+        """
+
+        temptx, tempty = self.inventory_tab[0].get_size()
+        size_width, size_height = self.wwidth * 0.55, self.wwidth * 0.55 * tempty / temptx
+        self.window.blit(pygame.transform.scale(self.inventory_tab[0], (int(size_width), int(size_height))), (0, 0))
+        # Le curseur
+        tempcx, tempcy = self.inventory_cursor[0].get_size()
+        size_cursor_width, size_cursor_height = size_width * tempcx / temptx, size_height * tempcy / tempty
+        self.window.blit(pygame.transform.scale(self.inventory_cursor[0], (int(size_cursor_width), int(size_cursor_height))), (int((cursor[0]+1) * size_width * 4 / temptx + cursor[0] * size_cursor_width), int((cursor[1]+1) * size_width * 4 / temptx + cursor[1] * size_cursor_height)))
 
     def print_map(self):
         """

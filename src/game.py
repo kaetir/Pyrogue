@@ -68,6 +68,9 @@ class Game:
 
         hud_cursor = 0
         max_hud_cursor = 2
+        inventory_cursor = [0, 0]
+        max_inventory_cursor = [8-1, 6-1]
+        game_area = 0  # 0: En salle, 1: En inventaire
 
         # Boucle infinie
         close = False
@@ -88,37 +91,68 @@ class Game:
                     self.view.resize_event(event)
 
                 elif event.type == pygame.KEYDOWN:  # On gere les boutons
-                    if event.key == pygame.K_RETURN:
-                        if hud_cursor == 1:
-                            i=1# INVENTAIRE
-                        elif hud_cursor == 2:
-                            i=1# SAVE
-                        elif hud_cursor == 3 and current_room.is_exit():
-                            # CHANGEMENT DE DONJON
-                            self.dungeon_restart(False)  # Sans RESET
+                    if game_area == 0:  # Si on est en mode salles
+                        if event.key == pygame.K_RETURN:
+                            if hud_cursor == 1:
+                                # INVENTAIRE
+                                game_area = 1
+                                inventory_cursor = [0, 0]
+                            elif hud_cursor == 2:
+                                i=1# SAVE
+                            elif hud_cursor == 3 and current_room.is_exit():
+                                # CHANGEMENT DE DONJON
+                                self.dungeon_restart(False)  # Sans RESET
 
-                    if event.key == pygame.K_UP:  # Fleche du haut
-                        if hud_cursor > 0:
-                            hud_cursor -= 1
-                        elif hud_cursor == 0:  # Si nous sommes sur la case de mouvement, on change de salle (si possible)
-                            self.change_room()
-                    elif event.key == pygame.K_DOWN:  # Fleche du bas
-                        if hud_cursor < max_hud_cursor:
-                            hud_cursor += 1
+                        elif event.key == pygame.K_UP:  # Fleche du haut
+                            if hud_cursor > 0:
+                                hud_cursor -= 1
+                            elif hud_cursor == 0:  # Si nous sommes sur la case de mouvement, on change de salle (si possible)
+                                self.change_room()
+                        elif event.key == pygame.K_DOWN:  # Fleche du bas
+                            if hud_cursor < max_hud_cursor:
+                                hud_cursor += 1
 
-                    # Si nous sommes sur la case de mouvement et que nous effectuons une rotation
-                    elif event.key == pygame.K_RIGHT and hud_cursor == 0:
-                        self.character.set_orientation((self.character.get_orientation() + 1) % 4)
-                    elif event.key == pygame.K_LEFT and hud_cursor == 0:
-                        self.character.set_orientation((self.character.get_orientation() - 1) % 4)
+                        # Si nous sommes sur la case_HUD (0) de mouvement et que nous effectuons une rotation
+                        elif event.key == pygame.K_RIGHT and hud_cursor == 0:
+                            self.character.set_orientation((self.character.get_orientation() + 1) % 4)
+                        elif event.key == pygame.K_LEFT and hud_cursor == 0:
+                            self.character.set_orientation((self.character.get_orientation() - 1) % 4)
+
+                    elif game_area == 1:  # Si on est en mode Inventaire
+                        if event.key == pygame.K_RETURN:
+                            # Action avec l'objet du curseur
+                            i=1
+
+                        elif event.key == pygame.K_ESCAPE:
+                            # On quitte l'inventaire
+                            game_area = 0
+
+                        elif event.key == pygame.K_UP:  # Fleche du haut
+                            if inventory_cursor[1] > 0:
+                                inventory_cursor[1] -= 1
+                        elif event.key == pygame.K_DOWN:  # Fleche du bas
+                            if inventory_cursor[1] < max_inventory_cursor[1]:
+                                inventory_cursor[1] += 1
+                        elif event.key == pygame.K_RIGHT:  # Fleche de droite
+                            if inventory_cursor[0] < max_inventory_cursor[0]:
+                                inventory_cursor[0] += 1
+                        elif event.key == pygame.K_LEFT:  # Fleche de gauche
+                            if inventory_cursor[0] > 0:
+                                inventory_cursor[0] -= 1
 
             # Calculating New sprites and Printing
             px, py = self.character.get_pos()
             current_room = self.map.get_room(px, py)
             # Background
             self.view.print_clear()
-            # Room
-            self.view.print_room(current_room, self.character)
+
+            if game_area == 0:
+                # Room
+                self.view.print_room(current_room, self.character)
+            elif game_area == 1:
+                # Room
+                self.view.print_inventory(self.character, inventory_cursor)
+
             # Map
             self.view.print_map()
             # HUD Right Cases
