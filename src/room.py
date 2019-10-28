@@ -10,14 +10,6 @@ from __future__ import annotations
 
 
 class Room:
-    x: int = 0
-    y: int = 0
-    inside = "du caca dans la salle"
-    # top, right, bottom, left
-    doors = [0, 0, 0, 0]
-    discovered: bool = False
-    exit = False
-
     # ne pas toucher
     top: int = 0
     right: int = 1
@@ -32,12 +24,15 @@ class Room:
         @param doors : list(int) les portes
         """
         super().__init__()
+        # top, right, bottom, left
         if doors is None:
             doors = [0, 0, 0, 0]
         else:
             self.doors = doors
         self.x = x
         self.y = y
+        self.discovered = False
+        self.exit = False
 
     def __repr__(self) -> str:
         return "Room %d : %d" % (self.x, self.y)

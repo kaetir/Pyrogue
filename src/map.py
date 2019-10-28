@@ -14,15 +14,14 @@ from src.room import Room
 
 
 class MapDungeon:
-    map_size: int = 15
-    rooms: list = []
-
     def __init__(self, size: int = 15) -> None:
         """
         @brief constructeur
         @param : int taille de la map
         """
         super().__init__()
+        self.rooms = []
+        self.map_size = size
         self.gen_map(size)
 
     def __str__(self) -> str:
