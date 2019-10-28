@@ -53,10 +53,19 @@ class Game:
         self.character.mana = 3
 
         hud_cursor = 0
+        max_hud_cursor = 2
 
         # Boucle infinie
         close = False
         while not close:
+            px, py = self.character.get_pos()
+            current_room = self.map.get_room(px, py)
+
+            if current_room.is_exit():
+                max_hud_cursor = 3
+            else:
+                max_hud_cursor = 2
+
             # Treating Events
             for event in pygame.event.get():
                 if event.type == QUIT:
@@ -71,7 +80,7 @@ class Game:
                         elif hud_cursor == 0:  # Si nous sommes sur la case de mouvement, on change de salle (si possible)
                             self.change_room()
                     elif event.key == pygame.K_DOWN:  # Fleche du bas
-                        if hud_cursor < 2:
+                        if hud_cursor < max_hud_cursor:
                             hud_cursor += 1
                     # Si nous sommes sur la case de mouvement et que nous effectuons une rotation
                     elif event.key == pygame.K_RIGHT and hud_cursor == 0:
@@ -82,12 +91,11 @@ class Game:
             # Background
             self.view.print_clear()
             # Room
-            px, py = self.character.get_pos()
-            self.view.print_room(self.map.get_room(px, py), self.character)
+            self.view.print_room(current_room, self.character)
             # Map
             self.view.print_map()
             # HUD Right Cases
-            self.view.print_cases_hud(hud_cursor)
+            self.view.print_cases_hud(hud_cursor, current_room.is_exit())
             # HUD Fillers
             self.view.print_fillers(self.character)
 
