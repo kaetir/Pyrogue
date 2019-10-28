@@ -269,7 +269,7 @@ class View:
             (int(self.wwidth * 0.77 + 7 * size_width * 4 / tempx + 3 * item_width),
              int(self.wheight * 0.30 + 7 * size_width * 4 / tempx + 3 * item_height)))
 
-    def print_map(self):
+    def print_map(self, map=None):
         """
         @brief Affichage de la map a l'ecran
         """

@@ -56,7 +56,7 @@ class Game:
 
         self.character.set_pos(px, py)
         self.map.get_room(px, py).discover()
-        self.map.disp_map("map.png")
+        #self.map.disp_map("map.png")
 
     def start_game(self):
         """

@@ -6,9 +6,11 @@
 from math import floor
 from random import random
 
+import matplotlib
+matplotlib.use("Agg")
 import matplotlib.pyplot as plt
+
 from matplotlib.patches import Rectangle
-import numpy as np
 
 from src.room import Room
 
@@ -125,7 +127,7 @@ class MapDungeon:
                 rom = r.get_pos()
                 plt.plot([rom[0] - 0.5, rom[0] - 0.5, rom[0] + 0.5, rom[0] + 0.5, rom[0] - 0.5],
                          [rom[1] - 0.5, rom[1] + 0.5, rom[1] + 0.5, rom[1] - 0.5, rom[1] - 0.5],
-                         color="black", lw=4)
+                         color="w", lw=4)
                 # affichage des portes
                 if r.doors[r.top] == 1:
                     self._porte(rom[0], rom[1], r.top)
@@ -144,8 +146,8 @@ class MapDungeon:
 
         # sauvegarde du graph
         if filename is not None:
-            # plt.savefig(filename, transparent=True)
-            plt.savefig(filename, transparent=False)
+            plt.savefig(filename, transparent=True)
+            #plt.savefig(filename, transparent=False)
         else:
             # affichage du graph
-            plt.show()
+            return plt.draw()
