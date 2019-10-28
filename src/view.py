@@ -36,6 +36,7 @@ class View:
     numbers_tiles = None
     inventory_tab = None
     inventory_cursor = None
+    active_tab = None
 
     def __init__(self) -> None:
         # Creation de la fenetre
@@ -60,6 +61,7 @@ class View:
         self.numbers_tiles = load_tile_table("hud/numbers.png", 11, 1)
         self.inventory_tab = load_tile_table("inventory/inventory_tab.png", 1, 1)
         self.inventory_cursor = load_tile_table("inventory/inventory_cursor.png", 1, 1)
+        self.active_tab = load_tile_table("inventory/active_tab.png", 1, 1)
 
     def print_clear(self):
         """
@@ -112,7 +114,33 @@ class View:
         # Le curseur
         tempcx, tempcy = self.inventory_cursor[0].get_size()
         size_cursor_width, size_cursor_height = size_width * tempcx / temptx, size_height * tempcy / tempty
-        self.window.blit(pygame.transform.scale(self.inventory_cursor[0], (int(size_cursor_width), int(size_cursor_height))), (int((cursor[0]+1) * size_width * 4 / temptx + cursor[0] * size_cursor_width), int((cursor[1]+1) * size_width * 4 / temptx + cursor[1] * size_cursor_height)))
+        self.window.blit(
+            pygame.transform.scale(self.inventory_cursor[0], (int(size_cursor_width), int(size_cursor_height))), (
+            int((cursor[0] + 1) * size_width * 4 / temptx + cursor[0] * size_cursor_width),
+            int((cursor[1] + 1) * size_width * 4 / temptx + cursor[1] * size_cursor_height)))
+
+    def print_active_tab(self, char, cursor=-1):
+        """
+        @brief Affiche la barre active du joueur
+        @param char : personnage dont on affiche la barre active
+        @param cursor : curseur dans la barre active (non Necessaire)
+        """
+        # On recupere la position sous l'affichage de la zone principale
+        tempx, tempy = self.wall_tiles[0].get_size()
+        starty = self.wwidth * 0.55 * tempy / tempx
+
+        temptx, tempty = self.active_tab[0].get_size()
+        size_width, size_height = self.wwidth * 0.40, self.wwidth * 0.40 * tempty / temptx
+        self.window.blit(pygame.transform.scale(self.active_tab[0], (int(size_width), int(size_height))), (self.wwidth * 0.575, starty))
+
+        # Le curseur
+        if 0 <= cursor < 4:
+            tempcx, tempcy = self.inventory_cursor[0].get_size()
+            size_cursor_width, size_cursor_height = size_width * tempcx / temptx, size_height * tempcy / tempty
+            self.window.blit(
+                pygame.transform.scale(self.inventory_cursor[0], (int(size_cursor_width), int(size_cursor_height))), (
+                int(self.wwidth * 0.575 + (cursor + 1) * size_width * 22 / temptx + cursor * size_cursor_width),
+                int(starty + size_width * 4 / temptx)))
 
     def print_map(self):
         """
@@ -175,8 +203,6 @@ class View:
                 self.window.blit(pygame.transform.scale(self.cases_hud[i * 2 + 6], (size_width, size_height)),
                                  (int(self.wwidth * 0.56), int(self.wheight * 0.30 + self.wheight * 0.10 * 3)))
 
-
-
     def print_numbers(self, number, is_percent, width, height, posx, posy):
         """
         @brief Affiche un nombre (positif entier) a l'ecran (en pourcentages ou non, auquel cas il est fixe a gauche de la position)
@@ -229,8 +255,8 @@ class View:
         for i in range(0, 3):
             self.window.blit(
                 pygame.transform.scale(self.fills_tubes[0], (int(size_width_tubes), int(size_height_tubes))), (
-                int(size_width_main),
-                int(starty + self.wheight * 0.01 + size_height_main / 16 + (5 * size_height_main / 16) * i)))
+                    int(size_width_main),
+                    int(starty + self.wheight * 0.01 + size_height_main / 16 + (5 * size_height_main / 16) * i)))
 
         # Fills Filler
         size_height_filler = size_height_tubes * 14 / 16
@@ -238,7 +264,7 @@ class View:
             size_width_filler = percentages[i] * size_width_tubes
             self.window.blit(
                 pygame.transform.scale(self.fills_fillers[i], (int(size_width_filler), int(size_height_filler))), (
-                int(size_width_main), int(starty + self.wheight * 0.01 + size_height_main / 16 + (
+                    int(size_width_main), int(starty + self.wheight * 0.01 + size_height_main / 16 + (
                             5 * size_height_main / 16) * i + size_height_main / 64)))
 
         # Fills Filler
@@ -254,9 +280,9 @@ class View:
             self.print_numbers(percentages[i] * 100, True, size_width_number, size_height_number,
                                size_width_main + size_width_tubes,
                                starty + self.wheight * 0.01 + size_height_main / 16 + (
-                                           5 * size_height_main / 16) * i + size_height_main / 32)
+                                       5 * size_height_main / 16) * i + size_height_main / 32)
         # Numbers Plain
         for i in range(0, 3):
             self.print_numbers(plain_numbers[i], False, size_width_number, size_height_number, size_width_main,
                                starty + self.wheight * 0.01 + size_height_main / 16 + (
-                                           5 * size_height_main / 16) * i + size_height_main / 32)
+                                       5 * size_height_main / 16) * i + size_height_main / 32)

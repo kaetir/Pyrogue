@@ -157,6 +157,8 @@ class Game:
             self.view.print_map()
             # HUD Right Cases
             self.view.print_cases_hud(hud_cursor, current_room.is_exit())
+            # HUD Active Tab
+            self.view.print_active_tab(self.character)
             # HUD Fillers
             self.view.print_fillers(self.character)
 
