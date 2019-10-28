@@ -160,14 +160,17 @@ class Game:
             if game_area == 0:
                 # Room
                 self.view.print_room(current_room, self.character)
+                # Map
+                self.view.print_map()
             elif game_area == 1:
-                # Room
+                # Inventory
                 self.view.print_inventory(self.character, inventory_cursor)
+                # Description
 
-            # Map
-            self.view.print_map()
             # HUD Right Cases
             self.view.print_cases_hud(hud_cursor, current_room.is_exit())
+            # HUD Active Equipment
+            self.view.print_active_equipment(self.character)
             # HUD Active Tab
             self.view.print_active_tab(self.character)
             # HUD Fillers

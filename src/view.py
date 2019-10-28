@@ -25,12 +25,12 @@ class View:
     items_id = {
         "error": 77,
         "no_helmet": 0,
-        "no_armor": 1,
+        "no_chest": 1,
         "no_legs": 2,
         "no_boots": 3,
         "no_gloves": 4,
-        "no_bracelets": 5,
-        "no_amulets": 6,
+        "no_bracelet": 5,
+        "no_amulet": 6,
         "no_weapon": 7,
         "no_shield": 8,
         "amulet1": 9,
@@ -53,6 +53,7 @@ class View:
     inventory_tab = None
     inventory_cursor = None
     active_tab = None
+    active_equipment = None
     items_tiles = None
 
     def __init__(self) -> None:
@@ -79,6 +80,7 @@ class View:
         self.inventory_tab = load_tile_table("inventory/inventory_tab.png", 1, 1)
         self.inventory_cursor = load_tile_table("inventory/inventory_cursor.png", 1, 1)
         self.active_tab = load_tile_table("inventory/active_tab.png", 1, 1)
+        self.active_equipment = load_tile_table("inventory/active_equipment.png", 1, 1)
         self.items_tiles = load_tile_table("inventory/items.png", 10, 8)
 
     def print_clear(self):
@@ -169,6 +171,104 @@ class View:
                 int(self.wwidth * 0.60 + (cursor[0] + 1) * size_width * 22 / temptx + cursor[0] * size_cursor_width),
                 int(starty + size_width * 4 / temptx + cursor[1] * (size_width * 22 / temptx + size_cursor_width))))
 
+    def print_active_equipment(self, char):
+        """
+        @brief Affiche l'equipement actif du joueur
+        @param char : personnage dont on affiche l'equipement
+        """
+        # On affiche la zone principale (les cases)
+        tempx, tempy = self.active_equipment[0].get_size()
+        size_width, size_height = self.wwidth * 0.22, self.wwidth * 0.22 * tempy / tempx
+        self.window.blit(pygame.transform.scale(self.active_equipment[0], (int(size_width), int(size_height))),
+                         (int(self.wwidth * 0.77), int(self.wheight * 0.30)))
+
+        # Taille visuelle des objets
+        tempix, tempiy = self.items_tiles[0].get_size()
+        item_width, item_height = size_width * tempix / tempx, size_height * tempiy / tempy
+
+        id = 0;
+        #Jewel1
+        if char.jewel1 is None:
+            id = self.items_id["no_amulet"]
+        else:
+            id = char.jewel1.get_icon_id()
+        self.window.blit(
+            pygame.transform.scale(self.items_tiles[id], (int(item_width), int(item_height))),
+            (int(self.wwidth * 0.77 + size_width * 4 / tempx),
+             int(self.wheight * 0.30 + size_width * 4 / tempx)))
+        #Jewel2
+        if char.jewel2 is None:
+            id = self.items_id["no_amulet"]
+        else:
+            id = char.jewel2.get_icon_id()
+        self.window.blit(
+            pygame.transform.scale(self.items_tiles[id], (int(item_width), int(item_height))),
+            (int(self.wwidth * 0.77 + size_width * 4 / tempx),
+             int(self.wheight * 0.30 + 3 * size_width * 4 / tempx + item_height)))
+        # Helmet
+        if char.helmet is None:
+            id = self.items_id["no_helmet"]
+        else:
+            id = char.helmet.get_icon_id()
+        self.window.blit(
+            pygame.transform.scale(self.items_tiles[id], (int(item_width), int(item_height))),
+            (int(self.wwidth * 0.77 + 3 * size_width * 4 / tempx + item_width),
+             int(self.wheight * 0.30 + size_width * 4 / tempx)))
+        # Chest
+        if char.chest is None:
+            id = self.items_id["no_chest"]
+        else:
+            id = char.chest.get_icon_id()
+        self.window.blit(
+            pygame.transform.scale(self.items_tiles[id], (int(item_width), int(item_height))),
+            (int(self.wwidth * 0.77 + 3 * size_width * 4 / tempx + item_width),
+             int(self.wheight * 0.30 + 3 * size_width * 4 / tempx + item_height)))
+        # Legs
+        if char.legs is None:
+            id = self.items_id["no_legs"]
+        else:
+            id = char.legs.get_icon_id()
+        self.window.blit(
+            pygame.transform.scale(self.items_tiles[id], (int(item_width), int(item_height))),
+            (int(self.wwidth * 0.77 + 3 * size_width * 4 / tempx + item_width),
+             int(self.wheight * 0.30 + 5 * size_width * 4 / tempx + 2 * item_height)))
+        # Boots
+        if char.boots is None:
+            id = self.items_id["no_boots"]
+        else:
+            id = char.boots.get_icon_id()
+        self.window.blit(
+            pygame.transform.scale(self.items_tiles[id], (int(item_width), int(item_height))),
+            (int(self.wwidth * 0.77 + 3 * size_width * 4 / tempx + item_width),
+             int(self.wheight * 0.30 + 7 * size_width * 4 / tempx + 3 * item_height)))
+        # Gloves
+        if char.gloves is None:
+            id = self.items_id["no_gloves"]
+        else:
+            id = char.gloves.get_icon_id()
+        self.window.blit(
+            pygame.transform.scale(self.items_tiles[id], (int(item_width), int(item_height))),
+            (int(self.wwidth * 0.77 + 5 * size_width * 4 / tempx + 2 * item_width),
+             int(self.wheight * 0.30 + 3 *size_width * 4 / tempx + item_height)))
+        # Weapon
+        if char.weapon is None:
+            id = self.items_id["no_weapon"]
+        else:
+            id = char.weapon.get_icon_id()
+        self.window.blit(
+            pygame.transform.scale(self.items_tiles[id], (int(item_width), int(item_height))),
+            (int(self.wwidth * 0.77 + 7 * size_width * 4 / tempx + 3 * item_width),
+             int(self.wheight * 0.30 + 5 * size_width * 4 / tempx + 2 * item_height)))
+        # Weapon
+        if char.shield is None:
+            id = self.items_id["no_shield"]
+        else:
+            id = char.shield.get_icon_id()
+        self.window.blit(
+            pygame.transform.scale(self.items_tiles[id], (int(item_width), int(item_height))),
+            (int(self.wwidth * 0.77 + 7 * size_width * 4 / tempx + 3 * item_width),
+             int(self.wheight * 0.30 + 7 * size_width * 4 / tempx + 3 * item_height)))
+
     def print_map(self):
         """
         @brief Affichage de la map a l'ecran
@@ -198,7 +298,7 @@ class View:
         @param cursor : Ajout de la case commerce
         """
         tempx, tempy = self.cases_hud[0].get_size()
-        size_width, size_height = int(self.wwidth * 0.25), int(self.wwidth * 0.25 * tempy / tempx)
+        size_width, size_height = int(self.wwidth * 0.20), int(self.wwidth * 0.20 * tempy / tempx)
 
         # Cases fleches
         if cursor == 0:
@@ -212,10 +312,10 @@ class View:
         for i in range(0, 2):
             if cursor == i + 1:
                 self.window.blit(pygame.transform.scale(self.cases_hud[i * 2 + 3], (size_width, size_height)),
-                                 (int(self.wwidth * 0.56), int(self.wheight * 0.30 + self.wheight * 0.10 * (i + 1))))
+                                 (int(self.wwidth * 0.56), int(self.wheight * 0.30 + self.wheight * 0.08 * (i + 1))))
             else:
                 self.window.blit(pygame.transform.scale(self.cases_hud[i * 2 + 2], (size_width, size_height)),
-                                 (int(self.wwidth * 0.56), int(self.wheight * 0.30 + self.wheight * 0.10 * (i + 1))))
+                                 (int(self.wwidth * 0.56), int(self.wheight * 0.30 + self.wheight * 0.08 * (i + 1))))
 
         if exit_case or merchant_case:
             i = 0
@@ -225,10 +325,10 @@ class View:
                 i = i
             if cursor == 3:
                 self.window.blit(pygame.transform.scale(self.cases_hud[i * 2 + 7], (size_width, size_height)),
-                                 (int(self.wwidth * 0.56), int(self.wheight * 0.30 + self.wheight * 0.10 * 3)))
+                                 (int(self.wwidth * 0.56), int(self.wheight * 0.30 + self.wheight * 0.08 * 3)))
             else:
                 self.window.blit(pygame.transform.scale(self.cases_hud[i * 2 + 6], (size_width, size_height)),
-                                 (int(self.wwidth * 0.56), int(self.wheight * 0.30 + self.wheight * 0.10 * 3)))
+                                 (int(self.wwidth * 0.56), int(self.wheight * 0.30 + self.wheight * 0.08 * 3)))
 
     def print_numbers(self, number, is_percent, width, height, posx, posy):
         """
@@ -242,9 +342,12 @@ class View:
         """
         number = int(number)
         letters = []  # Chiffres a affiche un a un
-        while number > 0:
-            letters.insert(0, number % 10)
-            number = number // 10
+        if number == 0:
+            letters.insert(0,0)
+        else:
+            while number > 0:
+                letters.insert(0, number % 10)
+                number = number // 10
 
         for i in range(0, len(letters)):
             if is_percent:

@@ -49,9 +49,19 @@ class Character:
         self.orientation = 0  # % 4 : orientation du personnage dans la salle
         self.position = [0, 0]  # position du personnage sur la map
 
+        # INVENTAIRES
         self.inventory = []  # Rempli d'items
         self.active_usables = []
         self.active_spells = []
+        self.helmet = None
+        self.chest = None
+        self.legs = None
+        self.boots = None
+        self.gloves = None
+        self.weapon = None
+        self.shield = None
+        self.jewel1 = None
+        self.jewel2 = None
 
     def __str__(self) -> str:
         return self.name + " de niveau " + str(self.level)
