@@ -331,8 +331,6 @@ class View:
         raw_data, size = map
         surf = pygame.image.frombuffer(raw_data, size, "RGB")
         surf.set_colorkey((255,255,255))
-        # map = load_tile_table("map.png", 1, 1)
-        # tempx, tempy = map[0].get_size()
         tempx, tempy = surf.get_size()
         size_width, size_height = int(self.wheight * 0.30 * tempx / tempy), int(self.wheight * 0.30)
         self.window.blit(pygame.transform.scale(surf, (size_width, size_height)),

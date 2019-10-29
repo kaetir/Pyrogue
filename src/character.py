@@ -41,6 +41,7 @@ class Character:
         self.damage_min: int = 1
         self.damage_max: int = 4
         self.armor: int = 0
+        self.max_armor: int = 1
         self.level: int = 1
         self.experience: int = 0
 
@@ -132,12 +133,15 @@ class Character:
         """
         print("### LEVEL UP {}###".format(self.level + 1))
         self.level += 1
-        self.health += randint(1, self.level)
-        self.armor += randint(1, self.level)
+        self.max_health += randint(1, self.level)
+        self.health = self.max_health
+        self.max_armor += randint(1, self.level)
+        self.armor = self.max_armor
         self.chance_of_dodge += random() / 10 if self.chance_of_dodge < 0.8 else 0.
         self.chance_of_parry += random() / 10 if self.chance_of_parry < 0.8 else 0
         self.chance_of_critical += random() / 3 if self.chance_of_parry < 0.8 else 0
         self.max_mana += randint(1, self.level)
+        self.mana = self.max_mana
         self.damage_min += randint(1, self.level)
 
     def take_damage(self, amount: int) -> bool:

@@ -4,10 +4,6 @@ from pygame.constants import QUIT, VIDEORESIZE, KEYDOWN, K_RETURN, K_UP, K_DOWN,
 from src.view import View
 from src.character import Character
 from src.map import MapDungeon
-from src.item import *
-
-from math import floor
-from random import random
 
 
 class Game:
@@ -32,7 +28,6 @@ class Game:
             self.actual_level = 0
 
         self.map = MapDungeon(15)
-        self.map.disp_map("map.png")
         self.actual_level += 1
         self.character.set_pos(0, 0)
 
