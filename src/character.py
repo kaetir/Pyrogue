@@ -97,7 +97,7 @@ class Character:
         return self.experience / self.max_experience
 
     def get_orientation(self):
-        return self.orientation
+        return self.orientation % 4
 
     def set_orientation(self, new_orient):
         self.orientation = new_orient % 4

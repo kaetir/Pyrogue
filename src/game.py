@@ -164,7 +164,7 @@ class Game:
                 # Room
                 self.view.print_room(current_room, self.character)
                 # Map
-                self.view.print_map()
+                self.view.print_map(self.map.disp_map(player=self.character))
             elif game_area == 1:
                 # Inventory
                 self.view.print_inventory(self.character, inventory_cursor)

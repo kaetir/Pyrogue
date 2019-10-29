@@ -137,16 +137,17 @@ class View:
         size_cursor_width, size_cursor_height = size_width * tempcx / temptx, size_height * tempcy / tempty
         self.window.blit(
             pygame.transform.scale(self.inventory_cursor[0], (int(size_cursor_width), int(size_cursor_height))), (
-            int((cursor[0] + 1) * size_width * 4 / temptx + cursor[0] * size_cursor_width),
-            int((cursor[1] + 1) * size_width * 4 / temptx + cursor[1] * size_cursor_height)))
+                int((cursor[0] + 1) * size_width * 4 / temptx + cursor[0] * size_cursor_width),
+                int((cursor[1] + 1) * size_width * 4 / temptx + cursor[1] * size_cursor_height)))
 
         # Objets de l'inventaire
         inventory = char.get_inventory()
         for i in range(0, len(inventory)):
             self.window.blit(
-                pygame.transform.scale(self.items_tiles[inventory[i].get_icon_id()], (int(size_cursor_width), int(size_cursor_height))), (
-                    int((i%8 + 1) * size_width * 4 / temptx + (i%8) * size_cursor_width),
-                    int((i//8 + 1) * size_width * 4 / temptx + (i//8) * size_cursor_height)))
+                pygame.transform.scale(self.items_tiles[inventory[i].get_icon_id()],
+                                       (int(size_cursor_width), int(size_cursor_height))), (
+                    int((i % 8 + 1) * size_width * 4 / temptx + (i % 8) * size_cursor_width),
+                    int((i // 8 + 1) * size_width * 4 / temptx + (i // 8) * size_cursor_height)))
 
     def print_active_tab(self, char, cursor=None):
         """
@@ -160,7 +161,8 @@ class View:
 
         temptx, tempty = self.active_tab[0].get_size()
         size_width, size_height = self.wwidth * 0.35, self.wwidth * 0.35 * tempty / temptx
-        self.window.blit(pygame.transform.scale(self.active_tab[0], (int(size_width), int(size_height))), (self.wwidth * 0.60, starty))
+        self.window.blit(pygame.transform.scale(self.active_tab[0], (int(size_width), int(size_height))),
+                         (self.wwidth * 0.60, starty))
 
         # Le curseur
         if cursor is not None:
@@ -168,8 +170,9 @@ class View:
             size_cursor_width, size_cursor_height = size_width * tempcx / temptx, size_height * tempcy / tempty
             self.window.blit(
                 pygame.transform.scale(self.inventory_cursor[0], (int(size_cursor_width), int(size_cursor_height))), (
-                int(self.wwidth * 0.60 + (cursor[0] + 1) * size_width * 22 / temptx + cursor[0] * size_cursor_width),
-                int(starty + size_width * 4 / temptx + cursor[1] * (size_width * 22 / temptx + size_cursor_width))))
+                    int(self.wwidth * 0.60 + (cursor[0] + 1) * size_width * 22 / temptx + cursor[
+                        0] * size_cursor_width),
+                    int(starty + size_width * 4 / temptx + cursor[1] * (size_width * 22 / temptx + size_cursor_width))))
 
     def print_active_equipment(self, char):
         """
@@ -187,7 +190,7 @@ class View:
         item_width, item_height = size_width * tempix / tempx, size_height * tempiy / tempy
 
         id = 0;
-        #Jewel1
+        # Jewel1
         if char.jewel1 is None:
             id = self.items_id["no_amulet"]
         else:
@@ -196,7 +199,7 @@ class View:
             pygame.transform.scale(self.items_tiles[id], (int(item_width), int(item_height))),
             (int(self.wwidth * 0.77 + size_width * 4 / tempx),
              int(self.wheight * 0.30 + size_width * 4 / tempx)))
-        #Jewel2
+        # Jewel2
         if char.jewel2 is None:
             id = self.items_id["no_amulet"]
         else:
@@ -249,7 +252,7 @@ class View:
         self.window.blit(
             pygame.transform.scale(self.items_tiles[id], (int(item_width), int(item_height))),
             (int(self.wwidth * 0.77 + 5 * size_width * 4 / tempx + 2 * item_width),
-             int(self.wheight * 0.30 + 3 *size_width * 4 / tempx + item_height)))
+             int(self.wheight * 0.30 + 3 * size_width * 4 / tempx + item_height)))
         # Weapon
         if char.weapon is None:
             id = self.items_id["no_weapon"]
@@ -273,10 +276,14 @@ class View:
         """
         @brief Affichage de la map a l'ecran
         """
-        map = load_tile_table("map.png", 1, 1)
-        tempx, tempy = map[0].get_size()
+        raw_data, size = map
+        surf = pygame.image.frombuffer(raw_data, size, "RGB")
+        surf.set_colorkey((255,255,255))
+        # map = load_tile_table("map.png", 1, 1)
+        # tempx, tempy = map[0].get_size()
+        tempx, tempy = surf.get_size()
         size_width, size_height = int(self.wheight * 0.30 * tempx / tempy), int(self.wheight * 0.30)
-        self.window.blit(pygame.transform.scale(map[0], (size_width, size_height)),
+        self.window.blit(pygame.transform.scale(surf, (size_width, size_height)),
                          (int(self.wwidth * (0.55 + 0.45 / 2) - size_width / 2), 0))
 
     def print_description(self, item):
@@ -284,7 +291,7 @@ class View:
         @brief Affiche la description d'un objet par dessus la map
         :param item: Objet dont on note la description
         """
-        i=1
+        i = 1
 
     def resize_event(self, event):
         """
@@ -350,7 +357,7 @@ class View:
         number = int(number)
         letters = []  # Chiffres a affiche un a un
         if number == 0:
-            letters.insert(0,0)
+            letters.insert(0, 0)
         else:
             while number > 0:
                 letters.insert(0, number % 10)
