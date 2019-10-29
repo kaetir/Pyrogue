@@ -133,6 +133,7 @@ class Game:
                         elif event.key == K_ESCAPE:
                             # On quitte l'inventaire
                             game_area = 0
+                            hud_cursor = 1
 
                         elif event.key == K_UP:  # Fleche du haut
                             if inventory_cursor[1] > 0:
