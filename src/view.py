@@ -55,6 +55,9 @@ class View:
     active_tab = None
     active_equipment = None
     items_tiles = None
+    # Font
+    font_name = None
+    fonts_stock = {} # Stock les polices selon leurs tailles (evite de reouvrir la police chaque fois que l'on reecri a la meme taille)
 
     def __init__(self) -> None:
         # Creation de la fenetre
@@ -82,6 +85,55 @@ class View:
         self.active_tab = load_tile_table("inventory/active_tab.png", 1, 1)
         self.active_equipment = load_tile_table("inventory/active_equipment.png", 1, 1)
         self.items_tiles = load_tile_table("inventory/items.png", 10, 8)
+        # Font
+        self.font_name = "hud/minecraftia.ttf"
+
+    def print_text(self, text, size, x, y, max_width):
+        """
+        @brief Affiche un texte a l'ecran
+        :param text: La String a afficher
+        :param size: Taille en pixel du texte
+        :param x: Position x
+        :param y: Position y
+        :param max_width: Taille maximale du texte avant de faire un retour a la ligne
+        """
+        # Check si la police existe deja ou non
+        if size in self.fonts_stock:
+            font = self.fonts_stock[size]
+        else:
+            font = pygame.font.Font(self.font_name, size)
+            self.fonts_stock[size] = font
+
+        text_surface = font.render(text, 0, (255, 255, 255))
+        width, max_height = text_surface.get_size()
+        if width < max_width: # Si nous avons assez de place on affiche la ligne sur sa ligne
+            self.window.blit(text_surface, (x, y))
+        else: # Sinon, nous calculons des retours a la ligne
+            pos_height = 0
+            splitted_text = text.split()
+            while len(splitted_text) > 0:
+                text_temp = ""
+                text_temp_printable = text_temp
+                width = 0
+                while width < max_width and len(splitted_text) > 0:
+                    text_temp_printable = text_temp
+                    text_temp += splitted_text.pop(0)
+                    text_surface = font.render(text_temp, 0, (255, 255, 255))
+                    width, height = text_surface.get_size()
+                    text_temp += " "
+
+                if width > max_width:
+                    splitted_temp = text_temp.split()
+                    if len(splitted_temp) == 1: # Si nous n'avons qu'un seul mot et qu'il depasse quand meme on affiche
+                        text_temp_printable = text_temp
+                    else: # sinon on ajoute le mot depassant a la ligne d'apres
+                        splitted_text.insert(0, splitted_temp[len(splitted_temp) - 1])
+
+                text_surface = font.render(text_temp_printable, 0, (255, 255, 255))
+                self.window.blit(text_surface, (x, y + pos_height))
+                pos_height += max_height
+
+
 
     def print_clear(self):
         """

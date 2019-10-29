@@ -169,7 +169,7 @@ class Game:
                 # Inventory
                 self.view.print_inventory(self.character, inventory_cursor)
                 # Description
-
+                
             # HUD Right Cases
             self.view.print_cases_hud(hud_cursor, current_room.is_exit())
             # HUD Active Equipment
