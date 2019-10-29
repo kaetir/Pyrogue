@@ -1,11 +1,11 @@
 """
 - Monsters are also characters
--  Your character has to battle against them
+-  Your character has to Battle against them
 - They can drop one or more objects when they die, plus an amount of gold, those you can add it to an Inventory.
 
 """
-import src.character as Character
-import src.item as Item
+from src.character import Character
+from src.item import Item
 from typing import List
 from random import randint
 

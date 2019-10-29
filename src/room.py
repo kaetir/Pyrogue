@@ -1,12 +1,11 @@
 """
     -   containing
-        - characters, such as monsters to battle, real persons to interact with,
+        - characters, such as monsters to Battle, real persons to interact with,
         - find objects,
         - or nothing happen while crossing rooms.
 
 """
 from __future__ import annotations
-
 
 
 class Room:
@@ -26,7 +25,7 @@ class Room:
         super().__init__()
         # top, right, bottom, left
         if doors is None:
-            doors = [0, 0, 0, 0]
+            self.doors = [0, 0, 0, 0]
         else:
             self.doors = doors
         self.x = x
@@ -38,7 +37,7 @@ class Room:
         return "Room %d : %d" % (self.x, self.y)
 
     def __str__(self) -> str:
-        return "pos :" + str(self.x) + " " + str(self.y) + "\n" + self.inside
+        return "pos :" + str(self.x) + " " + str(self.y) + "\n"
 
     def get_doors(self):
         return self.doors

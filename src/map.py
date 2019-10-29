@@ -8,14 +8,13 @@ from random import random
 
 import matplotlib
 
-matplotlib.use("Agg")
 import matplotlib.pyplot as plt
-
-from matplotlib.patches import Rectangle
 import matplotlib.backends.backend_agg as agg
 
 from src.room import Room
 from src.character import Character
+
+matplotlib.use("Agg")
 
 
 class MapDungeon:
@@ -105,8 +104,8 @@ class MapDungeon:
                       [-.6, -.1]][dir]
         c = 'w'
         l = 0.2
-        x = [centerx + offx, centerx + offx + l, centerx + offx + l, centerx + offx, centerx + offx ]
-        y = [centery + offy, centery + offy    , centery + offy + l, centery + offy + l, centery + offy]
+        x = [centerx + offx, centerx + offx + l, centerx + offx + l, centerx + offx, centerx + offx]
+        y = [centery + offy, centery + offy, centery + offy + l, centery + offy + l, centery + offy]
         plot.fill(x, y, c, zorder=3)
         return plot
 
@@ -129,7 +128,7 @@ class MapDungeon:
                         [rom[1] - 0.5, rom[1] + 0.5, rom[1] + 0.5, rom[1] - 0.5, rom[1] - 0.5],
                         color="r", lw=4)
 
-            # affichage des portes
+                # affichage des portes
                 if r.doors[r.top] == 1:
                     self._porte(ax, rom[0], rom[1], r.top)
                 if r.doors[r.left] == 1:
@@ -138,6 +137,9 @@ class MapDungeon:
                     self._porte(ax, rom[0], rom[1], r.right)
                 if r.doors[r.bottom] == 1:
                     self._porte(ax, rom[0], rom[1], r.bottom)
+
+        if self.rooms[-1].is_discovered():
+            ax.scatter(self.rooms[-1].get_pos()[0], self.rooms[-1].get_pos()[1], s=100, c="b", marker="X")
 
         if player is not None:
             m = ["^", ">", "v", "<"][player.get_orientation()]

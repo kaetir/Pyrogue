@@ -3,7 +3,7 @@
 - He has stats such as:
 ·         Health point when it reaches 0, you die and start back on another generated map,
                 with no level, no equipment, gold and Inventory emptied
-·         Shield point that block a certain amount of damage and decreased after taking damages
+·         armor point that block a certain amount of damage and decreased after taking damages
 ·         Chance of dodge (%) to avoid attacks (damages are nullified)
 ·         Chance of parry (%) to reduce amount of damage by 70%
 ·         Chance of critical hit (%) to double the amount of damage inflicted
@@ -13,7 +13,7 @@
 ·         Level, each leave increase a small of the characteristics above
 ·         Experience bar, when filled, increase current level by one
 
-- Your character can earn experience to gain level after a won battle. When you level up, his stats are raised, but
+- Your character can earn experience to gain level after a won Battle. When you level up, his stats are raised, but
             existing monsters stats are raising too.
 
 """
@@ -31,19 +31,18 @@ class Character:
         @param : str nom du personnage
         """
         self.name = name
-        self.health = 20
-        self.max_health = 20
-        self.chance_of_dodge = 0.05
-        self.chance_of_parry = 0.05
-        self.chance_of_critical = 0.1
-        self.mana = 10
-        self.max_mana = 10
-        self.damage_min = 1
-        self.damage_max = 4
-        self.armor = 0
-        self.level = 1
-        self.experience = 0
-        self.max_experience = 20
+        self.health: int = 20
+        self.max_health: int = 20
+        self.chance_of_dodge: float = 0.05
+        self.chance_of_parry: float = 0.05
+        self.chance_of_critical: float = 0.1
+        self.mana: int = 10
+        self.max_mana: int = 10
+        self.damage_min: int = 1
+        self.damage_max: int = 4
+        self.armor: int = 0
+        self.level: int = 1
+        self.experience: int = 0
 
         # Utiles pour le personnage Principal
         self.orientation = 0  # % 4 : orientation du personnage dans la salle
@@ -94,7 +93,7 @@ class Character:
         return self.mana / self.max_mana
 
     def get_experience_percent(self):
-        return self.experience / self.max_experience
+        return self.experience / (fib_rec(self.level) * 100)
 
     def get_orientation(self):
         return self.orientation % 4
@@ -110,7 +109,7 @@ class Character:
         """
         if len(self.inventory) == 6*8:
             return False
-        #Else
+        # Else
         self.inventory.append(item)
         return True
 
@@ -134,11 +133,11 @@ class Character:
         print("### LEVEL UP {}###".format(self.level + 1))
         self.level += 1
         self.health += randint(1, self.level)
-        self.shield += randint(1, self.level)
+        self.armor += randint(1, self.level)
         self.chance_of_dodge += random() / 10 if self.chance_of_dodge < 0.8 else 0.
         self.chance_of_parry += random() / 10 if self.chance_of_parry < 0.8 else 0
         self.chance_of_critical += random() / 3 if self.chance_of_parry < 0.8 else 0
-        self.mana_points += randint(1, self.level)
+        self.max_mana += randint(1, self.level)
         self.damage_min += randint(1, self.level)
 
     def take_damage(self, amount: int) -> bool:
@@ -154,17 +153,17 @@ class Character:
             return True
         if random() < self.chance_of_parry:
             print(self.name + " parry")
-            if self.shield - math.ceil(amount * 0.3) > 0:
-                self.shield, amount = self.shield - math.ceil(amount * 0.3), 0
+            if self.armor - math.ceil(amount * 0.3) > 0:
+                self.armor, amount = self.armor - math.ceil(amount * 0.3), 0
             else:
-                self.shield, amount = 0, math.ceil(amount * 0.3) - self.shield
+                self.armor, amount = 0, math.ceil(amount * 0.3) - self.armor
             self.health -= (1 - self.armor) * amount
             return self.is_alive()
         print(self.name + " prend dans le cul")
-        if self.shield - amount > 0:
-            self.shield, amount = self.shield - amount, 0
+        if self.armor - amount > 0:
+            self.armor, amount = self.armor - amount, 0
         else:
-            self.shield, amount = 0, amount - self.shield
+            self.armor, amount = 0, amount - self.armor
 
         self.health -= (1 - self.armor) * amount
         return self.is_alive()
@@ -188,7 +187,7 @@ class Character:
         @brief Affiche un joli résumé formaté
         """
         print(self)
-        print("HP :", self.health, " SP :", self.shield, "MP :", self.mana_points)
+        print("HP :", self.health, " SP :", self.armor, "MP :", self.mana)
 
     def is_alive(self) -> bool:
         """

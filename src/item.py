@@ -27,14 +27,15 @@ class Item:
     def set_icon_id(self, id):
         self.icon_id = id
 
-    def random(self):
+    @staticmethod
+    def random():
         typ = randint(1, 3)
         if typ == 1:
             # equipement
             return Equipment()
         elif typ == 2:
             # consumable
-            return consumables()
+            return Consumables()
 
 
 class Equipment(Item):
