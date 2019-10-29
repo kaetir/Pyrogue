@@ -279,6 +279,13 @@ class View:
         self.window.blit(pygame.transform.scale(map[0], (size_width, size_height)),
                          (int(self.wwidth * (0.55 + 0.45 / 2) - size_width / 2), 0))
 
+    def print_description(self, item):
+        """
+        @brief Affiche la description d'un objet par dessus la map
+        :param item: Objet dont on note la description
+        """
+        i=1
+
     def resize_event(self, event):
         """
         @brief fonction gerant la modification de la taille de la fenetre de jeu

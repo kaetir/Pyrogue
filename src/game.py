@@ -3,7 +3,7 @@ from pygame.locals import *
 from src.view import View
 from src.character import Character
 from src.map import MapDungeon
-from src.item import Item
+from src.item import *
 
 from math import floor
 from random import random
@@ -73,6 +73,9 @@ class Game:
             it = Item()
             it.set_icon_id(floor(random() * 70))
             self.character.collect(it)
+
+        ytg = Equipment()
+
         # FIN TESTS ---
 
         # Constantes Semi-Globales de l'instance de jeu
