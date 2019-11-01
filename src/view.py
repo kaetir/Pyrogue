@@ -71,20 +71,20 @@ class View:
         @brief Charge les sprites necessaires au bon fonctionnement du jeu
         """
         # Assets
-        self.wall_tiles = load_tile_table("tiles/dungeon_wall.png", 4, 4)
-        self.door_tiles = load_tile_table("tiles/dungeon_door.png", 4, 4)
-        self.ceiling_tiles = load_tile_table("tiles/dungeon_ceiling.png", 4, 4)
-        self.cases_hud = load_tile_table("hud/cases.png", 1, 12)
-        self.fills_fillers = load_tile_table("hud/fills_fillers.png", 1, 3)
-        self.fills_tips = load_tile_table("hud/fills_tips.png", 1, 3)
-        self.fills_main = load_tile_table("hud/fills_main.png", 4, 1)
-        self.fills_tubes = load_tile_table("hud/fills_tubes.png", 1, 1)
-        self.numbers_tiles = load_tile_table("hud/numbers.png", 11, 1)
-        self.inventory_tab = load_tile_table("inventory/inventory_tab.png", 1, 1)
-        self.inventory_cursor = load_tile_table("inventory/inventory_cursor.png", 1, 1)
-        self.active_tab = load_tile_table("inventory/active_tab.png", 1, 1)
-        self.active_equipment = load_tile_table("inventory/active_equipment.png", 1, 1)
-        self.items_tiles = load_tile_table("inventory/items.png", 10, 8)
+        self.wall_tiles = load_tile_table("res/tiles/dungeon_wall.png", 4, 4)
+        self.door_tiles = load_tile_table("res/tiles/dungeon_door.png", 4, 4)
+        self.ceiling_tiles = load_tile_table("res/tiles/dungeon_ceiling.png", 4, 4)
+        self.cases_hud = load_tile_table("res/hud/cases.png", 1, 12)
+        self.fills_fillers = load_tile_table("res/hud/fills_fillers.png", 1, 3)
+        self.fills_tips = load_tile_table("res/hud/fills_tips.png", 1, 3)
+        self.fills_main = load_tile_table("res/hud/fills_main.png", 4, 1)
+        self.fills_tubes = load_tile_table("res/hud/fills_tubes.png", 1, 1)
+        self.numbers_tiles = load_tile_table("res/hud/numbers.png", 11, 1)
+        self.inventory_tab = load_tile_table("res/inventory/inventory_tab.png", 1, 1)
+        self.inventory_cursor = load_tile_table("res/inventory/inventory_cursor.png", 1, 1)
+        self.active_tab = load_tile_table("res/inventory/active_tab.png", 1, 1)
+        self.active_equipment = load_tile_table("res/inventory/active_equipment.png", 1, 1)
+        self.items_tiles = load_tile_table("res/inventory/items.png", 10, 8)
         # Font
         self.font_name = "hud/minecraftia.ttf"
 
