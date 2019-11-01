@@ -12,7 +12,7 @@ import matplotlib.pyplot as plt
 import matplotlib.backends.backend_agg as agg
 
 from src.room import Room
-from src.character import Character
+from src.perso.character import Character
 
 matplotlib.use("Agg")
 

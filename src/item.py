@@ -19,33 +19,44 @@ from random import randint, random
 class Item:
     def __init__(self):
         self.name = ""
+        self.item_type = ""
         self.icon_id = 0
 
     def get_icon_id(self):
         return self.icon_id
 
-    def set_icon_id(self, id):
-        self.icon_id = id
+    def set_icon_id(self, icon_id):
+        self.icon_id = icon_id
 
     @staticmethod
     def random():
-        typ = randint(1, 3)
+        # incrémenter le deuxieme paramettre pour ajouter des catégories
+        typ = randint(1, 4)
         if typ == 1:
             # equipement
             return Equipment()
         elif typ == 2:
             # consumable
             return Consumables()
+        elif typ == 3:
+            # speelbook
+            return Speelbook()
 
 
+# ne pas utilisé juste utile pour la classification actuellement
 class Equipment(Item):
-    type = "equipment"
 
     def __init__(self) -> None:
         super().__init__()
+        item_type: str = "equipment"
+        emplacement: str = ""
+
 
 class Weapon(Equipment):
-    type = "weapon"
+    item_type = "weapon"
+    """ emplacement : 
+    weapon, shield
+    """
     damage: int = 1
     precission: float = 0.99
 
@@ -56,7 +67,11 @@ class Weapon(Equipment):
 
 
 class Armor(Equipment):
-    type = "armor"
+    item_type = "armor"
+    """ emplacement : 
+    helmet, chest, legs, boots, gloves
+    """
+
     value: int = 1
 
     def __init__(self) -> None:
@@ -68,11 +83,21 @@ class Armor(Equipment):
 
 
 class Jewel(Equipment):
-    type = "jewel"
+    item_type = "jewel"
+    """ emplacement : 
+    jewel1, jewel2
+    """
     color: str = "blueje"
 
 
 class Consumables(Item):
-
+    item_type = "consumable"
     def use(self) -> None:
         print("pouf")
+
+
+class Speelbook(Item):
+    item_type = "speelbook"
+
+    def use(self) -> None:
+        print("mathémagie")

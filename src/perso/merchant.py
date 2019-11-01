@@ -5,3 +5,10 @@
 
 
 """
+from src.perso.character import Character
+
+
+class Merchant(Character):
+    def __init__(self) -> None:
+        super().__init__("Merchant")
+        print("Bonjour, tu en veux c'est de la bonne")

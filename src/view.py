@@ -196,7 +196,7 @@ class View:
         inventory = char.get_inventory()
         for i in range(0, len(inventory)):
             self.window.blit(
-                pygame.transform.scale(self.items_tiles[inventory[i].get_icon_id()],
+                pygame.transform.scale(self.items_tiles[inventory[i].get_icon_id],
                                        (int(size_cursor_width), int(size_cursor_height))), (
                     int((i % 8 + 1) * size_width * 4 / temptx + (i % 8) * size_cursor_width),
                     int((i // 8 + 1) * size_width * 4 / temptx + (i // 8) * size_cursor_height)))
@@ -246,7 +246,7 @@ class View:
         if char.jewel1 is None:
             id = self.items_id["no_amulet"]
         else:
-            id = char.jewel1.get_icon_id()
+            id = char.jewel1.get_icon_id
         self.window.blit(
             pygame.transform.scale(self.items_tiles[id], (int(item_width), int(item_height))),
             (int(self.wwidth * 0.77 + size_width * 4 / tempx),
@@ -255,7 +255,7 @@ class View:
         if char.jewel2 is None:
             id = self.items_id["no_amulet"]
         else:
-            id = char.jewel2.get_icon_id()
+            id = char.jewel2.get_icon_id
         self.window.blit(
             pygame.transform.scale(self.items_tiles[id], (int(item_width), int(item_height))),
             (int(self.wwidth * 0.77 + size_width * 4 / tempx),
@@ -264,7 +264,7 @@ class View:
         if char.helmet is None:
             id = self.items_id["no_helmet"]
         else:
-            id = char.helmet.get_icon_id()
+            id = char.helmet.get_icon_id
         self.window.blit(
             pygame.transform.scale(self.items_tiles[id], (int(item_width), int(item_height))),
             (int(self.wwidth * 0.77 + 3 * size_width * 4 / tempx + item_width),
@@ -273,7 +273,7 @@ class View:
         if char.chest is None:
             id = self.items_id["no_chest"]
         else:
-            id = char.chest.get_icon_id()
+            id = char.chest.get_icon_id
         self.window.blit(
             pygame.transform.scale(self.items_tiles[id], (int(item_width), int(item_height))),
             (int(self.wwidth * 0.77 + 3 * size_width * 4 / tempx + item_width),
@@ -282,7 +282,7 @@ class View:
         if char.legs is None:
             id = self.items_id["no_legs"]
         else:
-            id = char.legs.get_icon_id()
+            id = char.legs.get_icon_id
         self.window.blit(
             pygame.transform.scale(self.items_tiles[id], (int(item_width), int(item_height))),
             (int(self.wwidth * 0.77 + 3 * size_width * 4 / tempx + item_width),
@@ -291,7 +291,7 @@ class View:
         if char.boots is None:
             id = self.items_id["no_boots"]
         else:
-            id = char.boots.get_icon_id()
+            id = char.boots.get_icon_id
         self.window.blit(
             pygame.transform.scale(self.items_tiles[id], (int(item_width), int(item_height))),
             (int(self.wwidth * 0.77 + 3 * size_width * 4 / tempx + item_width),
@@ -300,7 +300,7 @@ class View:
         if char.gloves is None:
             id = self.items_id["no_gloves"]
         else:
-            id = char.gloves.get_icon_id()
+            id = char.gloves.get_icon_id
         self.window.blit(
             pygame.transform.scale(self.items_tiles[id], (int(item_width), int(item_height))),
             (int(self.wwidth * 0.77 + 5 * size_width * 4 / tempx + 2 * item_width),
@@ -309,7 +309,7 @@ class View:
         if char.weapon is None:
             id = self.items_id["no_weapon"]
         else:
-            id = char.weapon.get_icon_id()
+            id = char.weapon.get_icon_id
         self.window.blit(
             pygame.transform.scale(self.items_tiles[id], (int(item_width), int(item_height))),
             (int(self.wwidth * 0.77 + 7 * size_width * 4 / tempx + 3 * item_width),
@@ -318,7 +318,7 @@ class View:
         if char.shield is None:
             id = self.items_id["no_shield"]
         else:
-            id = char.shield.get_icon_id()
+            id = char.shield.get_icon_id
         self.window.blit(
             pygame.transform.scale(self.items_tiles[id], (int(item_width), int(item_height))),
             (int(self.wwidth * 0.77 + 7 * size_width * 4 / tempx + 3 * item_width),
