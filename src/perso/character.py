@@ -20,6 +20,8 @@
 from __future__ import annotations
 from random import randint, random
 from src.my_utils import fib_rec
+from src.inventory import Inventory
+
 
 import math
 
@@ -85,7 +87,7 @@ class Character:
         return self.armor
 
     def get_inventory(self):
-        return self.inventory
+        return self.inventory.items
 
     def get_life_percent(self):
         return self.health / self.max_health
@@ -108,7 +110,7 @@ class Character:
         :param item: objet a recuperer
         :return: false si l'inventaire est plein sinon true
         """
-        if len(self.inventory) == 6*8:
+        if self.inventory.is_full():
             return False
         # Else
         self.inventory.append(item)

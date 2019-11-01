@@ -4,7 +4,7 @@
 - They can drop one or more objects when they die, plus an amount of gold, those you can add it to an Inventory.
 
 """
-from src.character import Character
+from src.perso.character import Character
 from src.item import Item
 from typing import List
 from random import randint

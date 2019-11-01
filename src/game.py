@@ -1,8 +1,8 @@
 import pygame
-from pygame.constants import QUIT, VIDEORESIZE, KEYDOWN, K_RETURN, K_UP, K_DOWN, K_RIGHT, K_LEFT, K_RETURN, K_ESCAPE
+from pygame.constants import QUIT, VIDEORESIZE, KEYDOWN, K_UP, K_DOWN, K_RIGHT, K_LEFT, K_RETURN, K_ESCAPE
 
 from src.view import View
-from src.character import Character
+from src.perso.character import Character
 from src.map import MapDungeon
 
 
@@ -14,7 +14,8 @@ class Game:
 
     def __init__(self) -> None:
         # Initialisation de la bibliotheque Pygame
-        pygame.init()
+        # pygame.init()
+        # cassé ne pas faire LOL
 
         self.view = View()
 
@@ -30,6 +31,7 @@ class Game:
         self.map = MapDungeon(15)
         self.actual_level += 1
         self.character.set_pos(0, 0)
+        self.map_surf = self.map.disp_map(player=self.character)
 
     def change_room(self):
         """
@@ -55,6 +57,7 @@ class Game:
         if not self.map.get_room(px, py).is_discovered():
             self.map.get_room(px, py).discover()
             self.character.gain_xp(1)
+        self.map_surf = self.map.disp_map(player=self.character)
 
     def start_game(self):
         """
@@ -69,6 +72,7 @@ class Game:
         inventory_cursor = [0, 0]
         max_inventory_cursor = [8 - 1, 6 - 1]
         game_area = 0  # 0: En salle, 1: En inventaire
+
 
         # Boucle infinie
         close = False
@@ -116,8 +120,10 @@ class Game:
                         # Si nous sommes sur la case_HUD (0) de mouvement et que nous effectuons une rotation
                         elif event.key == K_RIGHT and hud_cursor == 0:
                             self.character.set_orientation((self.character.get_orientation() + 1) % 4)
+                            self.map_surf = self.map.disp_map(player=self.character)
                         elif event.key == K_LEFT and hud_cursor == 0:
                             self.character.set_orientation((self.character.get_orientation() - 1) % 4)
+                            self.map_surf = self.map.disp_map(player=self.character)
 
                     elif game_area == 1:  # Si on est en mode Inventaire
                         if event.key == K_RETURN:
@@ -153,7 +159,7 @@ class Game:
                 # Room
                 self.view.print_room(current_room, self.character)
                 # Map
-                self.view.print_map(self.map.disp_map(player=self.character))
+                self.view.print_map(self.map_surf)
             elif game_area == 1:
                 # Inventory
                 self.view.print_inventory(self.character, inventory_cursor)
