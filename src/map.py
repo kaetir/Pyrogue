@@ -143,7 +143,8 @@ class MapDungeon:
 
         if player is not None:
             m = ["^", ">", "v", "<"][player.get_orientation()]
-            ax.scatter(player.position[0], player.position[1], s=100, c="y", marker=m)
+            size_cursor = ax.get_ylim()[1] - ax.get_ylim()[0]
+            ax.scatter(player.position[0], player.position[1], s=(10 - size_cursor) * 100, c="y", marker=m)
 
         # sauvegarde du graph
         if filename is not None:
