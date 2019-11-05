@@ -15,6 +15,8 @@
 from src.perso.character import Character
 from src.perso.monster import Monster
 
+import random
+
 
 class Battle:
     c: Character = None
@@ -35,14 +37,14 @@ class Battle:
         """
         return not self.m.is_alive()
 
-    def start(self) -> int:
+    def start(self) -> None:
         """
         @summary levelup du mob
         """
         for i in range(self.c.level):
             self.m.level_up()
 
-    def tour(self, action: int):
+    def tour(self, action: int) -> None:
         """
         @summary fait effectué les actions choisies par les perso
         @param action: int action effectué par le joueur
