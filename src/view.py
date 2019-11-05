@@ -1,5 +1,5 @@
 import pygame
-from pygame.locals import *
+from pygame.locals import RESIZABLE
 
 
 def load_tile_table(filename, nbx: int, nby: int):
@@ -57,7 +57,9 @@ class View:
     items_tiles = None
     # Font
     font_name = None
-    fonts_stock = {} # Stock les polices selon leurs tailles (evite de reouvrir la police chaque fois que l'on reecri a la meme taille)
+    fonts_stock = {}
+    # Stock les polices selon leurs tailles
+    # #(evite de reouvrir la police chaque fois que l'on reecri a la meme taille)
 
     def __init__(self) -> None:
         # Creation de la fenetre
@@ -106,9 +108,9 @@ class View:
 
         text_surface = font.render(text, 0, (255, 255, 255))
         width, max_height = text_surface.get_size()
-        if width < max_width: # Si nous avons assez de place on affiche la ligne sur sa ligne
+        if width < max_width:  # Si nous avons assez de place on affiche la ligne sur sa ligne
             self.window.blit(text_surface, (x, y))
-        else: # Sinon, nous calculons des retours a la ligne
+        else:  # Sinon, nous calculons des retours a la ligne
             pos_height = 0
             splitted_text = text.split()
             while len(splitted_text) > 0:
@@ -124,16 +126,14 @@ class View:
 
                 if width > max_width:
                     splitted_temp = text_temp.split()
-                    if len(splitted_temp) == 1: # Si nous n'avons qu'un seul mot et qu'il depasse quand meme on affiche
+                    if len(splitted_temp) == 1:  # Si nous n'avons qu'un seul mot et qu'il depasse quand meme on affiche
                         text_temp_printable = text_temp
-                    else: # sinon on ajoute le mot depassant a la ligne d'apres
+                    else:  # sinon on ajoute le mot depassant a la ligne d'apres
                         splitted_text.insert(0, splitted_temp[len(splitted_temp) - 1])
 
                 text_surface = font.render(text_temp_printable, 0, (255, 255, 255))
                 self.window.blit(text_surface, (x, y + pos_height))
                 pos_height += max_height
-
-
 
     def print_clear(self):
         """
@@ -241,7 +241,7 @@ class View:
         tempix, tempiy = self.items_tiles[0].get_size()
         item_width, item_height = size_width * tempix / tempx, size_height * tempiy / tempy
 
-        id = 0;
+        id = 0
         # Jewel1
         if char.inventory.jewel1 is None:
             id = self.items_id["no_amulet"]
@@ -323,15 +323,14 @@ class View:
             pygame.transform.scale(self.items_tiles[id], (int(item_width), int(item_height))),
             (int(self.wwidth * 0.77 + 7 * size_width * 4 / tempx + 3 * item_width),
              int(self.wheight * 0.30 + 7 * size_width * 4 / tempx + 3 * item_height)))
-        
 
-    def print_map(self, map : str = None):
+    def print_map(self, map: str = None):
         """
         @brief Affichage de la map a l'ecran
         """
         raw_data, size = map
         surf = pygame.image.frombuffer(raw_data, size, "RGB")
-        surf.set_colorkey((255,255,255))
+        surf.set_colorkey((255, 255, 255))
         tempx, tempy = surf.get_size()
         size_width, size_height = int(self.wheight * 0.30 * tempx / tempy), int(self.wheight * 0.30)
         self.window.blit(pygame.transform.scale(surf, (size_width, size_height)),
