@@ -99,5 +99,5 @@ class Consumables(Item):
 class Speelbook(Item):
     item_type = "speelbook"
 
-    def use(self) -> None:
+    def use(self, source, destination) -> None:
         print("mathémagie")

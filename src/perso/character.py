@@ -22,7 +22,6 @@ from random import randint, random
 from src.my_utils import fib_rec
 from src.inventory import Inventory
 
-
 import math
 
 
@@ -46,14 +45,14 @@ class Character:
         self.max_armor: int = 1
         self.level: int = 1
         self.experience: int = 0
+        self.icon_id = 0
 
         # Utiles pour le personnage Principal
         self.orientation = 0  # % 4 : orientation du personnage dans la salle
         self.position = [0, 0]  # position du personnage sur la map
 
         # INVENTAIRES
-        self.inventory = Inventory() # Rempli d'items
-
+        self.inventory = Inventory()  # Rempli d'items
 
     def __str__(self) -> str:
         return self.name + " de niveau " + str(self.level)

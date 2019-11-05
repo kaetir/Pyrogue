@@ -136,7 +136,7 @@ class Game:
                         if event.key == K_RETURN:
                             # Action avec l'objet du curseur
                             # TODO
-                            print("TODO utilisation objet")
+                            print("TODO équiper")
 
                         elif event.key == K_ESCAPE:
                             # On quitte l'inventaire

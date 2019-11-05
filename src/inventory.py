@@ -22,12 +22,12 @@ class Inventory:
         self.items: list[Item] = []
         self.max_size: int = 6 * 8
 
-        # les consumables sont stoké objet quantité
-        self.comsumable: list[Consumables] = []
+        # les consumables sont stoké
+        # max size 4
         self.active_comsumable: list[Consumables] = []
 
         # Les speels sont tous dans des speels book et on en actives certain
-        self.spells: list[Speelbook] = []
+        # max size 3
         self.active_spells: list[Speelbook] = []
 
         self.helmet = None

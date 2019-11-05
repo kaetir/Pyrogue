@@ -28,9 +28,40 @@ class Battle:
             self.m = m
         self.c = c
 
-    def battle(self) -> int:
+    def is_ended(self):
         """
-        @summary FIGHT
-        @return:
+        @summary dit si le mob est mort
+        @return: true si le mob est dead
         """
-        return 0
+        return not self.m.is_alive()
+
+    def start(self) -> int:
+        """
+        @summary levelup du mob
+        """
+        for i in range(self.c.level):
+            self.m.level_up()
+
+    def tour(self, action: int):
+        """
+        @summary fait effectué les actions choisies par les perso
+        @param action: int action effectué par le joueur
+        """
+        # ataque de base
+        if action == 0:
+            # TODO precision de l'arme
+            self.c.inflict_damage(self.m,
+                                  self.c.inventory.weapon.damage if self.c.inventory.weapon.damage is not None else 1)
+        # spell
+        elif action < 4:
+            # TODO verif spell
+            self.c.inventory.active_spells[action].use(self.c, self.m)
+
+        # consumable
+        elif action < 8:
+            # TODO verif consumable
+            self.c.inventory.active_comsumable[action].use(self.c, self.m)
+            self.c.inventory.active_comsumable[action] = None
+
+        if self.m.is_alive():
+            self.m.inflict_damage(self.c, random.randrange(self.m))
