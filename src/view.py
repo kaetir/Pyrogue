@@ -88,7 +88,7 @@ class View:
         self.active_equipment = load_tile_table("res/inventory/active_equipment.png", 1, 1)
         self.items_tiles = load_tile_table("res/inventory/items.png", 10, 8)
         # Font
-        self.font_name = "hud/minecraftia.ttf"
+        self.font_name = "res/hud/minecraftia.ttf"
 
     def print_text(self, text, size, x, y, max_width):
         """
@@ -217,6 +217,16 @@ class View:
                          (self.wwidth * 0.60, starty))
 
         # Le curseur
+        if cursor is not None:
+            tempcx, tempcy = self.inventory_cursor[0].get_size()
+            size_cursor_width, size_cursor_height = size_width * tempcx / temptx, size_height * tempcy / tempty
+            self.window.blit(
+                pygame.transform.scale(self.inventory_cursor[0], (int(size_cursor_width), int(size_cursor_height))), (
+                    int(self.wwidth * 0.60 + (cursor[0] + 1) * size_width * 22 / temptx + cursor[
+                        0] * size_cursor_width),
+                    int(starty + size_width * 4 / temptx + cursor[1] * (size_width * 22 / temptx + size_cursor_width))))
+
+        # Objets de la barre active
         if cursor is not None:
             tempcx, tempcy = self.inventory_cursor[0].get_size()
             size_cursor_width, size_cursor_height = size_width * tempcx / temptx, size_height * tempcy / tempty
