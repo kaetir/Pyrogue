@@ -224,6 +224,11 @@ class Game:
                 self.view.print_active_tab(self.character, active_cursor)
                 # Description
                 # TODO
+                # Test Fin Combat
+                if self.actual_battle.is_ended():
+                    game_area = 0
+                    current_room.enemy = None
+                    self.actual_battle = None
 
             # HUD Active Equipment
             self.view.print_active_equipment(self.character)
