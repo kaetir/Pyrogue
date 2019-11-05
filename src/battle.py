@@ -53,7 +53,7 @@ class Battle:
         if action == 0:
             # TODO precision de l'arme
             self.c.inflict_damage(self.m,
-                                  self.c.inventory.weapon.damage if self.c.inventory.weapon.damage is not None else 1)
+                                  self.c.inventory.weapon.damage if self.c.inventory.weapon is not None else 1)
         # spell
         elif action < 4:
             # TODO verif spell
@@ -66,4 +66,4 @@ class Battle:
             self.c.inventory.active_comsumable[action] = None
 
         if self.m.is_alive():
-            self.m.inflict_damage(self.c, random.randrange(self.m))
+            self.m.inflict_damage(self.c, random.randint(1,self.m.damage_max))

@@ -59,12 +59,6 @@ class Game:
         if not self.map.get_room(px, py).is_discovered():
             self.map.get_room(px, py).discover()
             self.character.gain_xp(1)
-            if self.map.get_room(px, py).enemy is not None:
-                # TODO
-                # disp sprite mob
-                # begin combat
-                labaston = Battle(self.character, self.map.get_room(px, py).enemy)
-                print("AU COMBAT")
         self.map_surf = self.map.disp_map(player=self.character)
 
     def start_game(self):
@@ -78,12 +72,22 @@ class Game:
         # Constantes Semi-Globales de l'instance de jeu
         hud_cursor = 0
         inventory_cursor = [0, 0]
+        active_cursor = [0, 0]
         max_inventory_cursor = [8 - 1, 6 - 1]
-        game_area = 0  # 0: En salle, 1: En inventaire
+        game_area = 0  # 0: En salle, 1: En inventaire, 2: En Combat
 
         # Boucle infinie
         close = False
         while not close:
+            if not self.character.is_alive(): # Reset Global
+                self.dungeon_restart(True)
+
+                # Constantes Semi-Globales de l'instance de jeu
+                hud_cursor = 0
+                inventory_cursor = [0, 0]
+                active_cursor = [0, 0]
+                game_area = 0  # 0: En salle, 1: En inventaire, 2: En Combat
+
             px, py = self.character.get_pos()
             current_room = self.map.get_room(px, py)
 
@@ -91,6 +95,11 @@ class Game:
                 max_hud_cursor = 3
             else:
                 max_hud_cursor = 2
+
+            if current_room.enemy is not None and game_area != 2:
+                self.actual_battle = Battle(self.character, current_room.enemy)
+                game_area = 2
+                print("AU COMBAT")
 
             # Treating Events
             for event in pygame.event.get():
@@ -156,6 +165,32 @@ class Game:
                             if inventory_cursor[0] > 0:
                                 inventory_cursor[0] -= 1
 
+                    elif game_area == 2:  # Si on est en mode COMBAT
+                        if event.key == K_RETURN:
+                            if active_cursor == [0, 0]: # Attaque Basique
+                                self.actual_battle.tour(0)
+                            elif active_cursor[0] > 0 and active_cursor[1] == 0: # Sorts
+                                if self.character.inventory.active_spells[active_cursor[0] - 1] is not None:
+                                    self.actual_battle.tour(active_cursor[0])
+                            elif active_cursor[0] >= 0 and active_cursor[1] == 1: # Consommables
+                                if self.character.inventory.active_spells[active_cursor[0]] is not None:
+                                    self.actual_battle.tour(4 + active_cursor[0])
+
+                            print("TODO utilisation objet")
+
+                        elif event.key == K_UP:  # Fleche du haut
+                            if active_cursor[1] > 0:
+                                active_cursor[1] -= 1
+                        elif event.key == K_DOWN:  # Fleche du bas
+                            if active_cursor[1] < 1:
+                                active_cursor[1] += 1
+                        elif event.key == K_RIGHT:  # Fleche de droite
+                            if active_cursor[0] < 3:
+                                active_cursor[0] += 1
+                        elif event.key == K_LEFT:  # Fleche de gauche
+                            if active_cursor[0] > 0:
+                                active_cursor[0] -= 1
+
             # Calculating New sprites and Printing
             px, py = self.character.get_pos()
             current_room = self.map.get_room(px, py)
@@ -167,17 +202,31 @@ class Game:
                 self.view.print_room(current_room, self.character)
                 # Map
                 self.view.print_map(self.map_surf)
+                # HUD Right Cases
+                self.view.print_cases_hud(hud_cursor, current_room.is_exit())
+                # HUD Active Tab
+                self.view.print_active_tab(self.character)
             elif game_area == 1:
                 # Inventory
                 self.view.print_inventory(self.character, inventory_cursor)
+                # HUD Right Cases
+                self.view.print_cases_hud(hud_cursor, current_room.is_exit())
+                # HUD Active Tab
+                self.view.print_active_tab(self.character)
                 # Description
+                # TODO
+            elif game_area == 2:
+                # Room
+                self.view.print_room(current_room, self.character)
+                # Monster
+                self.view.print_monster(current_room.enemy)
+                # HUD Active Tab
+                self.view.print_active_tab(self.character, active_cursor)
+                # Description
+                # TODO
 
-            # HUD Right Cases
-            self.view.print_cases_hud(hud_cursor, current_room.is_exit())
             # HUD Active Equipment
             self.view.print_active_equipment(self.character)
-            # HUD Active Tab
-            self.view.print_active_tab(self.character)
             # HUD Fillers
             self.view.print_fillers(self.character)
 

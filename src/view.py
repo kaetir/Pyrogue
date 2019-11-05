@@ -56,6 +56,8 @@ class View:
     active_tab = None
     active_equipment = None
     items_tiles = None
+    # Assets Monsters
+    monsters = []
     # Font
     font_name = None
     fonts_stock = {}
@@ -88,6 +90,14 @@ class View:
         self.active_tab = load_tile_table("res/inventory/active_tab.png", 1, 1)
         self.active_equipment = load_tile_table("res/inventory/active_equipment.png", 1, 1)
         self.items_tiles = load_tile_table("res/inventory/items.png", 10, 8)
+
+        # Assets Monsters
+        self.monsters.append(pygame.image.load("res/enemies/druid.png").convert_alpha())
+        self.monsters.append(pygame.image.load("res/enemies/imp.png").convert_alpha())
+        self.monsters.append(pygame.image.load("res/enemies/mimic.png").convert_alpha())
+        self.monsters.append(pygame.image.load("res/enemies/skeleton.png").convert_alpha())
+        self.monsters.append(pygame.image.load("res/enemies/zombie.png").convert_alpha())
+
         # Font
         self.font_name = "res/hud/minecraftia.ttf"
 
@@ -174,6 +184,12 @@ class View:
         else:
             self.window.blit(pygame.transform.scale(self.ceiling_tiles[7], (size_width, size_height)), (0, 0))
 
+    def print_monster(self, char):
+        tempx, tempy = self.monsters[0].get_size()  # Les monstres ont la meme taille niveau sprite
+        size_width, size_height = int(self.wwidth * 0.55), int(self.wwidth * 0.55 * tempy / tempx)
+
+        self.window.blit(pygame.transform.scale(self.monsters[char.icon_id], (size_width, size_height)), (0, 0))
+
     def print_inventory(self, char, cursor):
         """
         @brief Affiche l'inventaire du joueur
@@ -235,25 +251,21 @@ class View:
 
         # Sorts de la barre active
         spells = char.inventory.active_spells
-        max_len = 3
-        if(len(spells) < 3):
-            max_len = len(spells)
-        for i in range(1, max_len+1):
-            self.window.blit(
-                pygame.transform.scale(self.items_tiles[spells[i].get_icon_id()], (int(size_cursor_width), int(size_cursor_height))), (
-                    int(self.wwidth * 0.60 + (i + 1) * size_width * 22 / temptx + i * size_cursor_width),
-                    int(starty + size_width * 4 / temptx)))
+        for i in range(1, 4):
+            if spells[i-1] is not None:
+                self.window.blit(
+                    pygame.transform.scale(self.items_tiles[spells[i-1].get_icon_id()], (int(size_cursor_width), int(size_cursor_height))), (
+                        int(self.wwidth * 0.60 + (i + 1) * size_width * 22 / temptx + i * size_cursor_width),
+                        int(starty + size_width * 4 / temptx)))
 
         # Consommables de la barre active
         usables = char.inventory.active_comsumable
-        max_len = 4
-        if(len(usables) < 4):
-            max_len = len(usables)
-        for i in range(0, max_len):
-            self.window.blit(
-                pygame.transform.scale(self.items_tiles[usables[i].get_icon_id()], (int(size_cursor_width), int(size_cursor_height))), (
-                    int(self.wwidth * 0.60 + (i + 1) * size_width * 22 / temptx + i * size_cursor_width),
-                    int(starty + size_width * 4 / temptx + size_width * 22 / temptx + size_cursor_width)))
+        for i in range(0, 4):
+            if usables[i] is not None:
+                self.window.blit(
+                    pygame.transform.scale(self.items_tiles[usables[i].get_icon_id()], (int(size_cursor_width), int(size_cursor_height))), (
+                        int(self.wwidth * 0.60 + (i + 1) * size_width * 22 / temptx + i * size_cursor_width),
+                        int(starty + size_width * 4 / temptx + size_width * 22 / temptx + size_cursor_width)))
 
     def print_active_equipment(self, char):
         """
@@ -460,6 +472,9 @@ class View:
         @param char : Personnage selon lequel on affiche les fillers
         """
         percentages = [char.get_life_percent(), char.get_mana_percent(), char.get_experience_percent()]
+        for i in range(0, len(percentages)):
+            if percentages[i] < 0:
+                percentages[i] = 0
         plain_numbers = [char.get_health(), char.get_mana(), char.get_experience()]
 
         # On recupere la position sous l'affichage de la zone principale

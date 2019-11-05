@@ -24,11 +24,11 @@ class Inventory:
 
         # les consumables sont stoké
         # max size 4
-        self.active_comsumable: list[Consumables] = []
+        self.active_comsumable: list[Consumables] = [None, None, None, None]
 
         # Les speels sont tous dans des speels book et on en actives certain
         # max size 3
-        self.active_spells: list[Speelbook] = []
+        self.active_spells: list[Speelbook] = [None, None, None]
 
         self.helmet = None
         self.chest = None
