@@ -33,6 +33,7 @@ class View:
         "no_amulet": 6,
         "no_weapon": 7,
         "no_shield": 8,
+        "attack_logo": 78,
         "amulet1": 9,
         "amulet2": 19,
         "amulet3": 29
@@ -217,24 +218,42 @@ class View:
                          (self.wwidth * 0.60, starty))
 
         # Le curseur
+        tempcx, tempcy = self.inventory_cursor[0].get_size()
+        size_cursor_width, size_cursor_height = size_width * tempcx / temptx, size_height * tempcy / tempty
         if cursor is not None:
-            tempcx, tempcy = self.inventory_cursor[0].get_size()
-            size_cursor_width, size_cursor_height = size_width * tempcx / temptx, size_height * tempcy / tempty
             self.window.blit(
                 pygame.transform.scale(self.inventory_cursor[0], (int(size_cursor_width), int(size_cursor_height))), (
                     int(self.wwidth * 0.60 + (cursor[0] + 1) * size_width * 22 / temptx + cursor[
                         0] * size_cursor_width),
                     int(starty + size_width * 4 / temptx + cursor[1] * (size_width * 22 / temptx + size_cursor_width))))
 
-        # Objets de la barre active
-        if cursor is not None:
-            tempcx, tempcy = self.inventory_cursor[0].get_size()
-            size_cursor_width, size_cursor_height = size_width * tempcx / temptx, size_height * tempcy / tempty
+        # Logo d'attaque normale
+        self.window.blit(
+            pygame.transform.scale(self.items_tiles[self.items_id["attack_logo"]], (int(size_cursor_width), int(size_cursor_height))), (
+                int(self.wwidth * 0.60 + size_width * 22 / temptx),
+                int(starty + size_width * 4 / temptx)))
+
+        # Sorts de la barre active
+        spells = char.inventory.active_spells
+        max_len = 3
+        if(len(spells) < 3):
+            max_len = len(spells)
+        for i in range(1, max_len+1):
             self.window.blit(
-                pygame.transform.scale(self.inventory_cursor[0], (int(size_cursor_width), int(size_cursor_height))), (
-                    int(self.wwidth * 0.60 + (cursor[0] + 1) * size_width * 22 / temptx + cursor[
-                        0] * size_cursor_width),
-                    int(starty + size_width * 4 / temptx + cursor[1] * (size_width * 22 / temptx + size_cursor_width))))
+                pygame.transform.scale(self.items_tiles[spells[i].get_icon_id()], (int(size_cursor_width), int(size_cursor_height))), (
+                    int(self.wwidth * 0.60 + (i + 1) * size_width * 22 / temptx + i * size_cursor_width),
+                    int(starty + size_width * 4 / temptx)))
+
+        # Consommables de la barre active
+        usables = char.inventory.active_comsumable
+        max_len = 4
+        if(len(usables) < 4):
+            max_len = len(usables)
+        for i in range(0, max_len):
+            self.window.blit(
+                pygame.transform.scale(self.items_tiles[usables[i].get_icon_id()], (int(size_cursor_width), int(size_cursor_height))), (
+                    int(self.wwidth * 0.60 + (i + 1) * size_width * 22 / temptx + i * size_cursor_width),
+                    int(starty + size_width * 4 / temptx + size_width * 22 / temptx + size_cursor_width)))
 
     def print_active_equipment(self, char):
         """
