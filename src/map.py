@@ -96,16 +96,18 @@ class MapDungeon:
         self.rooms[0].discover()
         self.rooms[len(self.rooms) - 1].set_exit()  # La derniere salle est une sortie
 
-    def _porte(self, plot, centerx: int, centery: int, dir: int):
+    def _porte(self, plot, centerx: int, centery: int, dire: int):
         # top, right, bottom, left
         offx, offy = [[-.1, .4],
                       [.4, -.1],
                       [-.1, -.6],
-                      [-.6, -.1]][dir]
+                      [-.6, -.1]][dire]
         c = 'w'
-        l = 0.2
-        x = [centerx + offx, centerx + offx + l, centerx + offx + l, centerx + offx, centerx + offx]
-        y = [centery + offy, centery + offy, centery + offy + l, centery + offy + l, centery + offy]
+        largeur_porte = 0.2
+        x = [centerx + offx, centerx + offx + largeur_porte,
+             centerx + offx + largeur_porte, centerx + offx, centerx + offx]
+        y = [centery + offy, centery + offy, centery + offy + largeur_porte,
+             centery + offy + largeur_porte, centery + offy]
         plot.fill(x, y, c, zorder=3)
         return plot
 
@@ -129,14 +131,9 @@ class MapDungeon:
                         color="r", lw=4)
 
                 # affichage des portes
-                if r.doors[r.top] == 1:
-                    self._porte(ax, rom[0], rom[1], r.top)
-                if r.doors[r.left] == 1:
-                    self._porte(ax, rom[0], rom[1], r.left)
-                if r.doors[r.right] == 1:
-                    self._porte(ax, rom[0], rom[1], r.right)
-                if r.doors[r.bottom] == 1:
-                    self._porte(ax, rom[0], rom[1], r.bottom)
+                for direction in [r.top, r.left, r.right, r.bottom]:
+                    if r.doors[direction] == 1:
+                        self._porte(ax, rom[0], rom[1], direction)
 
         if self.rooms[-1].is_discovered():
             ax.scatter(self.rooms[-1].get_pos()[0], self.rooms[-1].get_pos()[1], s=100, c="b", marker="X")

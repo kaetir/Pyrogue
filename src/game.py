@@ -4,6 +4,7 @@ from pygame.constants import QUIT, VIDEORESIZE, KEYDOWN, K_UP, K_DOWN, K_RIGHT, 
 from src.view import View
 from src.perso.character import Character
 from src.map import MapDungeon
+from src.battle import Battle
 
 
 class Game:
@@ -18,6 +19,7 @@ class Game:
         # cassé ne pas faire LOL
 
         self.view = View()
+        self.map_surf: str = ""
 
     def dungeon_restart(self, reset):
         """
@@ -57,6 +59,12 @@ class Game:
         if not self.map.get_room(px, py).is_discovered():
             self.map.get_room(px, py).discover()
             self.character.gain_xp(1)
+            if self.map.get_room(px, py).enemy is not None:
+                # TODO
+                # disp sprite mob
+                # begin combat
+                labaston = Battle(self.character, self.map.get_room(px, py).enemy)
+                print("AU COMBAT")
         self.map_surf = self.map.disp_map(player=self.character)
 
     def start_game(self):
@@ -72,7 +80,6 @@ class Game:
         inventory_cursor = [0, 0]
         max_inventory_cursor = [8 - 1, 6 - 1]
         game_area = 0  # 0: En salle, 1: En inventaire
-
 
         # Boucle infinie
         close = False

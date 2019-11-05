@@ -29,4 +29,8 @@ class Battle:
         self.c = c
 
     def battle(self) -> int:
+        """
+        @summary FIGHT
+        @return:
+        """
         return 0

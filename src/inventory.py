@@ -22,11 +22,9 @@ class Inventory:
         self.items: list[Item] = []
         self.max_size: int = 6 * 8
 
-        self.active_usables: list[Item] = []
-
         # les consumables sont stoké objet quantité
-        self.comsumable: dict[Consumables, int] = []
-        self.active_comsumable: dict[Consumables, int] = []
+        self.comsumable: list[Consumables] = []
+        self.active_comsumable: list[Consumables] = []
 
         # Les speels sont tous dans des speels book et on en actives certain
         self.spells: list[Speelbook] = []
@@ -45,6 +43,7 @@ class Inventory:
     def is_full(self):
         """
         @brief dit si l'inventaire est plein
+        @return : bool
         """
         return len(self.items) == self.max_size
 

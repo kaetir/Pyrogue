@@ -7,6 +7,8 @@
 """
 from __future__ import annotations
 
+import random
+from src.perso.monster import Monster
 
 class Room:
     # ne pas toucher
@@ -30,8 +32,9 @@ class Room:
             self.doors = doors
         self.x = x
         self.y = y
-        self.discovered = False
-        self.exit = False
+        self.discovered: bool = False
+        self.exit: bool = False
+        self.enemy: Monster = None if random.randint(0, 1) < 0.7 else Monster()
 
     def __repr__(self) -> str:
         return "Room %d : %d" % (self.x, self.y)
@@ -51,7 +54,7 @@ class Room:
     def is_exit(self):
         """
         @brief Demande  si la salle est une sortie
-        @:return True or False
+        @return : bool
         """
         return self.exit
 
