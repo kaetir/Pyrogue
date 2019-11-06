@@ -22,8 +22,8 @@ class MapDungeon:
 
     def __init__(self, size: int = 15) -> None:
         """
-        @brief constructeur
-        @param : int taille de la map
+        @summary constructeur
+        @param : int taille de la carte
         """
         super().__init__()
         self.rooms = []
@@ -32,13 +32,13 @@ class MapDungeon:
 
     def __str__(self) -> str:
         """
-        @brief fonciton pour le retour string
+        @summary fonciton pour le retour string
         """
         return self.rooms.__str__()
 
     def get_room(self, x, y):
         """
-        @brief renvoie une room en fonction de ses coordonnées
+        @summary renvoie une room en fonction de ses coordonnées
         @param x : pos de la case
         @param y : pos de la case
         @return : Room
@@ -50,8 +50,8 @@ class MapDungeon:
 
     def gen_map(self, size: int = 15) -> None:
         """
-        @brief generateur de map aléatoire sur le model de l'algo du marcheur
-        @param : int taille de la map
+        @summary generateur de carte aléatoire sur le model de l'algo du marcheur
+        @param : int taille de la carte
         """
         self.map_size = size
         x = 0
@@ -98,7 +98,8 @@ class MapDungeon:
         self.rooms[len(self.rooms) - 1].set_exit()  # La derniere salle est une sortie
         self.rooms[len(self.rooms) - 1].enemy = None
 
-    def _porte(self, plot, centerx: int, centery: int, dire: int):
+    @staticmethod
+    def _porte(plot, centerx: int, centery: int, dire: int):
         # top, right, bottom, left
         offx, offy = [[-.1, .4],
                       [.4, -.1],
@@ -115,7 +116,7 @@ class MapDungeon:
 
     def disp_map(self, filename: str = None, player: Character = None):
         """
-        @brief affichage de la map et sauvegarde éventuelle
+        @summary affichage de la carte et sauvegarde éventuelle
         @param : str fichier de sauvegarde de l'image
         @param : Character le personnage principale
         """

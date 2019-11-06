@@ -69,7 +69,7 @@ class Battle:
             self.c.inventory.active_comsumable[action] = None
 
         if self.m.is_alive():
-            self.m.inflict_damage(self.c, random.randint(1,self.m.damage_max))
+            self.m.inflict_damage(self.c, random.randint(1, self.m.damage_max))
 
         print("=====================")
         self.c.print()

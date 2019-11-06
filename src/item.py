@@ -48,6 +48,7 @@ class Equipment(Item):
     def __init__(self) -> None:
         super().__init__()
         item_type: str = "equipment"
+        print(item_type)
 
 
 class Weapon(Equipment):
@@ -87,12 +88,14 @@ class Jewel(Equipment):
 
 class Consumables(Item):
     item_type = "consumable"
+
     def use(self) -> None:
-        print("pouf")
+        print("pouf", self.icon_id)
 
 
 class SpellBook(Item):
     item_type = "spellbook"
 
     def use(self, source, destination) -> None:
-        print("mathémagie")
+        print("mathémagie", self.icon_id)
+        print("{} use a spell on {}".format(source, destination))

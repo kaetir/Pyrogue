@@ -23,11 +23,12 @@ class Game:
 
         self.view = View()
         self.map_surf: str = ""
+        self.actual_battle = None
 
     def dungeon_restart(self, reset):
         """
-        @brief Regenere un dongeon en remettant toutes nos variables necessaire a 0
-        :param reset: (si True on remet le personnage a nu et le donjon a 1)
+        @summary Regenere un dongeon en remettant toutes nos variables necessaire a 0
+        @param reset: (si True on remet le personnage a nu et le donjon a 1)
         """
         if reset:
             self.character = Character("Bob")
@@ -43,7 +44,7 @@ class Game:
 
     def change_room(self):
         """
-        @brief On avance d'une salle selon la salle ou l'on est et l'orientation du personnage
+        @summary On avance d'une salle selon la salle ou l'on est et l'orientation du personnage
         """
         px, py = self.character.get_pos()
         room = self.map.get_room(px, py)
@@ -69,7 +70,7 @@ class Game:
 
     def start_game(self):
         """
-        @brief Algorithme principal du jeu, Main Loop algorithmique et visuelle
+        @summary Algorithme principal du jeu, Main Loop algorithmique et visuelle
         """
         clock = pygame.time.Clock()
 

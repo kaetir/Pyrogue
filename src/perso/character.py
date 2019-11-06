@@ -1,7 +1,7 @@
 """
 - Your character has a name.
 - He has stats such as:
-·         Health point when it reaches 0, you die and start back on another generated map,
+·         Health point when it reaches 0, you die and start back on another generated carte,
                 with no level, no equipment, gold and Inventory emptied
 ·         armor point that block a certain amount of damage and decreased after taking damages
 ·         Chance of dodge (%) to avoid attacks (damages are nullified)
@@ -28,7 +28,7 @@ import math
 class Character:
     def __init__(self, name: str = "billy"):
         """
-        @brief Constructeur
+        @summary Constructeur
         @param : str nom du personnage
         """
         self.name = name
@@ -49,7 +49,7 @@ class Character:
 
         # Utiles pour le personnage Principal
         self.orientation = 0  # % 4 : orientation du personnage dans la salle
-        self.position = [0, 0]  # position du personnage sur la map
+        self.position = [0, 0]  # position du personnage sur la carte
 
         # INVENTAIRES
         self.inventory = Inventory()  # Rempli d'items
@@ -95,9 +95,9 @@ class Character:
 
     def collect(self, item):
         """
-        @brief Recuperation d'un objet par le personnage
-        :param item: objet a recuperer
-        :return: false si l'inventaire est plein sinon true
+        @summary Recuperation d'un objet par le personnage
+        @param item: objet a recuperer
+        @return: false si l'inventaire est plein sinon true
         """
         if self.inventory.is_full():
             return False
@@ -107,8 +107,8 @@ class Character:
 
     def gain_xp(self, amount: int) -> None:
         """
-        @brief Le perso viens faire une action qui lui rapporte de l'xp
-        @brief On lui fait monter des nivreau si besoin et on lui ajoute le restant de l'xp
+        @summary Le perso viens faire une action qui lui rapporte de l'xp
+        @summary On lui fait monter des nivreau si besoin et on lui ajoute le restant de l'xp
         @param : int nombre de points d'xp a donner au joueur
         """
         while self.experience + amount > fib_rec(self.level) * 100:
@@ -119,8 +119,8 @@ class Character:
 
     def level_up(self) -> None:
         """
-        @brief Level up du perso et boost des stats
-        @brief capage des states de chances a 80% (en vrai ca peut dépasser mais osef)
+        @summary Level up du perso et boost des stats
+        @summary capage des states de chances a 80% (en vrai ca peut dépasser mais osef)
         """
         print("### LEVEL UP {}###".format(self.level + 1))
         self.level += 1
@@ -137,9 +137,9 @@ class Character:
 
     def take_damage(self, amount: int) -> bool:
         """
-        @brief fait prendre des dégats au joueur,
-        @brief on calcul ses chances de dodge et de parry a partir de 2 nombres aléatoires
-        @brief on déduit les dégats de parade
+        @summary fait prendre des dégats au joueur,
+        @summary on calcul ses chances de dodge et de parry a partir de 2 nombres aléatoires
+        @summary on déduit les dégats de parade
         @param : int le nombre de degat que le joueur va prendre
         @return si le joueur est vivant -> true = alive
         """
@@ -165,8 +165,8 @@ class Character:
 
     def inflict_damage(self, other: Character, amount: int) -> None:
         """
-        @brief fait prendre a un autre perso des dégats infligé par nous
-        @brief on ne calcule pas les dégats ici parce qu'ils dépendent de si c'est un sort ou une attaque
+        @summary fait prendre a un autre perso des dégats infligé par nous
+        @summary on ne calcule pas les dégats ici parce qu'ils dépendent de si c'est un sort ou une attaque
         @param : Character l'autre perso a qui on veut en mettre sur le visage
         @param : int le nombre de dégats qu'on lui met sur le visage
         """
@@ -177,14 +177,20 @@ class Character:
 
     def print(self) -> None:
         """
-        @brief Affiche un joli résumé formaté
+        @summary Affiche un joli résumé formaté
         """
         print(self)
         print("HP :", self.health, " SP :", self.armor, "MP :", self.mana)
 
     def is_alive(self) -> bool:
         """
-        @brief dit si le joueur et en vie
+        @summary dit si le joueur et en vie
         @return booléen True = vivant
         """
         return self.health > 0
+
+    def equip_spellbook(self, current_item, cursor) -> bool:
+        return 0
+
+    def equip_consumable(self, current_item, cursor: int) -> bool:
+        return 0

@@ -10,6 +10,7 @@ from __future__ import annotations
 import random
 from src.perso.monster import Monster
 
+
 class Room:
     # ne pas toucher
     top: int = 0
@@ -19,7 +20,7 @@ class Room:
 
     def __init__(self, x: int, y: int, doors=None):
         """
-        @brief constructeur
+        @summary constructeur
         @param x : int position de la room
         @param y : int position de la room
         @param doors : list(int) les portes
@@ -47,40 +48,40 @@ class Room:
 
     def set_exit(self):
         """
-        @brief La salle devient une sortie
+        @summary La salle devient une sortie
         """
         self.exit = True
 
     def is_exit(self):
         """
-        @brief Demande  si la salle est une sortie
+        @summary Demande  si la salle est une sortie
         @return : bool
         """
         return self.exit
 
     def get_pos(self) -> (int, int):
         """
-        @brief retourne les pos de la salle
+        @summary retourne les pos de la salle
         @return : [int, int] x et y
         """
         return self.x, self.y
 
     def set_porte(self, p: int) -> None:
         """
-        @brief assigne une porte a la salle
+        @summary assigne une porte a la salle
         @param p: le numéro de la porte a ouvrir
         """
         self.doors[p] = 1
 
     def is_discovered(self) -> bool:
         """
-        @brief retourne si la salle est découverte
+        @summary retourne si la salle est découverte
         @return : bool
         """
         return self.discovered
 
     def discover(self) -> None:
         """
-        @brief rend une salle visible
+        @summary rend une salle visible
         """
         self.discovered = True

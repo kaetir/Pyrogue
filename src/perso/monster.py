@@ -20,7 +20,7 @@ class Monster(Character):
 
     def drop(self) -> List[Item]:
         """
-        @brief when a mob die he loot drops
+        @summary when a mob die he loot drops
         @return : List[Item] une list de loot
         """
         if self.health <= 0:

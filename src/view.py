@@ -1,10 +1,12 @@
 import pygame
 from pygame.locals import RESIZABLE
 
+from src.item import Item
+
 
 def load_tile_table(filename, nbx: int, nby: int):
     """
-    @brief Charge un spritesheet selon une image et le nombre de sprites
+    @summary Charge un spritesheet selon une image et le nombre de sprites
     @param filename : nom du fichier
     @param nbx : nombre de sprites horizontaux
     @param nby : nombre de sprites verticaux
@@ -61,6 +63,7 @@ class View:
     # Font
     font_name = None
     fonts_stock = {}
+
     # Stock les polices selon leurs tailles
     # #(evite de reouvrir la police chaque fois que l'on reecri a la meme taille)
 
@@ -75,7 +78,7 @@ class View:
 
     def load_assets(self):
         """
-        @brief Charge les sprites necessaires au bon fonctionnement du jeu
+        @summary Charge les sprites necessaires au bon fonctionnement du jeu
         """
         # Assets
         self.wall_tiles = load_tile_table("res/tiles/dungeon_wall.png", 4, 4)
@@ -105,13 +108,13 @@ class View:
 
     def print_text(self, text, size, x, y, max_width, center=False):
         """
-        @brief Affiche un texte a l'ecran
-        :param text: La String a afficher
-        :param size: Taille en pixel du texte
-        :param x: Position x
-        :param y: Position y
-        :param max_width: Taille maximale du texte avant de faire un retour a la ligne
-        :param center: Centrer le texte (max_width inutile)
+        @summary Affiche un texte a l'ecran
+        @param text: La String a afficher
+        @param size: Taille en pixel du texte
+        @param x: Position x
+        @param y: Position y
+        @param max_width: Taille maximale du texte avant de faire un retour a la ligne
+        @param center: Centrer le texte (max_width inutile)
         """
         # Check si la police existe deja ou non
         if size in self.fonts_stock:
@@ -124,7 +127,7 @@ class View:
         width, max_height = text_surface.get_size()
 
         if center:
-            self.window.blit(text_surface, (x - width//2, y))
+            self.window.blit(text_surface, (x - width // 2, y))
             return
 
         if width < max_width:  # Si nous avons assez de place on affiche la ligne sur sa ligne
@@ -156,13 +159,13 @@ class View:
 
     def print_clear(self):
         """
-        @brief Vide l'ecran avec un ecran noir
+        @summary Vide l'ecran avec un ecran noir
         """
         pygame.draw.rect(self.window, (0, 0, 0), (0, 0, self.wwidth, self.wheight))
 
     def print_room(self, room, char):
         """
-        @brief Affiche la salle active a l'ecran
+        @summary Affiche la salle active a l'ecran
         @param room : salle a afficher
         @param char : personnage principal (pour avoir l'orientation de la salle)
         """
@@ -200,7 +203,7 @@ class View:
 
     def print_inventory(self, char, cursor):
         """
-        @brief Affiche l'inventaire du joueur
+        @summary Affiche l'inventaire du joueur
         @param char : personnage dont on affiche l'inventaire
         @param cursor : curseur (2D) dans l'inventaire
         """
@@ -229,7 +232,7 @@ class View:
 
     def print_active_tab(self, char, cursor=None):
         """
-        @brief Affiche la barre active du joueur
+        @summary Affiche la barre active du joueur
         @param char : personnage dont on affiche la barre active
         @param cursor : curseur dans la barre active (non Necessaire)
         """
@@ -254,16 +257,18 @@ class View:
 
         # Logo d'attaque normale
         self.window.blit(
-            pygame.transform.scale(self.items_tiles[self.items_id["attack_logo"]], (int(size_cursor_width), int(size_cursor_height))), (
+            pygame.transform.scale(self.items_tiles[self.items_id["attack_logo"]],
+                                   (int(size_cursor_width), int(size_cursor_height))), (
                 int(self.wwidth * 0.60 + size_width * 22 / temptx),
                 int(starty + size_width * 4 / temptx)))
 
         # Sorts de la barre active
         spells = char.inventory.active_spells
         for i in range(1, 4):
-            if spells[i-1] is not None:
+            if spells[i - 1] is not None:
                 self.window.blit(
-                    pygame.transform.scale(self.items_tiles[spells[i-1].get_icon_id()], (int(size_cursor_width), int(size_cursor_height))), (
+                    pygame.transform.scale(self.items_tiles[spells[i - 1].get_icon_id()], (int(size_cursor_width),
+                                                                                           int(size_cursor_height))), (
                         int(self.wwidth * 0.60 + (i + 1) * size_width * 22 / temptx + i * size_cursor_width),
                         int(starty + size_width * 4 / temptx)))
 
@@ -272,13 +277,14 @@ class View:
         for i in range(0, 4):
             if usables[i] is not None:
                 self.window.blit(
-                    pygame.transform.scale(self.items_tiles[usables[i].get_icon_id()], (int(size_cursor_width), int(size_cursor_height))), (
+                    pygame.transform.scale(self.items_tiles[usables[i].get_icon_id()], (int(size_cursor_width),
+                                                                                        int(size_cursor_height))), (
                         int(self.wwidth * 0.60 + (i + 1) * size_width * 22 / temptx + i * size_cursor_width),
                         int(starty + size_width * 4 / temptx + size_width * 22 / temptx + size_cursor_width)))
 
     def print_active_equipment(self, char):
         """
-        @brief Affiche l'equipement actif du joueur
+        @summary Affiche l'equipement actif du joueur
         @param char : personnage dont on affiche l'equipement
         """
         # On affiche la zone principale (les cases)
@@ -291,7 +297,6 @@ class View:
         tempix, tempiy = self.items_tiles[0].get_size()
         item_width, item_height = size_width * tempix / tempx, size_height * tempiy / tempy
 
-        icon_id = 0
         # Jewel1
         if char.inventory.jewel1 is None:
             icon_id = self.items_id["no_amulet"]
@@ -374,11 +379,12 @@ class View:
             (int(self.wwidth * 0.77 + 7 * size_width * 4 / tempx + 3 * item_width),
              int(self.wheight * 0.30 + 7 * size_width * 4 / tempx + 3 * item_height)))
 
-    def print_map(self, map: str = None):
+    def print_map(self, carte: str = None) -> None:
         """
-        @brief Affichage de la map a l'ecran
+        @summary Affichage de la carte a l'ecran
+        @param carte : str la map en text generé par plt
         """
-        raw_data, size = map
+        raw_data, size = carte
         surf = pygame.image.frombuffer(raw_data, size, "RGB")
         surf.set_colorkey((255, 255, 255))
         tempx, tempy = surf.get_size()
@@ -386,16 +392,16 @@ class View:
         self.window.blit(pygame.transform.scale(surf, (size_width, size_height)),
                          (int(self.wwidth * (0.55 + 0.45 / 2) - size_width / 2), 0))
 
-    def print_description(self, item):
+    def print_description(self, item: Item) -> None:
         """
-        @brief Affiche la description d'un objet par dessus la map
-        :param item: Objet dont on note la description
+        @summary Affiche la description d'un objet par dessus la carte
+        @param item: Objet dont on note la description
         """
-        i = 1
+        # TODO
 
     def resize_event(self, event):
         """
-        @brief fonction gerant la modification de la taille de la fenetre de jeu
+        @summary fonction gerant la modification de la taille de la fenetre de jeu
         @param event : evenement genere par pygame
         """
         width, height = event.size
@@ -406,10 +412,10 @@ class View:
 
     def print_case(self, cursor, position, text):
         """
-        @brief Affiche une case de l'HUD
-        :param cursor: Position du curseur (== position si sur cette case)
-        :param position: Position de la case (par rapport a la premiere == 0)
-        :param text: texte dans la case (si text = "<^>" on affiche les fleches)
+        @summary Affiche une case de l'HUD
+        @param cursor: Position du curseur (== position si sur cette case)
+        @param position: Position de la case (par rapport a la premiere == 0)
+        @param text: texte dans la case (si text = "<^>" on affiche les fleches)
         """
         tempx, tempy = self.cases_hud[0].get_size()
         size_width, size_height = int(self.wwidth * 0.20), int(self.wwidth * 0.20 * tempy / tempx)
@@ -419,51 +425,58 @@ class View:
         # Cases fleches
         if text == "<^>":
             self.window.blit(pygame.transform.scale(self.cases_hud[hovered], (size_width, size_height)),
-                                (int(self.wwidth * 0.56), int(self.wheight * 0.30 + self.wheight * 0.08 * position)))
+                             (int(self.wwidth * 0.56), int(self.wheight * 0.30 + self.wheight * 0.08 * position)))
         else:
-            self.window.blit(pygame.transform.scale(self.cases_hud[hovered+2], (size_width, size_height)),
-                                (int(self.wwidth * 0.56), int(self.wheight * 0.30 + self.wheight * 0.08 * position)))
+            self.window.blit(pygame.transform.scale(self.cases_hud[hovered + 2], (size_width, size_height)),
+                             (int(self.wwidth * 0.56), int(self.wheight * 0.30 + self.wheight * 0.08 * position)))
             # On centre le texte sur la case et on met une taille maximale de 0 (comme on centre ca ne change rien)
-            self.print_text(text, int(size_height//2.5), int(self.wwidth * 0.56) + size_width//2, int(self.wheight * 0.30 + self.wheight * 0.08 * position) + size_height//4, 0, True)
+            self.print_text(text, int(size_height // 2.5), int(self.wwidth * 0.56) + size_width // 2,
+                            int(self.wheight * 0.30 + self.wheight * 0.08 * position) + size_height // 4, 0, True)
 
     def print_cases_hud(self, cursor, situation=0):
         """
-        @brief Affiche l'HUD presentant les options en mode exploration / Inventaire / ... (fleches, inventaire ...)
+        @summary Affiche l'HUD presentant les options en mode exploration / Inventaire / ... (fleches, inventaire ...)
         @param cursor : Curseur pointant la case active
-        @param situation : Situation des cases: 0-Exploration, 1-Sortie de donjon, 2-Marchand, 3-Action Equipement(armures,armes,sorts), 4-Action consommables
+        @param situation : Situation des cases:
+                0-Exploration,
+                1-Sortie de donjon,
+                2-Marchand,
+                3-Action Equipement(armures,armes,sorts),
+                4-Action consommables
         """
 
-        if situation == 0: # Exploration
+        if situation == 0:  # Exploration
             self.print_case(cursor, 0, "<^>")
             self.print_case(cursor, 1, "Inventaire")
             self.print_case(cursor, 2, "Sauvegarder")
-        if situation == 1: # Exploration Fin Donjon
+        if situation == 1:  # Exploration Fin Donjon
             self.print_case(cursor, 0, "<^>")
             self.print_case(cursor, 1, "Inventaire")
             self.print_case(cursor, 2, "Sauvegarder")
             self.print_case(cursor, 3, "Descendre")
-        if situation == 2: # Exploration Marchand
+        if situation == 2:  # Exploration Marchand
             self.print_case(cursor, 0, "<^>")
             self.print_case(cursor, 1, "Inventaire")
             self.print_case(cursor, 2, "Sauvegarder")
             self.print_case(cursor, 3, "Marchand")
-        if situation == 3: # Inventaire Action Objet
+        if situation == 3:  # Inventaire Action Objet
             self.print_case(cursor, 0, "Equiper")
             self.print_case(cursor, 1, "Jeter")
-        if situation == 4: # Inventaire Action Consommables
+        if situation == 4:  # Inventaire Action Consommables
             self.print_case(cursor, 0, "Equiper")
             self.print_case(cursor, 1, "Jeter")
             self.print_case(cursor, 1, "Utiliser")
 
     def print_numbers(self, number, is_percent, width, height, posx, posy):
         """
-        @brief Affiche un nombre (positif entier) a l'ecran (en pourcentages ou non, auquel cas il est fixe a gauche de la position)
-        :param number: Nombre a affiche
-        :param is_percent: Mets-on un pourcentage au bout du nombre
-        :param width: epaisseur des chiffres
-        :param height: hauteur des chiffres
-        :param posx: position x du nombre (droite si pourcentage)
-        :param posy: position y du nombre (Toujours en haut des sprites)
+        @summary Affiche un nombre (positif entier) a l'ecran
+        @summary (en pourcentages ou non, auquel cas il est fixe a gauche de la position)
+        @param number: Nombre a affiche
+        @param is_percent: Mets-on un pourcentage au bout du nombre
+        @param width: epaisseur des chiffres
+        @param height: hauteur des chiffres
+        @param posx: position x du nombre (droite si pourcentage)
+        @param posy: position y du nombre (Toujours en haut des sprites)
         """
         number = int(number)
         letters = []  # Chiffres a affiche un a un
@@ -488,7 +501,7 @@ class View:
 
     def print_fillers(self, char=None):
         """
-        @brief Affichage des fillers (Vie, Mana, Armure)
+        @summary Affichage des fillers (Vie, Mana, Armure)
         @param char : Personnage selon lequel on affiche les fillers
         """
         percentages = [char.get_life_percent(), char.get_mana_percent(), char.get_experience_percent()]
@@ -509,7 +522,9 @@ class View:
                          (0, int(starty + self.wheight * 0.01)))
 
         # Fills Tubes
-        size_width_tubes, size_height_tubes = self.wwidth * 0.55 - size_width_main - self.wwidth * 0.055, self.wheight * 0.25 * 0.25
+        size_width_tubes = self.wwidth * 0.55 - size_width_main - self.wwidth * 0.055
+        size_height_tubes = self.wheight * 0.25 * 0.25
+
         for i in range(0, 3):
             self.window.blit(
                 pygame.transform.scale(self.fills_tubes[0], (int(size_width_tubes), int(size_height_tubes))), (
@@ -530,7 +545,7 @@ class View:
         for i in range(0, 3):
             self.window.blit(pygame.transform.scale(self.fills_tips[i], (int(size_width_tips), int(size_height_tips))),
                              (int(size_width_main + size_width_tubes), int(
-                                 starty + self.wheight * 0.01 + size_height_main / 32 + size_height_main * 20 / 64 * i)))
+                                starty + self.wheight * 0.01 + size_height_main / 32 + size_height_main * 20 / 64 * i)))
 
         # Numbers Percents
         size_width_number, size_height_number = size_width_main * 11 / 84, size_height_main * 11 / 64
