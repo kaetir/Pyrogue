@@ -13,10 +13,10 @@ from random import randint
 class Monster(Character):
     def __init__(self) -> None:
         super().__init__("Mechant")
-        print("Booohhh")
+        self.icon_id = randint(0, 4)
 
     def __str__(self) -> str:
-        return "boooooo"
+        return "Monster type:{} | level :{}".format(self.icon_id, self.level)
 
     def drop(self) -> List[Item]:
         """

@@ -40,7 +40,7 @@ class Character:
         self.mana: int = 10
         self.max_mana: int = 10
         self.damage_min: int = 1
-        self.damage_max: int = 4
+        self.damage_max: int = 3
         self.armor: int = 0
         self.max_armor: int = 1
         self.level: int = 1
@@ -172,8 +172,6 @@ class Character:
         """
         if amount < self.damage_min:
             other.take_damage(self.damage_min)
-        elif amount > self.damage_max:
-            other.take_damage(self.damage_max)
         else:
             other.take_damage(amount)
 

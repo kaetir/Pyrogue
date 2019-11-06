@@ -35,7 +35,10 @@ class Battle:
         @summary dit si le mob est mort
         @return: true si le mob est dead
         """
-        return not self.m.is_alive()
+        if not self.m.is_alive():
+            self.c.gain_xp(30)
+            self.c.armor = self.c.max_armor
+            return True
 
     def start(self) -> None:
         """
@@ -67,3 +70,7 @@ class Battle:
 
         if self.m.is_alive():
             self.m.inflict_damage(self.c, random.randint(1,self.m.damage_max))
+
+        print("=====================")
+        self.c.print()
+        self.m.print()

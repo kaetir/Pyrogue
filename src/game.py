@@ -6,6 +6,8 @@ from src.perso.character import Character
 from src.map import MapDungeon
 from src.battle import Battle
 
+from src.item import Weapon
+
 
 class Game:
     view = None
@@ -34,6 +36,9 @@ class Game:
         self.actual_level += 1
         self.character.set_pos(0, 0)
         self.map_surf = self.map.disp_map(player=self.character)
+        self.character.inventory.weapon = Weapon()
+        self.character.inventory.weapon.icon_id = 0
+        self.character.inventory.weapon.damage = 6
 
     def change_room(self):
         """
