@@ -22,13 +22,16 @@ class Inventory:
         self.items: list[Item] = []
         self.max_size: int = 6 * 8
 
+        for i in range(0, self.max_size):
+            self.items.append(None)
+
         # les consumables sont stoké
         # max size 4
         self.active_comsumable: list[Consumables] = [None, None, None, None]
 
         # Les speels sont tous dans des speels book et on en actives certain
         # max size 3
-        self.active_spells: list[Speelbook] = [None, None, None]
+        self.active_spells: list[SpellBook] = [None, None, None]
 
         self.helmet = None
         self.chest = None
@@ -39,6 +42,15 @@ class Inventory:
         self.shield = None
         self.jewel1 = None
         self.jewel2 = None
+
+    def equip(self, item):
+        """
+        @brief equipe un objet et l'enleve de l'inventaire si il est dedans
+        :param item: item a equiper
+        """
+        if isinstance(item, Equipment):
+            if item in self.items:
+                self.items[self.items.index(item)] = None
 
     def is_full(self):
         """
@@ -61,5 +73,5 @@ class Inventory:
             print(item.item_type)
         elif item.item_type == "consumable":
             print(item.item_type)
-        elif item.item_type == "speelbook":
+        elif item.item_type == "spellbook":
             print(item.item_type)

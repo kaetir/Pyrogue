@@ -40,16 +40,14 @@ class Item:
             return Consumables()
         elif typ == 3:
             # speelbook
-            return Speelbook()
+            return SpellBook()
 
 
-# ne pas utilisé juste utile pour la classification actuellement
 class Equipment(Item):
 
     def __init__(self) -> None:
         super().__init__()
         item_type: str = "equipment"
-        emplacement: str = ""
 
 
 class Weapon(Equipment):
@@ -78,9 +76,6 @@ class Armor(Equipment):
         super().__init__()
         self.armor_type = ""
 
-    def equiper(self) -> int:
-        return self.value
-
 
 class Jewel(Equipment):
     item_type = "jewel"
@@ -96,8 +91,8 @@ class Consumables(Item):
         print("pouf")
 
 
-class Speelbook(Item):
-    item_type = "speelbook"
+class SpellBook(Item):
+    item_type = "spellbook"
 
     def use(self, source, destination) -> None:
         print("mathémagie")

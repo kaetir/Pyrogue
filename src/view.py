@@ -69,6 +69,8 @@ class View:
         self.window = pygame.display.set_mode((800, 450), RESIZABLE)
         self.wwidth, self.wheight = pygame.display.get_surface().get_size()
 
+        pygame.font.init()
+
         self.load_assets()
 
     def load_assets(self):
@@ -79,7 +81,7 @@ class View:
         self.wall_tiles = load_tile_table("res/tiles/dungeon_wall.png", 4, 4)
         self.door_tiles = load_tile_table("res/tiles/dungeon_door.png", 4, 4)
         self.ceiling_tiles = load_tile_table("res/tiles/dungeon_ceiling.png", 4, 4)
-        self.cases_hud = load_tile_table("res/hud/cases.png", 1, 12)
+        self.cases_hud = load_tile_table("res/hud/cases.png", 1, 4)
         self.fills_fillers = load_tile_table("res/hud/fills_fillers.png", 1, 3)
         self.fills_tips = load_tile_table("res/hud/fills_tips.png", 1, 3)
         self.fills_main = load_tile_table("res/hud/fills_main.png", 4, 1)
@@ -101,7 +103,7 @@ class View:
         # Font
         self.font_name = "res/hud/minecraftia.ttf"
 
-    def print_text(self, text, size, x, y, max_width):
+    def print_text(self, text, size, x, y, max_width, center=False):
         """
         @brief Affiche un texte a l'ecran
         :param text: La String a afficher
@@ -109,6 +111,7 @@ class View:
         :param x: Position x
         :param y: Position y
         :param max_width: Taille maximale du texte avant de faire un retour a la ligne
+        :param center: Centrer le texte (max_width inutile)
         """
         # Check si la police existe deja ou non
         if size in self.fonts_stock:
@@ -119,6 +122,11 @@ class View:
 
         text_surface = font.render(text, 0, (255, 255, 255))
         width, max_height = text_surface.get_size()
+
+        if center:
+            self.window.blit(text_surface, (x - width//2, y))
+            return
+
         if width < max_width:  # Si nous avons assez de place on affiche la ligne sur sa ligne
             self.window.blit(text_surface, (x, y))
         else:  # Sinon, nous calculons des retours a la ligne
@@ -210,13 +218,14 @@ class View:
                 int((cursor[1] + 1) * size_width * 4 / temptx + cursor[1] * size_cursor_height)))
 
         # Objets de l'inventaire
-        inventory = char.get_inventory()
+        inventory = char.inventory.items
         for i in range(0, len(inventory)):
-            self.window.blit(
-                pygame.transform.scale(self.items_tiles[inventory[i].get_icon_id],
-                                       (int(size_cursor_width), int(size_cursor_height))), (
-                    int((i % 8 + 1) * size_width * 4 / temptx + (i % 8) * size_cursor_width),
-                    int((i // 8 + 1) * size_width * 4 / temptx + (i // 8) * size_cursor_height)))
+            if inventory[i] is not None:
+                self.window.blit(
+                    pygame.transform.scale(self.items_tiles[inventory[i].get_icon_id],
+                                           (int(size_cursor_width), int(size_cursor_height))), (
+                        int((i % 8 + 1) * size_width * 4 / temptx + (i % 8) * size_cursor_width),
+                        int((i // 8 + 1) * size_width * 4 / temptx + (i // 8) * size_cursor_height)))
 
     def print_active_tab(self, char, cursor=None):
         """
@@ -282,86 +291,86 @@ class View:
         tempix, tempiy = self.items_tiles[0].get_size()
         item_width, item_height = size_width * tempix / tempx, size_height * tempiy / tempy
 
-        id = 0
+        icon_id = 0
         # Jewel1
         if char.inventory.jewel1 is None:
-            id = self.items_id["no_amulet"]
+            icon_id = self.items_id["no_amulet"]
         else:
-            id = char.inventory.jewel1.get_icon_id()
+            icon_id = char.inventory.jewel1.get_icon_id()
         self.window.blit(
-            pygame.transform.scale(self.items_tiles[id], (int(item_width), int(item_height))),
+            pygame.transform.scale(self.items_tiles[icon_id], (int(item_width), int(item_height))),
             (int(self.wwidth * 0.77 + size_width * 4 / tempx),
              int(self.wheight * 0.30 + size_width * 4 / tempx)))
         # Jewel2
         if char.inventory.jewel2 is None:
-            id = self.items_id["no_amulet"]
+            icon_id = self.items_id["no_amulet"]
         else:
-            id = char.inventory.jewel2.get_icon_id()
+            icon_id = char.inventory.jewel2.get_icon_id()
         self.window.blit(
-            pygame.transform.scale(self.items_tiles[id], (int(item_width), int(item_height))),
+            pygame.transform.scale(self.items_tiles[icon_id], (int(item_width), int(item_height))),
             (int(self.wwidth * 0.77 + size_width * 4 / tempx),
              int(self.wheight * 0.30 + 3 * size_width * 4 / tempx + item_height)))
         # Helmet
         if char.inventory.helmet is None:
-            id = self.items_id["no_helmet"]
+            icon_id = self.items_id["no_helmet"]
         else:
-            id = char.inventory.helmet.get_icon_id()
+            icon_id = char.inventory.helmet.get_icon_id()
         self.window.blit(
-            pygame.transform.scale(self.items_tiles[id], (int(item_width), int(item_height))),
+            pygame.transform.scale(self.items_tiles[icon_id], (int(item_width), int(item_height))),
             (int(self.wwidth * 0.77 + 3 * size_width * 4 / tempx + item_width),
              int(self.wheight * 0.30 + size_width * 4 / tempx)))
         # Chest
         if char.inventory.chest is None:
-            id = self.items_id["no_chest"]
+            icon_id = self.items_id["no_chest"]
         else:
-            id = char.inventory.chest.get_icon_id()
+            icon_id = char.inventory.chest.get_icon_id()
         self.window.blit(
-            pygame.transform.scale(self.items_tiles[id], (int(item_width), int(item_height))),
+            pygame.transform.scale(self.items_tiles[icon_id], (int(item_width), int(item_height))),
             (int(self.wwidth * 0.77 + 3 * size_width * 4 / tempx + item_width),
              int(self.wheight * 0.30 + 3 * size_width * 4 / tempx + item_height)))
         # Legs
         if char.inventory.legs is None:
-            id = self.items_id["no_legs"]
+            icon_id = self.items_id["no_legs"]
         else:
-            id = char.inventory.legs.get_icon_id()
+            icon_id = char.inventory.legs.get_icon_id()
         self.window.blit(
-            pygame.transform.scale(self.items_tiles[id], (int(item_width), int(item_height))),
+            pygame.transform.scale(self.items_tiles[icon_id], (int(item_width), int(item_height))),
             (int(self.wwidth * 0.77 + 3 * size_width * 4 / tempx + item_width),
              int(self.wheight * 0.30 + 5 * size_width * 4 / tempx + 2 * item_height)))
         # Boots
         if char.inventory.boots is None:
-            id = self.items_id["no_boots"]
+            icon_id = self.items_id["no_boots"]
         else:
-            id = char.inventory.boots.get_icon_id()
+            icon_id = char.inventory.boots.get_icon_id()
         self.window.blit(
-            pygame.transform.scale(self.items_tiles[id], (int(item_width), int(item_height))),
+            pygame.transform.scale(self.items_tiles[icon_id], (int(item_width), int(item_height))),
             (int(self.wwidth * 0.77 + 3 * size_width * 4 / tempx + item_width),
              int(self.wheight * 0.30 + 7 * size_width * 4 / tempx + 3 * item_height)))
         # Gloves
         if char.inventory.gloves is None:
-            id = self.items_id["no_gloves"]
+            icon_id = self.items_id["no_gloves"]
         else:
-            id = char.inventory.gloves.get_icon_id()
+            icon_id = char.inventory.gloves.get_icon_id()
         self.window.blit(
-            pygame.transform.scale(self.items_tiles[id], (int(item_width), int(item_height))),
+            pygame.transform.scale(self.items_tiles[icon_id], (int(item_width), int(item_height))),
             (int(self.wwidth * 0.77 + 5 * size_width * 4 / tempx + 2 * item_width),
              int(self.wheight * 0.30 + 3 * size_width * 4 / tempx + item_height)))
         # Weapon
         if char.inventory.weapon is None:
-            id = self.items_id["no_weapon"]
+            icon_id = self.items_id["no_weapon"]
         else:
-            id = char.inventory.weapon.get_icon_id()
+            icon_id = char.inventory.weapon.get_icon_id()
         self.window.blit(
-            pygame.transform.scale(self.items_tiles[id], (int(item_width), int(item_height))),
+            pygame.transform.scale(self.items_tiles[icon_id], (int(item_width), int(item_height))),
             (int(self.wwidth * 0.77 + 7 * size_width * 4 / tempx + 3 * item_width),
              int(self.wheight * 0.30 + 5 * size_width * 4 / tempx + 2 * item_height)))
         # Weapon
         if char.inventory.shield is None:
-            id = self.items_id["no_shield"]
+            icon_id = self.items_id["no_shield"]
         else:
-            id = char.inventory.shield.get_icon_id
+            icon_id = char.inventory.shield.get_icon_id
         self.window.blit(
-            pygame.transform.scale(self.items_tiles[id], (int(item_width), int(item_height))),
+            pygame.transform.scale(self.items_tiles[icon_id], (int(item_width), int(item_height))),
             (int(self.wwidth * 0.77 + 7 * size_width * 4 / tempx + 3 * item_width),
              int(self.wheight * 0.30 + 7 * size_width * 4 / tempx + 3 * item_height)))
 
@@ -395,45 +404,56 @@ class View:
         self.window = pygame.display.set_mode((width, height), RESIZABLE)
         self.wwidth, self.wheight = pygame.display.get_surface().get_size()
 
-    def print_cases_hud(self, cursor, exit_case=False, merchant_case=False):
+    def print_case(self, cursor, position, text):
         """
-        @brief Affiche l'HUD presentant les options en mode exploration (fleches, inventaire ...)
-        @param cursor : Curseur pointant la case active
-        @param exit_case : Ajout de la case Sortie de dongeon
-        @param cursor : Ajout de la case commerce
+        @brief Affiche une case de l'HUD
+        :param cursor: Position du curseur (== position si sur cette case)
+        :param position: Position de la case (par rapport a la premiere == 0)
+        :param text: texte dans la case (si text = "<^>" on affiche les fleches)
         """
         tempx, tempy = self.cases_hud[0].get_size()
         size_width, size_height = int(self.wwidth * 0.20), int(self.wwidth * 0.20 * tempy / tempx)
 
+        hovered = 1 if cursor == position else 0
+
         # Cases fleches
-        if cursor == 0:
-            self.window.blit(pygame.transform.scale(self.cases_hud[1], (size_width, size_height)),
-                             (int(self.wwidth * 0.56), int(self.wheight * 0.30)))
+        if text == "<^>":
+            self.window.blit(pygame.transform.scale(self.cases_hud[hovered], (size_width, size_height)),
+                                (int(self.wwidth * 0.56), int(self.wheight * 0.30 + self.wheight * 0.08 * position)))
         else:
-            self.window.blit(pygame.transform.scale(self.cases_hud[0], (size_width, size_height)),
-                             (int(self.wwidth * 0.56), int(self.wheight * 0.30)))
+            self.window.blit(pygame.transform.scale(self.cases_hud[hovered+2], (size_width, size_height)),
+                                (int(self.wwidth * 0.56), int(self.wheight * 0.30 + self.wheight * 0.08 * position)))
+            # On centre le texte sur la case et on met une taille maximale de 0 (comme on centre ca ne change rien)
+            self.print_text(text, int(size_height//2.5), int(self.wwidth * 0.56) + size_width//2, int(self.wheight * 0.30 + self.wheight * 0.08 * position) + size_height//4, 0, True)
 
-        # Cases inventaire et sauvegarde (toujours présents)
-        for i in range(0, 2):
-            if cursor == i + 1:
-                self.window.blit(pygame.transform.scale(self.cases_hud[i * 2 + 3], (size_width, size_height)),
-                                 (int(self.wwidth * 0.56), int(self.wheight * 0.30 + self.wheight * 0.08 * (i + 1))))
-            else:
-                self.window.blit(pygame.transform.scale(self.cases_hud[i * 2 + 2], (size_width, size_height)),
-                                 (int(self.wwidth * 0.56), int(self.wheight * 0.30 + self.wheight * 0.08 * (i + 1))))
+    def print_cases_hud(self, cursor, situation=0):
+        """
+        @brief Affiche l'HUD presentant les options en mode exploration / Inventaire / ... (fleches, inventaire ...)
+        @param cursor : Curseur pointant la case active
+        @param situation : Situation des cases: 0-Exploration, 1-Sortie de donjon, 2-Marchand, 3-Action Equipement(armures,armes,sorts), 4-Action consommables
+        """
 
-        if exit_case or merchant_case:
-            i = 0
-            if exit_case:
-                i = 0
-            elif merchant_case:
-                i = i
-            if cursor == 3:
-                self.window.blit(pygame.transform.scale(self.cases_hud[i * 2 + 7], (size_width, size_height)),
-                                 (int(self.wwidth * 0.56), int(self.wheight * 0.30 + self.wheight * 0.08 * 3)))
-            else:
-                self.window.blit(pygame.transform.scale(self.cases_hud[i * 2 + 6], (size_width, size_height)),
-                                 (int(self.wwidth * 0.56), int(self.wheight * 0.30 + self.wheight * 0.08 * 3)))
+        if situation == 0: # Exploration
+            self.print_case(cursor, 0, "<^>")
+            self.print_case(cursor, 1, "Inventaire")
+            self.print_case(cursor, 2, "Sauvegarder")
+        if situation == 1: # Exploration Fin Donjon
+            self.print_case(cursor, 0, "<^>")
+            self.print_case(cursor, 1, "Inventaire")
+            self.print_case(cursor, 2, "Sauvegarder")
+            self.print_case(cursor, 3, "Descendre")
+        if situation == 2: # Exploration Marchand
+            self.print_case(cursor, 0, "<^>")
+            self.print_case(cursor, 1, "Inventaire")
+            self.print_case(cursor, 2, "Sauvegarder")
+            self.print_case(cursor, 3, "Marchand")
+        if situation == 3: # Inventaire Action Objet
+            self.print_case(cursor, 0, "Equiper")
+            self.print_case(cursor, 1, "Jeter")
+        if situation == 4: # Inventaire Action Consommables
+            self.print_case(cursor, 0, "Equiper")
+            self.print_case(cursor, 1, "Jeter")
+            self.print_case(cursor, 1, "Utiliser")
 
     def print_numbers(self, number, is_percent, width, height, posx, posy):
         """
