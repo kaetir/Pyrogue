@@ -87,6 +87,8 @@ class View:
         self.monsters.append(pygame.image.load("res/enemies/skeleton.png").convert_alpha())
         self.monsters.append(pygame.image.load("res/enemies/zombie.png").convert_alpha())
         self.monsters.append(pygame.image.load("res/enemies/shadow_soul.png").convert_alpha())
+
+        # Assets Merchants
         self.monsters.append(pygame.image.load("res/enemies/thibault.png").convert_alpha())
 
         # Font
