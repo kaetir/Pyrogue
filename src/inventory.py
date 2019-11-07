@@ -41,6 +41,9 @@ class Inventory:
         self.amulet = None
         self.ring = None
 
+        # LA THUNE 💲💲💲💲💵💵💵💵💵💵💵💵$$$$$$$
+        self.money: int = 0
+
     def equip(self, item):
         """
         @summary equipe un objet et l'enleve de l'inventaire si il est dedans
