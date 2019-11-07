@@ -4,6 +4,7 @@ from pygame.locals import RESIZABLE
 from src.item import Item
 from src.items_id import items_id
 
+
 def load_tile_table(filename, nbx: int, nby: int):
     """
     @summary Charge un spritesheet selon une image et le nombre de sprites
@@ -70,7 +71,7 @@ class View:
         self.cases_hud = load_tile_table("res/hud/cases.png", 1, 4)
         self.fills_fillers = load_tile_table("res/hud/fills_fillers.png", 1, 4)
         self.fills_tips = load_tile_table("res/hud/fills_tips.png", 1, 4)
-        self.fills_main = load_tile_table("res/hud/fills_main.png", 5, 1)
+        self.fills_main = load_tile_table("res/hud/fills_main.png", 6, 1)
         self.fills_tubes = load_tile_table("res/hud/fills_tubes.png", 1, 1)
         self.numbers_tiles = load_tile_table("res/hud/numbers.png", 11, 1)
         self.inventory_tab = load_tile_table("res/inventory/inventory_tab.png", 1, 1)
@@ -515,7 +516,9 @@ class View:
 
         # Fills Main
         tempx_main, tempy_main = self.fills_main[0].get_size()
-        size_width_main, size_height_main = coef * self.wheight * 0.25 * tempx_main / tempy_main, coef * self.wheight * 0.25
+        size_width_main = coef * self.wheight * 0.25 * tempx_main / tempy_main
+        size_height_main = coef * self.wheight * 0.25
+
         self.window.blit(pygame.transform.scale(self.fills_main[char.get_orientation() % 4 if not monster else 4],
                                                 (int(size_width_main), int(size_height_main))),
                          (startx, int(starty + coef * self.wheight * 0.01)))
@@ -528,13 +531,14 @@ class View:
             self.window.blit(
                 pygame.transform.scale(self.fills_tubes[0], (int(size_width_tubes), int(size_height_tubes))), (
                     int(startx + size_width_main),
-                    int(starty + coef * (self.wheight * 0.01 + (5 * size_height_main / 16) * i) + size_height_main / 16)))
+                    int(starty + coef * (
+                                self.wheight * 0.01 + (5 * size_height_main / 16) * i) + size_height_main / 16)))
 
         # Fills Filler
         size_height_filler = size_height_tubes * 14 / 16
         for i in range(0, 3):
             size_width_filler = percentages[i] * size_width_tubes
-            if armoring and i ==2: # On saute le 2 pour afficher l'armure (3)
+            if armoring and i == 2:  # On saute le 2 pour afficher l'armure (3)
                 index = 3
             else:
                 index = i
@@ -546,13 +550,14 @@ class View:
         # Fills Filler
         size_width_tips, size_height_tips = size_width_main * 32 / 84, size_height_main * 20 / 64
         for i in range(0, 3):
-            if armoring and i ==2: # On saute le 2 pour afficher l'armure (3)
+            if armoring and i == 2:  # On saute le 2 pour afficher l'armure (3)
                 index = 3
             else:
                 index = i
-            self.window.blit(pygame.transform.scale(self.fills_tips[index], (int(size_width_tips), int(size_height_tips))),
-                             (int(startx + size_width_main + size_width_tubes), int(
-                                starty + coef * (self.wheight * 0.01) + size_height_main / 32 + size_height_main * 20 / 64 * i)))
+            self.window.blit(
+                pygame.transform.scale(self.fills_tips[index], (int(size_width_tips), int(size_height_tips))),
+                (int(startx + size_width_main + size_width_tubes), int(
+                    starty + coef * (self.wheight * 0.01) + size_height_main / 32 + size_height_main * 20 / 64 * i)))
 
         # Numbers Percents
         size_width_number, size_height_number = size_width_main * 11 / 84, size_height_main * 11 / 64
