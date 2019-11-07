@@ -10,6 +10,7 @@ items_id = {
     "no_weapon": 8,
     "no_shield": 9,
     "attack_logo": 77,
+    "gold": 80,
 
     "amulets": [18, 19],
 
