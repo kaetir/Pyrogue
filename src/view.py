@@ -2,7 +2,7 @@ import pygame
 from pygame.locals import RESIZABLE
 
 from src.item import Item
-
+from src.items_id import items_id
 
 def load_tile_table(filename, nbx: int, nby: int):
     """
@@ -24,23 +24,6 @@ def load_tile_table(filename, nbx: int, nby: int):
 
 
 class View:
-    items_id = {
-        "error": 77,
-        "no_helmet": 0,
-        "no_chest": 1,
-        "no_legs": 2,
-        "no_boots": 3,
-        "no_gloves": 4,
-        "no_ring": 5,
-        "no_amulet": 6,
-        "no_weapon": 7,
-        "no_shield": 8,
-        "attack_logo": 78,
-        "amulet1": 9,
-        "amulet2": 19,
-        "amulet3": 29
-    }
-
     window = None
     wwidth, wheight = 0, 0
     # Assets
@@ -257,7 +240,7 @@ class View:
 
         # Logo d'attaque normale
         self.window.blit(
-            pygame.transform.scale(self.items_tiles[self.items_id["attack_logo"]],
+            pygame.transform.scale(self.items_tiles[items_id["attack_logo"]],
                                    (int(size_cursor_width), int(size_cursor_height))), (
                 int(self.wwidth * 0.60 + size_width * 22 / temptx),
                 int(starty + size_width * 4 / temptx)))
@@ -299,7 +282,7 @@ class View:
 
         # amulet
         if char.inventory.amulet is None:
-            icon_id = self.items_id["no_amulet"]
+            icon_id = items_id["no_amulet"]
         else:
             icon_id = char.inventory.amulet.get_icon_id()
         self.window.blit(
@@ -308,7 +291,7 @@ class View:
              int(self.wheight * 0.30 + size_width * 4 / tempx)))
         # ring
         if char.inventory.ring is None:
-            icon_id = self.items_id["no_ring"]
+            icon_id = items_id["no_ring"]
         else:
             icon_id = char.inventory.ring.get_icon_id()
         self.window.blit(
@@ -317,7 +300,7 @@ class View:
              int(self.wheight * 0.30 + 3 * size_width * 4 / tempx + item_height)))
         # Helmet
         if char.inventory.helmet is None:
-            icon_id = self.items_id["no_helmet"]
+            icon_id = items_id["no_helmet"]
         else:
             icon_id = char.inventory.helmet.get_icon_id()
         self.window.blit(
@@ -326,7 +309,7 @@ class View:
              int(self.wheight * 0.30 + size_width * 4 / tempx)))
         # Chest
         if char.inventory.chest is None:
-            icon_id = self.items_id["no_chest"]
+            icon_id = items_id["no_chest"]
         else:
             icon_id = char.inventory.chest.get_icon_id()
         self.window.blit(
@@ -335,7 +318,7 @@ class View:
              int(self.wheight * 0.30 + 3 * size_width * 4 / tempx + item_height)))
         # Legs
         if char.inventory.legs is None:
-            icon_id = self.items_id["no_legs"]
+            icon_id = items_id["no_legs"]
         else:
             icon_id = char.inventory.legs.get_icon_id()
         self.window.blit(
@@ -344,7 +327,7 @@ class View:
              int(self.wheight * 0.30 + 5 * size_width * 4 / tempx + 2 * item_height)))
         # Boots
         if char.inventory.boots is None:
-            icon_id = self.items_id["no_boots"]
+            icon_id = items_id["no_boots"]
         else:
             icon_id = char.inventory.boots.get_icon_id()
         self.window.blit(
@@ -353,7 +336,7 @@ class View:
              int(self.wheight * 0.30 + 7 * size_width * 4 / tempx + 3 * item_height)))
         # Gloves
         if char.inventory.gloves is None:
-            icon_id = self.items_id["no_gloves"]
+            icon_id = items_id["no_gloves"]
         else:
             icon_id = char.inventory.gloves.get_icon_id()
         self.window.blit(
@@ -362,7 +345,7 @@ class View:
              int(self.wheight * 0.30 + 3 * size_width * 4 / tempx + item_height)))
         # Weapon
         if char.inventory.weapon is None:
-            icon_id = self.items_id["no_weapon"]
+            icon_id = items_id["no_weapon"]
         else:
             icon_id = char.inventory.weapon.get_icon_id()
         self.window.blit(
@@ -371,7 +354,7 @@ class View:
              int(self.wheight * 0.30 + 5 * size_width * 4 / tempx + 2 * item_height)))
         # Weapon
         if char.inventory.shield is None:
-            icon_id = self.items_id["no_shield"]
+            icon_id = items_id["no_shield"]
         else:
             icon_id = char.inventory.shield.get_icon_id
         self.window.blit(
