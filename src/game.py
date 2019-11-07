@@ -1,6 +1,7 @@
 import pygame
 from pygame.constants import QUIT, VIDEORESIZE, KEYDOWN, K_UP, K_DOWN, K_RIGHT, K_LEFT, K_RETURN, K_ESCAPE
 
+
 from src.view import View
 from src.perso.character import Character
 from src.map import MapDungeon
@@ -38,9 +39,11 @@ class Game:
         self.actual_level += 1
         self.character.set_pos(0, 0)
         self.map_surf = self.map.disp_map(player=self.character)
+        # === TEST ===
         self.character.inventory.weapon = Weapon()
-        self.character.inventory.weapon.icon_id = 0
+        self.character.inventory.weapon.icon_id = 11
         self.character.inventory.weapon.damage = 6
+        # === FIN  ===
 
     def change_room(self):
         """
@@ -106,7 +109,7 @@ class Game:
             elif game_area == 3 and isinstance(current_item, Consumables):
                 max_hud_cursor = 2
             else:
-                max_hud_cursor = 1
+                max_hud_cursor = 2
 
             if current_room.enemy is not None and game_area != 2:
                 self.actual_battle = Battle(self.character, current_room.enemy)
