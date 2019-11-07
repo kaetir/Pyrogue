@@ -12,7 +12,8 @@
 """
 
 from __future__ import annotations
-from src.item import Equipment
+from src.item import *
+from src.perso.character import *
 
 
 class Inventory:
@@ -51,12 +52,28 @@ class Inventory:
         @param item: item a equiper
         @return bool: code d'erreur
         """
-        if isinstance(item, Equipment):
-            if item in self.items:
-                # TODO
-                self.items[self.items.index(item)] = None
-        else:
-            return 1
+        if item in self.items:
+            if item.equipment_type == "helmet":
+                self.helmet, self.items[self.items.index(item)] = item, self.helmet
+            elif item.equipment_type == "chest":
+                self.chest, self.items[self.items.index(item)] = item, self.chest
+            elif item.equipment_type == "legs":
+                self.legs, self.items[self.items.index(item)] = item, self.legs
+            elif item.equipment_type == "boots":
+                self.boots, self.items[self.items.index(item)] = item, self.boots
+            elif item.equipment_type == "gloves":
+                self.gloves, self.items[self.items.index(item)] = item, self.gloves
+            elif item.equipment_type == "amulet":
+                self.amulet, self.items[self.items.index(item)] = item, self.amulet
+            elif item.equipment_type == "ring":
+                self.ring, self.items[self.items.index(item)] = item, self.ring
+            elif item.equipment_type == "weapon":
+                self.weapon, self.items[self.items.index(item)] = item, self.weapon
+            elif item.equipment_type == "shield":
+                self.shield, self.items[self.items.index(item)] = item, self.shield
+            else:
+                return 0
+        return 1
 
     def use(self, cons: Consumables, car: Character):
         if cons in self.items:
@@ -74,7 +91,12 @@ class Inventory:
         @summary dit si l'inventaire est plein
         @return : bool
         """
-        return len(self.items) == self.max_size
+        count = 0
+        for i in range(0, self.max_size):
+            count += 1 if self.items[i] is not None else 0
+        if count == self.max_size:
+            return True
+        return False
 
     def append(self, item: Item):
         """
@@ -85,8 +107,9 @@ class Inventory:
             i = 0
             while self.items[i] is not None:
                 i += 1
+            self.items[i] = item
 
-        if item.item_type == "weapon":
+        """if item.item_type == "weapon":
             print(item.item_type)
         elif item.item_type == "armor":
             print(item.item_type)
@@ -95,7 +118,7 @@ class Inventory:
         elif item.item_type == "consumable":
             print(item.item_type)
         elif item.item_type == "spellbook":
-            print(item.item_type)
+            print(item.item_type)"""
 
     def equip_consumable(self, c: Consumables, pos: int):
         """
@@ -105,11 +128,9 @@ class Inventory:
         @return:
         """
         if c in self.items:
-            print(c)
             self.active_comsumable[pos], self.items[self.items.index(c)] = c, self.active_comsumable[pos]
             return 0
-        else:
-            return 1
+        return 1
 
     def equip_spellbook(self, sb: SpellBook, pos: int):
         """
@@ -118,5 +139,7 @@ class Inventory:
         @param pos: la pos dans la barre des équipable
         @return:
         """
-        # TODO
-        return 0
+        if sb in self.items:
+            self.active_spells[pos], self.items[self.items.index(sb)] = sb, self.active_spells[pos]
+            return 0
+        return 1

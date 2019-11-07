@@ -44,7 +44,7 @@ class Game:
         self.character.inventory.weapon.icon_id = 11
         self.character.inventory.weapon.damage = 6
         self.character.inventory.items[5] = Consumables()
-        self.character.inventory.items[24] = Equipment()
+        self.character.inventory.items[24] = Armor()
         self.character.inventory.items[12] = Weapon()
         # === FIN  ===
 

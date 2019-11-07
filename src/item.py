@@ -16,6 +16,7 @@
 from __future__ import annotations
 from random import randint, random, choice
 from res.ressources_id import items_id
+from src.perso.character import Character
 
 
 class Item:
@@ -50,20 +51,32 @@ class Equipment(Item):
 
     def __init__(self) -> None:
         super().__init__()
-        item_type: str = "equipment"
-        print(item_type)
 
 
 class Weapon(Equipment):
-    item_type = "weapon"
     """ emplacement : 
     weapon, shield
     """
-    damage: int = 1
-    precission: float = 0.99
+
+    static_equipment_type = ["weapon", "shield"]
+
+    def __init__(self) -> None:
+        super().__init__()
+        self.equipment_type = choice(self.static_equipment_type)
+        self.random_icon()
+
+        self.damage = 1
+        self.precision = 0.95
+        self.block_chance = 0.10
+
+    def random_icon(self):
+        if self.equipment_type == "weapon":
+            self.icon_id = choice(items_id["swords"])
+        elif self.equipment_type == "shield":
+            self.icon_id = choice(items_id["shields"])
 
     def hit(self) -> int:
-        if random() > self.precission:
+        if random() > self.precision:
             return self.damage
         return 0
 
@@ -74,12 +87,30 @@ class Armor(Equipment):
     helmet, chest, legs, boots, gloves
     """
 
-    value: int = 1
+    static_equipment_type = ["helmet", "chest", "legs", "boots", "gloves", "amulet", "ring"]
 
     def __init__(self) -> None:
         super().__init__()
-        self.armor_type = ""
+        self.equipment_type = choice(self.static_equipment_type)
+        self.random_icon()
 
+        self.armor = 1
+
+    def random_icon(self):
+        if self.equipment_type == "helmet":
+            self.icon_id = choice(items_id["helmets"])
+        elif self.equipment_type == "chest":
+            self.icon_id = choice(items_id["chests"])
+        elif self.equipment_type == "legs":
+            self.icon_id = choice(items_id["legs"])
+        elif self.equipment_type == "boots":
+            self.icon_id = choice(items_id["boots"])
+        elif self.equipment_type == "gloves":
+            self.icon_id = choice(items_id["gloves"])
+        elif self.equipment_type == "amulet":
+            self.icon_id = choice(items_id["amulets"])
+        elif self.equipment_type == "ring":
+            self.icon_id = choice(items_id["rings"])
 
 class Consumables(Item):
     item_type = "consumable"
