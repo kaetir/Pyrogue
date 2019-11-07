@@ -7,7 +7,7 @@
 """
 import random
 from src.perso.character import Character
-from src.ressources_id import merchants_id
+from res.ressources_id import merchants_id
 
 
 class Merchant(Character):

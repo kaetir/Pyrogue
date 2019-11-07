@@ -5,7 +5,7 @@ from src.item import Item
 from src.perso.merchant import Merchant
 from src.perso.monster import Monster
 from src.item import Item
-from src.ressources_id import items_id
+from res.ressources_id import *
 
 
 def load_tile_table(filename, nbx: int, nby: int):
@@ -76,7 +76,7 @@ class View:
         self.cases_hud = load_tile_table("res/hud/cases.png", 1, 4)
         self.fills_fillers = load_tile_table("res/hud/fills_fillers.png", 1, 4)
         self.fills_tips = load_tile_table("res/hud/fills_tips.png", 1, 4)
-        self.fills_main = load_tile_table("res/hud/fills_main.png", 6, 1)
+        self.fills_main = load_tile_table("res/hud/fills_main.png", 5, 1)
         self.fills_tubes = load_tile_table("res/hud/fills_tubes.png", 1, 1)
         self.numbers_tiles = load_tile_table("res/hud/numbers.png", 11, 1)
         self.inventory_tab = load_tile_table("res/inventory/inventory_tab.png", 1, 1)
@@ -92,9 +92,6 @@ class View:
         self.monsters.append(pygame.image.load("res/enemies/skeleton.png").convert_alpha())
         self.monsters.append(pygame.image.load("res/enemies/zombie.png").convert_alpha())
         self.monsters.append(pygame.image.load("res/enemies/shadow_soul.png").convert_alpha())
-
-        # Assets Merchants
-        self.monsters.append(pygame.image.load("res/enemies/thibault.png").convert_alpha())
 
         # Assets Merchants
         self.merchants.append(pygame.image.load("res/allies/thibault.png").convert_alpha())
