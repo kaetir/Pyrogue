@@ -226,7 +226,7 @@ class View:
         for i in range(0, len(inventory)):
             if inventory[i] is not None:
                 self.window.blit(
-                    pygame.transform.scale(self.items_tiles[inventory[i].get_icon_id],
+                    pygame.transform.scale(self.items_tiles[inventory[i].get_icon_id()],
                                            (int(size_cursor_width), int(size_cursor_height))), (
                         int((i % 8 + 1) * size_width * 4 / temptx + (i % 8) * size_cursor_width),
                         int((i // 8 + 1) * size_width * 4 / temptx + (i // 8) * size_cursor_height)))
@@ -374,7 +374,7 @@ class View:
         if char.inventory.shield is None:
             icon_id = items_id["no_shield"]
         else:
-            icon_id = char.inventory.shield.get_icon_id
+            icon_id = char.inventory.shield.get_icon_id()
         self.window.blit(
             pygame.transform.scale(self.items_tiles[icon_id], (int(item_width), int(item_height))),
             (int(self.wwidth * 0.77 + 7 * size_width * 4 / tempx + 3 * item_width),
@@ -467,7 +467,7 @@ class View:
         elif situation == 4:  # Inventaire Action Consommables
             self.print_case(cursor, 0, "Equiper")
             self.print_case(cursor, 1, "Jeter")
-            self.print_case(cursor, 1, "Utiliser")
+            self.print_case(cursor, 2, "Utiliser")
 
     def print_numbers(self, number, is_percent, width, height, posx, posy):
         """
@@ -566,7 +566,7 @@ class View:
                                                 (int(size_width_main), int(size_height_main))),
                          (startx, int(starty + coef * self.wheight * 0.01)))
         if not monster:
-            self.print_gold(656545, startx + size_width_main * 0.375,
+            self.print_gold(char.inventory.money, startx + size_width_main * 0.375,
                             starty + coef * self.wheight * 0.01 + size_height_main * 0.4, True)
 
         # Fills Tubes

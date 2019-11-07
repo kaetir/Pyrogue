@@ -43,6 +43,9 @@ class Game:
         self.character.inventory.weapon = Weapon()
         self.character.inventory.weapon.icon_id = 11
         self.character.inventory.weapon.damage = 6
+        self.character.inventory.items[5] = Consumables()
+        self.character.inventory.items[24] = Equipment()
+        self.character.inventory.items[12] = Weapon()
         # === FIN  ===
 
     def change_room(self):
@@ -253,8 +256,10 @@ class Game:
                                     self.character.inventory.throw(current_item)
                                     game_area = 1
                                 elif hud_cursor == 2:
-                                    self.character.inventory.use(current_item)
-                                    game_area = 1
+                                    if isinstance(current_item, Consumables):
+                                        if current_item.bonus == True:
+                                            self.character.inventory.use(current_item, self.character)
+                                            game_area = 1
 
                         elif event.key == K_ESCAPE:
                             # On quitte l'interface gerant les objets d'inventaire
