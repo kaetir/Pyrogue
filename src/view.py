@@ -2,7 +2,10 @@ import pygame
 from pygame.locals import RESIZABLE
 
 from src.item import Item
-from res.ressources_id import *
+from src.perso.merchant import Merchant
+from src.perso.monster import Monster
+from src.item import Item
+from src.ressources_id import items_id
 
 
 def load_tile_table(filename, nbx: int, nby: int):
@@ -44,6 +47,8 @@ class View:
     items_tiles = None
     # Assets Monsters
     monsters = []
+    # Assets Merchants
+    merchants = []
     # Font
     font_name = None
     fonts_stock = {}
@@ -90,6 +95,9 @@ class View:
 
         # Assets Merchants
         self.monsters.append(pygame.image.load("res/enemies/thibault.png").convert_alpha())
+
+        # Assets Merchants
+        self.merchants.append(pygame.image.load("res/allies/thibault.png").convert_alpha())
 
         # Font
         self.font_name = "res/hud/minecraftia.ttf"
@@ -183,11 +191,19 @@ class View:
         else:
             self.window.blit(pygame.transform.scale(self.ceiling_tiles[7], (size_width, size_height)), (0, 0))
 
-    def print_monster(self, char):
+    def print_character(self, char):
         tempx, tempy = self.monsters[0].get_size()  # Les monstres ont la meme taille niveau sprite
         size_width, size_height = int(self.wwidth * 0.55), int(self.wwidth * 0.55 * tempy / tempx)
 
-        self.window.blit(pygame.transform.scale(self.monsters[char.icon_id], (size_width, size_height)), (0, 0))
+        sprite = None
+        if isinstance(char, Monster):
+            sprite = self.monsters
+        elif isinstance(char, Merchant):
+            sprite = self.merchants
+        else:
+            return # Inconnu, on quitte sans afficher
+
+        self.window.blit(pygame.transform.scale(sprite[char.icon_id], (size_width, size_height)), (0, 0))
 
     def print_inventory(self, char, cursor):
         """

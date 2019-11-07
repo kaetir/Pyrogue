@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import random
 from src.perso.monster import Monster
+from src.perso.merchant import Merchant
 
 
 class Room:
@@ -35,7 +36,9 @@ class Room:
         self.y = y
         self.discovered: bool = False
         self.exit: bool = False
-        self.enemy: Monster = None if random.randint(0, 1) < 0.7 else Monster()
+
+        self.enemy: Monster = None if random.random() < 0.7 else Monster()
+        self.merchant: Merchant = None if self.enemy is not None or random.random() < 0.9 else Merchant()
 
     def __repr__(self) -> str:
         return "Room %d : %d" % (self.x, self.y)

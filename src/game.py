@@ -102,7 +102,7 @@ class Game:
             current_room = self.map.get_room(px, py)
             current_item = self.character.inventory.items[inventory_cursor[0] + inventory_cursor[1] * 8]
 
-            if game_area == 0 and current_room.is_exit():
+            if game_area == 0 and (current_room.is_exit() or current_room.merchant is not None):
                 max_hud_cursor = 3
             elif game_area == 3 and isinstance(current_item, Equipment):
                 max_hud_cursor = 1
@@ -137,6 +137,10 @@ class Game:
                                 # CHANGEMENT DE DONJON
                                 hud_cursor = 0
                                 self.dungeon_restart(False)  # Sans RESET
+                            elif hud_cursor == 3 and current_room.merchant is not None:
+                                # LES SOLDES
+                                # TODO
+                                i =1
 
                         elif event.key == K_UP:  # Fleche du haut
                             if hud_cursor > 0:
@@ -290,7 +294,11 @@ class Game:
                 # HUD Right Cases
                 if current_room.is_exit():
                     self.view.print_cases_hud(hud_cursor, 1)
-                elif not current_room.is_exit():
+                elif current_room.merchant is not None:
+                    self.view.print_cases_hud(hud_cursor, 2)
+                    # Merchant
+                    self.view.print_character(current_room.merchant)
+                else:
                     self.view.print_cases_hud(hud_cursor, 0)
                 # HUD Active Tab
                 self.view.print_active_tab(self.character)
@@ -316,7 +324,7 @@ class Game:
                 # Room
                 self.view.print_room(current_room, self.character)
                 # Monster
-                self.view.print_monster(current_room.enemy)
+                self.view.print_character(current_room.enemy)
                 # HUD Active Tab
                 self.view.print_active_tab(self.character, active_cursor)
                 # Description

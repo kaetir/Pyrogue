@@ -95,8 +95,10 @@ class MapDungeon:
             self.rooms += [Room(val[0], val[1], val[2])]
         self.rooms[0].discover()
         self.rooms[0].enemy = None
+        self.rooms[0].merchant = None
         self.rooms[len(self.rooms) - 1].set_exit()  # La derniere salle est une sortie
         self.rooms[len(self.rooms) - 1].enemy = None
+        self.rooms[len(self.rooms) - 1].merchant = None
 
     @staticmethod
     def _porte(plot, centerx: int, centery: int, dire: int):

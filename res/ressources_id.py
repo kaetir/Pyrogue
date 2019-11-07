@@ -35,6 +35,9 @@ monsters_id = {
     "mimic": 2,
     "skeleton": 3,
     "zombie": 4,
-    "shadow": 5,
-    "thibault": 6
+    "shadow": 5
+}
+
+merchants_id = {
+    "thibault": 0
 }
