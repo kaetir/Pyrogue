@@ -217,7 +217,7 @@ class Game:
                                 if self.character.inventory.active_spells[active_cursor[0] - 1] is not None:
                                     self.actual_battle.tour(active_cursor[0])
                             elif active_cursor[0] >= 0 and active_cursor[1] == 1:  # Consommables
-                                if self.character.inventory.active_spells[active_cursor[0]] is not None:
+                                if self.character.inventory.active_comsumable[active_cursor[0]] is not None:
                                     self.actual_battle.tour(4 + active_cursor[0])
 
                         elif event.key == K_UP:  # Fleche du haut
