@@ -274,7 +274,7 @@ class Game:
 
                     elif game_area == 4:  # Mode Objet d'inventaire -> Sorts Barre Active
                         if event.key == K_RETURN:
-                            self.character.equip_spellbook(current_item, active_cursor[0] - 1)
+                            self.character.inventory.equip_spellbook(current_item, active_cursor[0] - 1)
                             active_cursor = [0, 0]
                             game_area = 1  # On retourne a l'inventaire
 
@@ -291,7 +291,7 @@ class Game:
 
                     elif game_area == 5:  # Mode Objet d'inventaire -> Consommables Barre Active
                         if event.key == K_RETURN:
-                            self.character.equip_consumable(current_item, active_cursor[0])
+                            self.character.inventory.equip_consumable(current_item, active_cursor[0])
                             active_cursor = [0, 0]
                             game_area = 1  # On retourne a l'inventaire
 

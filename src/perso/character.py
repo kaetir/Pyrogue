@@ -198,3 +198,17 @@ class Character:
 
     def equip_consumable(self, current_item, cursor: int) -> bool:
         return 0
+
+    def sell(self, item, merchant):
+        pass
+
+    def heal(self, amount: int)-> None:
+        """
+        @summary rend de la vie au perso
+        @param amount: la quantité
+        @return: None
+        """
+        if self.health + amount >= self.max_health:
+            self.health = self.max_health
+        else:
+            self.health += amount

@@ -13,7 +13,9 @@
 
 """
 
-from random import randint, random
+from __future__ import annotations
+from random import randint, random, choice
+from res.ressources_id import items_id
 
 
 class Item:
@@ -21,6 +23,7 @@ class Item:
         self.name = ""
         self.item_type = ""
         self.icon_id = 0
+        self.prix = randint(1, 42)
 
     def get_icon_id(self):
         return self.icon_id
@@ -80,13 +83,21 @@ class Armor(Equipment):
 
 class Consumables(Item):
     item_type = "consumable"
+    bonus: bool = True
 
-    def use(self) -> None:
-        print("pouf", self.icon_id)
+    def __init__(self):
+        super().__init__()
+        self.icon_id = choice(items_id["sandwichs"])
+
+    def use(self, c: Character) -> None:
+        if self.bonus:
+            c.heal(c.max_health//2)
+        print("pouf")
 
 
 class SpellBook(Item):
     item_type = "spellbook"
+    bonus: bool = True
 
     def use(self, source, destination) -> None:
         print("mathémagie", self.icon_id)

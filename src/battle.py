@@ -64,13 +64,19 @@ class Battle:
                                   self.c.inventory.weapon.damage if self.c.inventory.weapon is not None else 1)
         # spell
         elif action < 4:
+            action -= 1
             # TODO verif spell
             self.c.inventory.active_spells[action].use(self.c, self.m)
 
         # consumable
         elif action < 8:
             # TODO verif consumable
-            self.c.inventory.active_comsumable[action].use(self.c, self.m)
+            action %= 4
+            if self.c.inventory.active_comsumable[action].bonus:
+                self.c.inventory.active_comsumable[action].use(self.c)
+            else:
+                self.c.inventory.active_comsumable[action].use(self.m)
+
             self.c.inventory.active_comsumable[action] = None
 
         if self.m.is_alive():

@@ -83,7 +83,7 @@ class View:
         self.inventory_cursor = load_tile_table("res/inventory/inventory_cursor.png", 1, 1)
         self.active_tab = load_tile_table("res/inventory/active_tab.png", 1, 1)
         self.active_equipment = load_tile_table("res/inventory/active_equipment.png", 1, 1)
-        self.items_tiles = load_tile_table("res/inventory/items.png", 10, 9)
+        self.items_tiles = load_tile_table("res/inventory/items.png", 10, 11)
 
         # Assets Monsters
         self.monsters.append(pygame.image.load("res/enemies/druid.png").convert_alpha())
