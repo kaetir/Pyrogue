@@ -41,7 +41,7 @@ class Inventory:
         self.amulet = None
         self.ring = None
 
-        # LA THUNE 💲💲💲💲💵💵💵💵💵💵💵💵$$$$$$$
+        # LA THUNE
         self.money: int = 0
 
     def equip(self, item):

@@ -55,6 +55,6 @@ class PyrogueDB:
 
 if __name__ == '__main__':
     my = PyrogueDB()
-    my.save("map", "thibault")
+    my.save("map", "toitoine")
 
     my.load()
