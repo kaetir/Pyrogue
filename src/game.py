@@ -339,10 +339,11 @@ class Game:
                 elif game_area == 6:
                     self.view.print_inventory(current_room.merchant, inventory_cursor)
                 # HUD Right Cases
-                if isinstance(current_item, Equipment) or isinstance(current_item, SpellBook):
-                    self.view.print_cases_hud(-1, 3)  # Si Equipement ou Sort
-                elif isinstance(current_item, Consumables):
-                    self.view.print_cases_hud(-1, 4)  # Si Consommable
+                if game_area == 1:
+                    if isinstance(current_item, Equipment) or isinstance(current_item, SpellBook):
+                        self.view.print_cases_hud(-1, 3)  # Si Equipement ou Sort
+                    elif isinstance(current_item, Consumables):
+                        self.view.print_cases_hud(-1, 4)  # Si Consommable
                 # HUD Active Tab
                 self.view.print_active_tab(self.character)
                 # Description
