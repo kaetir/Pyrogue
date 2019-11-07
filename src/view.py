@@ -2,7 +2,7 @@ import pygame
 from pygame.locals import RESIZABLE
 
 from src.item import Item
-from src.items_id import items_id
+from src.ressources_id import items_id
 
 
 def load_tile_table(filename, nbx: int, nby: int):
@@ -86,6 +86,8 @@ class View:
         self.monsters.append(pygame.image.load("res/enemies/mimic.png").convert_alpha())
         self.monsters.append(pygame.image.load("res/enemies/skeleton.png").convert_alpha())
         self.monsters.append(pygame.image.load("res/enemies/zombie.png").convert_alpha())
+        self.monsters.append(pygame.image.load("res/enemies/shadow_soul.png").convert_alpha())
+        self.monsters.append(pygame.image.load("res/enemies/thibault.png").convert_alpha())
 
         # Font
         self.font_name = "res/hud/minecraftia.ttf"
