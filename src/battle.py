@@ -43,6 +43,7 @@ class Battle:
         if not self.m.is_alive():
             self.c.gain_xp(30)
             self.c.armor = self.c.max_armor
+            self.c.inventory.money += random.randint(20, 100)
             return True
 
     def start(self) -> None:

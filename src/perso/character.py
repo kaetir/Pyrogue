@@ -42,7 +42,7 @@ class Character:
         self.damage_min: int = 1
         self.damage_max: int = 3
         self.armor: int = 0
-        self.max_armor: int = 1
+        self.max_armor: int = 0
         self.level: int = 1
         self.experience: int = 0
         self.icon_id = 0
@@ -129,7 +129,7 @@ class Character:
         self.level += 1
         self.max_health += randint(1, self.level)
         self.health = self.max_health
-        self.max_armor += randint(1, self.level)
+        #self.max_armor += randint(1, self.level)
         self.armor = self.max_armor
         self.chance_of_dodge += random() / 10 if self.chance_of_dodge < 0.8 else 0.
         self.chance_of_parry += random() / 10 if self.chance_of_parry < 0.8 else 0

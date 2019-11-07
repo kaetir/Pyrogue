@@ -19,6 +19,10 @@ class Monster(Character):
     def __str__(self) -> str:
         return "Monster type:{} | level :{}".format(self.icon_id, self.level)
 
+    def level_up(self) -> None:
+        super().level_up()
+        self.armor += randint(1, self.level)
+
     def drop(self) -> List[Item]:
         """
         @summary when a mob die he loot drops

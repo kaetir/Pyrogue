@@ -107,7 +107,7 @@ class MapDungeon:
                       [.4, -.1],
                       [-.1, -.6],
                       [-.6, -.1]][dire]
-        c = 'w'
+        c = '#595652'
         largeur_porte = 0.2
         x = [centerx + offx, centerx + offx + largeur_porte,
              centerx + offx + largeur_porte, centerx + offx, centerx + offx]
@@ -131,14 +131,22 @@ class MapDungeon:
         for r in self.rooms:
             if r.is_discovered():
                 rom = r.get_pos()
+                x = [rom[0] - .5, rom[0] + .5, rom[0] + .5, rom[0] - .5, rom[0] - .5]
+                y = [rom[1] - .5, rom[1] - .5, rom[1] + .5, rom[1] + .5, rom[1] - .5]
+                ax.fill(x, y, "#595652", zorder=1)
                 ax.plot([rom[0] - 0.5, rom[0] - 0.5, rom[0] + 0.5, rom[0] + 0.5, rom[0] - 0.5],
                         [rom[1] - 0.5, rom[1] + 0.5, rom[1] + 0.5, rom[1] - 0.5, rom[1] - 0.5],
-                        color="r", lw=4)
+                        color="#d27d2c", lw=4)
 
                 # affichage des portes
                 for direction in [r.top, r.left, r.right, r.bottom]:
                     if r.doors[direction] == 1:
                         self._porte(ax, rom[0], rom[1], direction)
+
+                if r.merchant is not None:
+                    size_cursor = ax.get_ylim()[1] - ax.get_ylim()[0]
+                    ax.scatter(rom[0], rom[1], s=(10 - size_cursor) * 100, c="y",
+                               marker="o", zorder=3)
 
         if self.rooms[-1].is_discovered():
             ax.scatter(self.rooms[-1].get_pos()[0], self.rooms[-1].get_pos()[1], s=100, c="b", marker="X")
@@ -146,7 +154,8 @@ class MapDungeon:
         if player is not None:
             m = ["^", ">", "v", "<"][player.get_orientation()]
             size_cursor = ax.get_ylim()[1] - ax.get_ylim()[0]
-            ax.scatter(player.position[0], player.position[1], s=(10 - size_cursor) * 100, c="y", marker=m)
+            ax.scatter(player.position[0], player.position[1], s=(10 - size_cursor) * 100, c="#5555ff",
+                       marker=m, zorder=3)
 
         # sauvegarde du graph
         if filename is not None:
