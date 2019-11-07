@@ -137,6 +137,7 @@ class Character:
         self.max_mana += randint(1, self.level)
         self.mana = self.max_mana
         self.damage_min += randint(1, self.level)
+        self.damage_max += randint(1, self.level)
 
     def take_damage(self, amount: int) -> bool:
         """
