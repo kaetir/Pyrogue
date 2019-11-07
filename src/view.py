@@ -68,9 +68,9 @@ class View:
         self.door_tiles = load_tile_table("res/tiles/dungeon_door.png", 4, 4)
         self.ceiling_tiles = load_tile_table("res/tiles/dungeon_ceiling.png", 4, 4)
         self.cases_hud = load_tile_table("res/hud/cases.png", 1, 4)
-        self.fills_fillers = load_tile_table("res/hud/fills_fillers.png", 1, 3)
-        self.fills_tips = load_tile_table("res/hud/fills_tips.png", 1, 3)
-        self.fills_main = load_tile_table("res/hud/fills_main.png", 4, 1)
+        self.fills_fillers = load_tile_table("res/hud/fills_fillers.png", 1, 4)
+        self.fills_tips = load_tile_table("res/hud/fills_tips.png", 1, 4)
+        self.fills_main = load_tile_table("res/hud/fills_main.png", 5, 1)
         self.fills_tubes = load_tile_table("res/hud/fills_tubes.png", 1, 1)
         self.numbers_tiles = load_tile_table("res/hud/numbers.png", 11, 1)
         self.inventory_tab = load_tile_table("res/inventory/inventory_tab.png", 1, 1)
@@ -482,63 +482,87 @@ class View:
             self.window.blit(pygame.transform.scale(self.numbers_tiles[10], (int(width), int(height))),
                              (int(posx - width), int(posy)))
 
-    def print_fillers(self, char=None):
+    def print_fillers(self, char, armoring=False, monster=False):
         """
         @summary Affichage des fillers (Vie, Mana, Armure)
         @param char : Personnage selon lequel on affiche les fillers
+        @param armoring : Remplace t on la barre d'experience par une barre de shield?
+        @param monster : Est-ce que nous affichons les stats des mobs ?
         """
-        percentages = [char.get_life_percent(), char.get_mana_percent(), char.get_experience_percent()]
+        if armoring:
+            percentages = [char.get_life_percent(), char.get_mana_percent(), char.get_armor_percent()]
+            plain_numbers = [char.get_health(), char.get_mana(), char.get_armor()]
+        else:
+            percentages = [char.get_life_percent(), char.get_mana_percent(), char.get_experience_percent()]
+            plain_numbers = [char.get_health(), char.get_mana(), char.get_experience()]
         for i in range(0, len(percentages)):
             if percentages[i] < 0:
                 percentages[i] = 0
-        plain_numbers = [char.get_health(), char.get_mana(), char.get_experience()]
+        for i in range(0, len(plain_numbers)):
+            if plain_numbers[i] < 0:
+                plain_numbers[i] = 0
 
-        # On recupere la position sous l'affichage de la zone principale
+        # On recupere la position sous l'affichage de la zone principale (ou a droite si c'est un monstre)
         tempx, tempy = self.wall_tiles[0].get_size()
-        starty = self.wwidth * 0.55 * tempy / tempx
+        if monster:
+            starty = self.wheight * 0.05
+            startx = self.wwidth * 0.56
+            coef = 0.75
+        else:
+            starty = self.wwidth * 0.55 * tempy / tempx
+            startx = 0
+            coef = 1
 
         # Fills Main
         tempx_main, tempy_main = self.fills_main[0].get_size()
-        size_width_main, size_height_main = self.wheight * 0.25 * tempx_main / tempy_main, self.wheight * 0.25
-        self.window.blit(pygame.transform.scale(self.fills_main[char.get_orientation() % 4],
+        size_width_main, size_height_main = coef * self.wheight * 0.25 * tempx_main / tempy_main, coef * self.wheight * 0.25
+        self.window.blit(pygame.transform.scale(self.fills_main[char.get_orientation() % 4 if not monster else 4],
                                                 (int(size_width_main), int(size_height_main))),
-                         (0, int(starty + self.wheight * 0.01)))
+                         (startx, int(starty + coef * self.wheight * 0.01)))
 
         # Fills Tubes
-        size_width_tubes = self.wwidth * 0.55 - size_width_main - self.wwidth * 0.055
-        size_height_tubes = self.wheight * 0.25 * 0.25
+        size_width_tubes = coef * (self.wwidth * 0.55 - self.wwidth * 0.055) - size_width_main
+        size_height_tubes = coef * self.wheight * 0.25 * 0.25
 
         for i in range(0, 3):
             self.window.blit(
                 pygame.transform.scale(self.fills_tubes[0], (int(size_width_tubes), int(size_height_tubes))), (
-                    int(size_width_main),
-                    int(starty + self.wheight * 0.01 + size_height_main / 16 + (5 * size_height_main / 16) * i)))
+                    int(startx + size_width_main),
+                    int(starty + coef * (self.wheight * 0.01 + (5 * size_height_main / 16) * i) + size_height_main / 16)))
 
         # Fills Filler
         size_height_filler = size_height_tubes * 14 / 16
         for i in range(0, 3):
             size_width_filler = percentages[i] * size_width_tubes
+            if armoring and i ==2: # On saute le 2 pour afficher l'armure (3)
+                index = 3
+            else:
+                index = i
             self.window.blit(
-                pygame.transform.scale(self.fills_fillers[i], (int(size_width_filler), int(size_height_filler))), (
-                    int(size_width_main), int(starty + self.wheight * 0.01 + size_height_main / 16 + (
+                pygame.transform.scale(self.fills_fillers[index], (int(size_width_filler), int(size_height_filler))), (
+                    int(startx + size_width_main), int(starty + coef * (self.wheight * 0.01) + size_height_main / 16 + (
                             5 * size_height_main / 16) * i + size_height_main / 64)))
 
         # Fills Filler
         size_width_tips, size_height_tips = size_width_main * 32 / 84, size_height_main * 20 / 64
         for i in range(0, 3):
-            self.window.blit(pygame.transform.scale(self.fills_tips[i], (int(size_width_tips), int(size_height_tips))),
-                             (int(size_width_main + size_width_tubes), int(
-                                starty + self.wheight * 0.01 + size_height_main / 32 + size_height_main * 20 / 64 * i)))
+            if armoring and i ==2: # On saute le 2 pour afficher l'armure (3)
+                index = 3
+            else:
+                index = i
+            self.window.blit(pygame.transform.scale(self.fills_tips[index], (int(size_width_tips), int(size_height_tips))),
+                             (int(startx + size_width_main + size_width_tubes), int(
+                                starty + coef * (self.wheight * 0.01) + size_height_main / 32 + size_height_main * 20 / 64 * i)))
 
         # Numbers Percents
         size_width_number, size_height_number = size_width_main * 11 / 84, size_height_main * 11 / 64
         for i in range(0, 3):
             self.print_numbers(percentages[i] * 100, True, size_width_number, size_height_number,
-                               size_width_main + size_width_tubes,
-                               starty + self.wheight * 0.01 + size_height_main / 16 + (
+                               startx + size_width_main + size_width_tubes,
+                               starty + coef * (self.wheight * 0.01) + size_height_main / 16 + (
                                        5 * size_height_main / 16) * i + size_height_main / 32)
         # Numbers Plain
         for i in range(0, 3):
-            self.print_numbers(plain_numbers[i], False, size_width_number, size_height_number, size_width_main,
-                               starty + self.wheight * 0.01 + size_height_main / 16 + (
+            self.print_numbers(plain_numbers[i], False, size_width_number, size_height_number, startx + size_width_main,
+                               starty + coef * (self.wheight * 0.01) + size_height_main / 16 + (
                                        5 * size_height_main / 16) * i + size_height_main / 32)

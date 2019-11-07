@@ -79,13 +79,16 @@ class Character:
         return self.inventory.items
 
     def get_life_percent(self):
-        return self.health / self.max_health
+        return self.health / self.max_health if self.max_health != 0 else 0
 
     def get_mana_percent(self):
-        return self.mana / self.max_mana
+        return self.mana / self.max_mana if self.max_mana != 0 else 0
 
     def get_experience_percent(self):
         return self.experience / (fib_rec(self.level) * 100)
+
+    def get_armor_percent(self):
+        return self.armor / self.max_armor if self.max_armor != 0 else 0
 
     def get_orientation(self):
         return self.orientation % 4

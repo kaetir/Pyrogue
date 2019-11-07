@@ -294,6 +294,9 @@ class Game:
                     self.view.print_cases_hud(hud_cursor, 0)
                 # HUD Active Tab
                 self.view.print_active_tab(self.character)
+                # HUD Fillers
+                self.view.print_fillers(self.character)
+
             elif game_area == 1:
                 # Inventory
                 self.view.print_inventory(self.character, inventory_cursor)
@@ -306,6 +309,9 @@ class Game:
                 self.view.print_active_tab(self.character)
                 # Description
                 # TODO
+                # HUD Fillers
+                self.view.print_fillers(self.character)
+
             elif game_area == 2:
                 # Room
                 self.view.print_room(current_room, self.character)
@@ -315,11 +321,15 @@ class Game:
                 self.view.print_active_tab(self.character, active_cursor)
                 # Description
                 # TODO
+                # HUD Fillers
+                self.view.print_fillers(self.character, True)
+                self.view.print_fillers(current_room.enemy, True, True) # Monstre
                 # Test Fin Combat
                 if self.actual_battle.is_ended():
                     game_area = 0
                     current_room.enemy = None
                     self.actual_battle = None
+
             elif game_area == 3:
                 # Objet Inventaire
                 self.view.print_inventory(self.character, inventory_cursor)
@@ -332,6 +342,9 @@ class Game:
                 self.view.print_active_tab(self.character)
                 # Description
                 # TODO
+                # HUD Fillers
+                self.view.print_fillers(self.character)
+
             elif game_area == 4 or game_area == 5:
                 # Objet d'inventaire -> Sorts Barre Active
                 self.view.print_inventory(self.character, inventory_cursor)
@@ -344,11 +357,11 @@ class Game:
                 self.view.print_active_tab(self.character, active_cursor)
                 # Description
                 # TODO
+                # HUD Fillers
+                self.view.print_fillers(self.character)
 
             # HUD Active Equipment
             self.view.print_active_equipment(self.character)
-            # HUD Fillers
-            self.view.print_fillers(self.character)
 
             pygame.display.flip()
 
