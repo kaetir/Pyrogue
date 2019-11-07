@@ -100,10 +100,15 @@ class Game:
 
             px, py = self.character.get_pos()
             current_room = self.map.get_room(px, py)
-            current_item = self.character.inventory.items[inventory_cursor[0] + inventory_cursor[1] * 8]
+            if game_area != 6 or current_room.merchant is None:  # Si nous ne sommes pas en mode Acheter
+                current_item = self.character.inventory.items[inventory_cursor[0] + inventory_cursor[1] * 8]
+            else:
+                current_item = current_room.merchant.inventory.items[inventory_cursor[0] + inventory_cursor[1] * 8]
 
-            if game_area == 0 and (current_room.is_exit() or current_room.merchant is not None):
+            if game_area == 0 and current_room.is_exit():
                 max_hud_cursor = 3
+            elif game_area == 0 and current_room.merchant is not None:
+                max_hud_cursor = 4
             elif game_area == 3 and isinstance(current_item, Equipment):
                 max_hud_cursor = 1
             elif game_area == 3 and isinstance(current_item, Consumables):
@@ -139,8 +144,12 @@ class Game:
                                 self.dungeon_restart(False)  # Sans RESET
                             elif hud_cursor == 3 and current_room.merchant is not None:
                                 # LES SOLDES
-                                # TODO
-                                i =1
+                                game_area = 6
+                                inventory_cursor = [0, 0]
+                            elif hud_cursor == 4 and current_room.merchant is not None:
+                                # LES SOLDES #2
+                                game_area = 7
+                                inventory_cursor = [0, 0]
 
                         elif event.key == K_UP:  # Fleche du haut
                             if hud_cursor > 0:
@@ -160,17 +169,29 @@ class Game:
                             self.character.set_orientation((self.character.get_orientation() - 1) % 4)
                             self.map_surf = self.map.disp_map(player=self.character)
 
-                    elif game_area == 1:  # Si on est en mode Inventaire
+                    elif game_area == 1 or game_area == 6 or game_area == 7:  # Si on est en mode Inventaire, ou Achat ou Vente
                         if event.key == K_RETURN:
                             # Action avec l'objet du curseur, on passe en action inventaire
-                            if current_item is not None:  # Si pas d'objet, on reste en mode inventaire
+                            if game_area == 1 and current_item is not None:  # Si pas d'objet, on reste en mode inventaire
                                 game_area = 3
                                 hud_cursor = 0
+                            # On achete l'objet vise
+                            if game_area == 6 and current_item is not None and current_room.merchant is not None:
+                                self.character.buy(current_item, current_room.merchant)
+                            # On vend l'objet vise
+                            if game_area == 7 and current_item is not None and current_room.merchant is not None:
+                                self.character.sell(current_item, current_room.merchant)
 
                         elif event.key == K_ESCAPE:
                             # On quitte l'inventaire
+                            inventory_cursor = [0, 0]
+                            if game_area == 6:
+                                hud_cursor = 3
+                            elif game_area == 7:
+                                hud_cursor = 4
+                            else:
+                                hud_cursor = 1
                             game_area = 0
-                            hud_cursor = 1
 
                         elif event.key == K_UP:  # Fleche du haut
                             if inventory_cursor[1] > 0:
@@ -280,6 +301,7 @@ class Game:
                             if active_cursor[0] > 0:
                                 active_cursor[0] -= 1
 
+
             # Calculating New sprites and Printing
             px, py = self.character.get_pos()
             current_room = self.map.get_room(px, py)
@@ -305,9 +327,12 @@ class Game:
                 # HUD Fillers
                 self.view.print_fillers(self.character)
 
-            elif game_area == 1:
+            elif game_area == 1 or game_area == 6 or game_area == 7:
                 # Inventory
-                self.view.print_inventory(self.character, inventory_cursor)
+                if game_area == 1 or game_area == 7:
+                    self.view.print_inventory(self.character, inventory_cursor)
+                elif game_area == 6:
+                    self.view.print_inventory(current_room.merchant, inventory_cursor)
                 # HUD Right Cases
                 if isinstance(current_item, Equipment) or isinstance(current_item, SpellBook):
                     self.view.print_cases_hud(-1, 3)  # Si Equipement ou Sort

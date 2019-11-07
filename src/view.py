@@ -83,7 +83,7 @@ class View:
         self.inventory_cursor = load_tile_table("res/inventory/inventory_cursor.png", 1, 1)
         self.active_tab = load_tile_table("res/inventory/active_tab.png", 1, 1)
         self.active_equipment = load_tile_table("res/inventory/active_equipment.png", 1, 1)
-        self.items_tiles = load_tile_table("res/inventory/items.png", 10, 8)
+        self.items_tiles = load_tile_table("res/inventory/items.png", 10, 9)
 
         # Assets Monsters
         self.monsters.append(pygame.image.load("res/enemies/druid.png").convert_alpha())
@@ -113,7 +113,7 @@ class View:
         if size in self.fonts_stock:
             font = self.fonts_stock[size]
         else:
-            font = pygame.font.Font(self.font_name, size)
+            font = pygame.font.Font(self.font_name, int(size))
             self.fonts_stock[size] = font
 
         text_surface = font.render(text, 0, (255, 255, 255))
@@ -198,7 +198,7 @@ class View:
         elif isinstance(char, Merchant):
             sprite = self.merchants
         else:
-            return # Inconnu, on quitte sans afficher
+            return  # Inconnu, on quitte sans afficher
 
         self.window.blit(pygame.transform.scale(sprite[char.icon_id], (size_width, size_height)), (0, 0))
 
@@ -450,20 +450,21 @@ class View:
             self.print_case(cursor, 0, "<^>")
             self.print_case(cursor, 1, "Inventaire")
             self.print_case(cursor, 2, "Sauvegarder")
-        if situation == 1:  # Exploration Fin Donjon
+        elif situation == 1:  # Exploration Fin Donjon
             self.print_case(cursor, 0, "<^>")
             self.print_case(cursor, 1, "Inventaire")
             self.print_case(cursor, 2, "Sauvegarder")
             self.print_case(cursor, 3, "Descendre")
-        if situation == 2:  # Exploration Marchand
+        elif situation == 2:  # Exploration Marchand
             self.print_case(cursor, 0, "<^>")
             self.print_case(cursor, 1, "Inventaire")
             self.print_case(cursor, 2, "Sauvegarder")
-            self.print_case(cursor, 3, "Marchand")
-        if situation == 3:  # Inventaire Action Objet
+            self.print_case(cursor, 3, "Acheter")
+            self.print_case(cursor, 4, "Vendre")
+        elif situation == 3:  # Inventaire Action Objet
             self.print_case(cursor, 0, "Equiper")
             self.print_case(cursor, 1, "Jeter")
-        if situation == 4:  # Inventaire Action Consommables
+        elif situation == 4:  # Inventaire Action Consommables
             self.print_case(cursor, 0, "Equiper")
             self.print_case(cursor, 1, "Jeter")
             self.print_case(cursor, 1, "Utiliser")
@@ -499,6 +500,31 @@ class View:
         if is_percent:
             self.window.blit(pygame.transform.scale(self.numbers_tiles[10], (int(width), int(height))),
                              (int(posx - width), int(posy)))
+
+    def print_gold(self, price, x, y, limited=False):
+        """
+        @summary Affiche un prix
+        @param price : Prix a afficher
+        @param x : position x
+        @param y : position y
+        @param limited : Doit-on raccourcir le prix ? (auquel cas il est centre)
+        """
+        tempx, tempy = self.items_tiles[items_id["gold"]].get_size()
+        size_width, size_height = self.wheight * 0.07 * tempx / tempy, self.wheight * 0.07
+
+        self.window.blit(pygame.transform.scale(self.items_tiles[items_id["gold"]], (int(size_width), int(size_height))),
+                         (int(x - size_width if not limited else x - size_width / 2),
+                         int(y if not limited else y - size_height)))
+
+        price = int(price)
+        unit = [".", "K", "M", "G", "T", "P", "E", "Z", "Y", "*"]
+        index_unit = 0
+        while price > price % 1000:
+            price = price // 1000
+            if index_unit < len(unit) - 1:
+                index_unit += 1
+
+        self.print_text(str(price) + unit[index_unit], size_height*0.75, int(x), int(y), self.wwidth, limited)
 
     def print_fillers(self, char, armoring=False, monster=False):
         """
@@ -539,6 +565,9 @@ class View:
         self.window.blit(pygame.transform.scale(self.fills_main[char.get_orientation() % 4 if not monster else 4],
                                                 (int(size_width_main), int(size_height_main))),
                          (startx, int(starty + coef * self.wheight * 0.01)))
+        if not monster:
+            self.print_gold(656545, startx + size_width_main * 0.375,
+                            starty + coef * self.wheight * 0.01 + size_height_main * 0.4, True)
 
         # Fills Tubes
         size_width_tubes = coef * (self.wwidth * 0.55 - self.wwidth * 0.055) - size_width_main
@@ -549,7 +578,7 @@ class View:
                 pygame.transform.scale(self.fills_tubes[0], (int(size_width_tubes), int(size_height_tubes))), (
                     int(startx + size_width_main),
                     int(starty + coef * (
-                                self.wheight * 0.01 + (5 * size_height_main / 16) * i) + size_height_main / 16)))
+                            self.wheight * 0.01 + (5 * size_height_main / 16) * i) + size_height_main / 16)))
 
         # Fills Filler
         size_height_filler = size_height_tubes * 14 / 16
