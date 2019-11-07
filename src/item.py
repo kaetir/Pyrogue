@@ -78,14 +78,6 @@ class Armor(Equipment):
         self.armor_type = ""
 
 
-class Jewel(Equipment):
-    item_type = "jewel"
-    """ emplacement : 
-    jewel1, jewel2
-    """
-    color: str = "blueje"
-
-
 class Consumables(Item):
     item_type = "consumable"
 

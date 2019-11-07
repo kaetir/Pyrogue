@@ -31,7 +31,7 @@ class View:
         "no_legs": 2,
         "no_boots": 3,
         "no_gloves": 4,
-        "no_bracelet": 5,
+        "no_ring": 5,
         "no_amulet": 6,
         "no_weapon": 7,
         "no_shield": 8,
@@ -297,20 +297,20 @@ class View:
         tempix, tempiy = self.items_tiles[0].get_size()
         item_width, item_height = size_width * tempix / tempx, size_height * tempiy / tempy
 
-        # Jewel1
-        if char.inventory.jewel1 is None:
+        # amulet
+        if char.inventory.amulet is None:
             icon_id = self.items_id["no_amulet"]
         else:
-            icon_id = char.inventory.jewel1.get_icon_id()
+            icon_id = char.inventory.amulet.get_icon_id()
         self.window.blit(
             pygame.transform.scale(self.items_tiles[icon_id], (int(item_width), int(item_height))),
             (int(self.wwidth * 0.77 + size_width * 4 / tempx),
              int(self.wheight * 0.30 + size_width * 4 / tempx)))
-        # Jewel2
-        if char.inventory.jewel2 is None:
-            icon_id = self.items_id["no_amulet"]
+        # ring
+        if char.inventory.ring is None:
+            icon_id = self.items_id["no_ring"]
         else:
-            icon_id = char.inventory.jewel2.get_icon_id()
+            icon_id = char.inventory.ring.get_icon_id()
         self.window.blit(
             pygame.transform.scale(self.items_tiles[icon_id], (int(item_width), int(item_height))),
             (int(self.wwidth * 0.77 + size_width * 4 / tempx),

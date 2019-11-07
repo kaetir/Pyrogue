@@ -38,8 +38,8 @@ class Inventory:
         self.gloves = None
         self.weapon = None
         self.shield = None
-        self.jewel1 = None
-        self.jewel2 = None
+        self.amulet = None
+        self.ring = None
 
     def equip(self, item):
         """
