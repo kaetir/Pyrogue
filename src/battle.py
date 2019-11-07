@@ -30,10 +30,15 @@ class Battle:
             self.m = m
         self.c = c
 
-    def is_ended(self):
+        print("======= AU COMBAT =======")
+        self.c.print()
+        self.m.print()
+        print("=========================")
+
+    def is_ended(self) -> bool:
         """
         @summary dit si le mob est mort
-        @return: true si le mob est dead
+        @return: bool true si le mob est dead
         """
         if not self.m.is_alive():
             self.c.gain_xp(30)
@@ -69,8 +74,8 @@ class Battle:
             self.c.inventory.active_comsumable[action] = None
 
         if self.m.is_alive():
-            self.m.inflict_damage(self.c, random.randint(1, self.m.damage_max))
+            self.m.inflict_damage(self.c, random.randint(self.m.damage_min, self.m.damage_max))
 
-        print("=====================")
+        print("-------------------")
         self.c.print()
         self.m.print()
