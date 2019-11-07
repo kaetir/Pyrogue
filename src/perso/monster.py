@@ -6,6 +6,7 @@
 """
 from src.perso.character import Character
 from src.item import Item
+from src.ressources_id import monsters_id
 from typing import List
 from random import randint
 
@@ -13,7 +14,7 @@ from random import randint
 class Monster(Character):
     def __init__(self) -> None:
         super().__init__("Mechant")
-        self.icon_id = randint(0, 4)
+        self.icon_id = randint(0, len(monsters_id)-1)
 
     def __str__(self) -> str:
         return "Monster type:{} | level :{}".format(self.icon_id, self.level)

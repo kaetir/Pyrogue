@@ -28,3 +28,13 @@ items_id = {
 
     "spellbooks": [70, 71, 72, 73]
 }
+
+monsters_id = {
+    "druid": 0,
+    "imp": 1,
+    "mimic": 2,
+    "skeleton": 3,
+    "zombie": 4,
+    "shadow": 5,
+    "thibault": 6
+}
