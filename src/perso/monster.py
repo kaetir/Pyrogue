@@ -6,7 +6,7 @@
 """
 from src.perso.character import Character
 from src.item import Item
-from src.ressources_id import monsters_id
+from res.ressources_id import monsters_id
 from typing import List
 from random import randint
 

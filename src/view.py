@@ -2,7 +2,7 @@ import pygame
 from pygame.locals import RESIZABLE
 
 from src.item import Item
-from src.ressources_id import items_id
+from res.ressources_id import *
 
 
 def load_tile_table(filename, nbx: int, nby: int):
