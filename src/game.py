@@ -40,8 +40,7 @@ class Game:
         self.character.set_pos(0, 0)
         self.map_surf = self.map.disp_map(player=self.character)
         # === TEST ===
-        self.character.inventory.weapon = Weapon()
-        self.character.inventory.weapon.damage = 6
+        self.character.inventory.weapon = Weapon("weapon")
         self.character.inventory.append(Consumables())
         self.character.inventory.append(Armor())
         self.character.inventory.append(Weapon())

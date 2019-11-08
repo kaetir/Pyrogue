@@ -12,8 +12,8 @@
 """
 
 from __future__ import annotations
-from src.item import *
 from src.perso.character import *
+from src.item import *
 
 
 class Inventory:
@@ -52,18 +52,28 @@ class Inventory:
         @param item: item a equiper
         @return bool: code d'erreur
         """
-        if isinstance(item, Equipment):
-            if item in self.items:
-                if isinstance(item, Armor):
-                    if item.armor_type == "helmet":
-                        self.helmet, self.items[self.items.index(item)] = \
-                            self.items[self.items.index(item)], self.helmet
-                elif isinstance(item, Weapon):
-                    self.weapon, self.items[self.items.index(item)] = \
-                        self.items[self.items.index(item)], self.weapon
-
-        else:
-            return 1
+        if item in self.items:
+            if item.equipment_type == "helmet":
+                self.helmet, self.items[self.items.index(item)] = item, self.helmet
+            elif item.equipment_type == "chest":
+                self.chest, self.items[self.items.index(item)] = item, self.chest
+            elif item.equipment_type == "legs":
+                self.legs, self.items[self.items.index(item)] = item, self.legs
+            elif item.equipment_type == "boots":
+                self.boots, self.items[self.items.index(item)] = item, self.boots
+            elif item.equipment_type == "gloves":
+                self.gloves, self.items[self.items.index(item)] = item, self.gloves
+            elif item.equipment_type == "amulet":
+                self.amulet, self.items[self.items.index(item)] = item, self.amulet
+            elif item.equipment_type == "ring":
+                self.ring, self.items[self.items.index(item)] = item, self.ring
+            elif item.equipment_type == "weapon":
+                self.weapon, self.items[self.items.index(item)] = item, self.weapon
+            elif item.equipment_type == "shield":
+                self.shield, self.items[self.items.index(item)] = item, self.shield
+            else:
+                return 0
+        return 1
 
         # recalcule de l'armure dans le player
 

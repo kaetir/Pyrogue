@@ -21,7 +21,7 @@ from __future__ import annotations
 from random import randint, random
 from src.my_utils import fib_rec
 from src.inventory import Inventory
-from src.item import Equipment
+#from src.item import Equipment
 
 import math
 
@@ -215,16 +215,19 @@ class Character:
             self.armor += self.inventory.boots.value
         if self.inventory.gloves is not None:
             self.armor += self.inventory.gloves.value
-        if self.inventory.shield is not None:
-            self.armor += self.inventory.shield.value
+        if self.inventory.ring is not None:
+            self.armor += self.inventory.ring.value
+        if self.inventory.amulet is not None:
+            self.armor += self.inventory.amulet.value
         self.max_armor = self.armor
 
         return True
 
     def buy(self, item: Item, merchant: Merchant):
-        if self.inventory.money > item.prix:
+        if self.inventory.money >= item.prix:
             merchant.inventory.items[merchant.inventory.items.index(item)] = None
             self.inventory.append(item)
+            self.inventory.money -= item.prix
 
     def sell(self, item, merchant):
         pass

@@ -149,7 +149,7 @@ class MapDungeon:
                                marker="o", zorder=3)
 
         if self.rooms[-1].is_discovered():
-            ax.scatter(self.rooms[-1].get_pos()[0], self.rooms[-1].get_pos()[1], s=100, c="b", marker="X")
+            ax.scatter(self.rooms[-1].get_pos()[0], self.rooms[-1].get_pos()[1], s=100, c="b", marker="X", zorder=3)
 
         if player is not None:
             m = ["^", ">", "v", "<"][player.get_orientation()]
