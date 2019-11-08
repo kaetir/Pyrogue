@@ -60,12 +60,50 @@ class Weapon(Equipment):
 
     static_equipment_type = ["weapon", "shield"]
 
-    def __init__(self) -> None:
+    swordDamage = {
+        10: 3,
+        11: 3,
+        13: 3,
+        12: 3,
+        14: 3,
+        15: 3,
+        16: 3,
+        17: 6,
+        20: 3,
+        21: 3,
+        22: 3,
+        24: 3,
+        23: 3,
+        25: 3,
+        26: 3,
+        27: 6,
+        30: 3,
+        31: 3,
+        32: 3,
+        33: 3,
+        34: 6,
+        35: 8,
+        36: 3,
+        37: 3,
+        78: 15
+    }
+
+    def __init__(self, type: str= None) -> None:
         super().__init__()
-        self.equipment_type = choice(self.static_equipment_type)
+        if type is None:
+            self.equipment_type = choice(self.static_equipment_type)
+        else:
+            if type in self.static_equipment_type:
+                self.equipment_type = type
+            else:
+                self.equipment_type = choice(self.static_equipment_type)
+
         self.random_icon()
 
-        self.damage = 1
+        if self.equipment_type == "weapon":
+            self.damage = self.swordDamage[self.icon_id]
+        else:
+            self.damage = 1
         self.precision = 0.95
         self.block_chance = 0.10
 
@@ -94,7 +132,7 @@ class Armor(Equipment):
         self.equipment_type = choice(self.static_equipment_type)
         self.random_icon()
 
-        self.armor = 1
+        self.value = 1
 
     def random_icon(self):
         if self.equipment_type == "helmet":
@@ -112,6 +150,7 @@ class Armor(Equipment):
         elif self.equipment_type == "ring":
             self.icon_id = choice(items_id["rings"])
 
+
 class Consumables(Item):
     item_type = "consumable"
     bonus: bool = True
@@ -122,7 +161,7 @@ class Consumables(Item):
 
     def use(self, c: Character) -> None:
         if self.bonus:
-            c.heal(c.max_health//2)
+            c.heal(c.max_health // 2)
         print("pouf")
 
 

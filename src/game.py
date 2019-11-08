@@ -40,12 +40,10 @@ class Game:
         self.character.set_pos(0, 0)
         self.map_surf = self.map.disp_map(player=self.character)
         # === TEST ===
-        self.character.inventory.weapon = Weapon()
-        self.character.inventory.weapon.icon_id = 11
-        self.character.inventory.weapon.damage = 6
-        self.character.inventory.items[5] = Consumables()
-        self.character.inventory.items[24] = Armor()
-        self.character.inventory.items[12] = Weapon()
+        self.character.inventory.weapon = Weapon("weapon")
+        self.character.inventory.append(Consumables())
+        self.character.inventory.append(Armor())
+        self.character.inventory.append(Weapon())
         # === FIN  ===
 
     def change_room(self):
@@ -172,10 +170,12 @@ class Game:
                             self.character.set_orientation((self.character.get_orientation() - 1) % 4)
                             self.map_surf = self.map.disp_map(player=self.character)
 
-                    elif game_area == 1 or game_area == 6 or game_area == 7:  # Si on est en mode Inventaire, ou Achat ou Vente
+                    # Si on est en mode Inventaire, ou Achat ou Vente
+                    elif game_area == 1 or game_area == 6 or game_area == 7:
                         if event.key == K_RETURN:
                             # Action avec l'objet du curseur, on passe en action inventaire
-                            if game_area == 1 and current_item is not None:  # Si pas d'objet, on reste en mode inventaire
+                            # Si pas d'objet, on reste en mode inventaire
+                            if game_area == 1 and current_item is not None:
                                 game_area = 3
                                 hud_cursor = 0
                             # On achete l'objet vise
@@ -237,7 +237,7 @@ class Game:
                         if event.key == K_RETURN:
                             if isinstance(current_item, Equipment):
                                 if hud_cursor == 0:
-                                    self.character.inventory.equip(current_item)
+                                    self.character.equip(current_item)
                                 elif hud_cursor == 1:
                                     self.character.inventory.throw(current_item)
                                 game_area = 1

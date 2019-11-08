@@ -5,13 +5,15 @@
 
 
 """
-import random
 from src.perso.character import Character
 from res.ressources_id import merchants_id
+from src.item import *
 
 
 class Merchant(Character):
     def __init__(self) -> None:
         super().__init__("Merchant")
         print("Bonjour, tu en veux c'est de la bonne")
-        self.icon_id = random.randint(0, len(merchants_id)-1)
+        self.icon_id = randint(0, len(merchants_id) - 1)
+        for i in range(3):
+            self.inventory.items[i] = Consumables()

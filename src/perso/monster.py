@@ -29,7 +29,7 @@ class Monster(Character):
         @return : List[Item] une list de loot
         """
         if self.health <= 0:
-            return [Item.random() for _ in range(randint(0, 3))]
+            return []
         else:
             return []
 

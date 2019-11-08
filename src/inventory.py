@@ -12,8 +12,8 @@
 """
 
 from __future__ import annotations
-from src.item import *
 from src.perso.character import *
+from src.item import *
 
 
 class Inventory:
@@ -75,6 +75,8 @@ class Inventory:
                 return 0
         return 1
 
+        # recalcule de l'armure dans le player
+
     def use(self, cons: Consumables, car: Character):
         if cons in self.items:
             self.items[self.items.index(cons)] = None
@@ -91,12 +93,12 @@ class Inventory:
         @summary dit si l'inventaire est plein
         @return : bool
         """
-        count = 0
-        for i in range(0, self.max_size):
-            count += 1 if self.items[i] is not None else 0
-        if count == self.max_size:
-            return True
-        return False
+        i = 0
+        while i < self.max_size:
+            i += 1
+            if self.items[i] is None :
+                return False
+        return True
 
     def append(self, item: Item):
         """
@@ -108,17 +110,6 @@ class Inventory:
             while self.items[i] is not None:
                 i += 1
             self.items[i] = item
-
-        """if item.item_type == "weapon":
-            print(item.item_type)
-        elif item.item_type == "armor":
-            print(item.item_type)
-        elif item.item_type == "jewel":
-            print(item.item_type)
-        elif item.item_type == "consumable":
-            print(item.item_type)
-        elif item.item_type == "spellbook":
-            print(item.item_type)"""
 
     def equip_consumable(self, c: Consumables, pos: int):
         """
