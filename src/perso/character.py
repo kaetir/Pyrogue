@@ -21,6 +21,7 @@ from __future__ import annotations
 from random import randint, random
 from src.my_utils import fib_rec
 from src.inventory import Inventory
+from src.item import Equipment
 
 import math
 
@@ -194,10 +195,36 @@ class Character:
         return self.health > 0
 
     def equip_spellbook(self, current_item, cursor) -> bool:
-        return 0
+        return True
 
     def equip_consumable(self, current_item, cursor: int) -> bool:
-        return 0
+        return True
+
+    def equip(self, item: Equipment):
+        self.inventory.equip(item)
+
+        # recalcule de l'armure
+        self.armor = 0
+        if self.inventory.helmet is not None:
+            self.armor += self.inventory.helmet.value
+        if self.inventory.chest is not None:
+            self.armor += self.inventory.chest.value
+        if self.inventory.legs is not None:
+            self.armor += self.inventory.legs.value
+        if self.inventory.boots is not None:
+            self.armor += self.inventory.boots.value
+        if self.inventory.gloves is not None:
+            self.armor += self.inventory.gloves.value
+        if self.inventory.shield is not None:
+            self.armor += self.inventory.shield.value
+        self.max_armor = self.armor
+
+        return True
+
+    def buy(self, item: Item, merchant: Merchant):
+        if self.inventory.money > item.prix:
+            merchant.inventory.items[merchant.inventory.items.index(item)] = None
+            self.inventory.append(item)
 
     def sell(self, item, merchant):
         pass

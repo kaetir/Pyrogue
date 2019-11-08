@@ -62,6 +62,40 @@ class Weapon(Equipment):
     damage: int = 1
     precission: float = 0.99
 
+    def __init__(self) -> None:
+        super().__init__()
+        sword = choice(items_id["swords"])
+        swordDamage = {
+            10: 3,
+            11: 3,
+            12: 3,
+            13: 3,
+            14: 3,
+            15: 3,
+            16: 3,
+            17: 6,
+            20: 3,
+            21: 3,
+            22: 3,
+            23: 3,
+            24: 3,
+            25: 3,
+            26: 3,
+            27: 6,
+            30: 3,
+            31: 3,
+            32: 3,
+            33: 3,
+            34: 6,
+            35: 8,
+            36: 3,
+            37: 3,
+            78: 15
+        }
+
+        self.icon_id = sword
+        self.damage = swordDamage[sword]
+
     def hit(self) -> int:
         if random() > self.precission:
             return self.damage
@@ -78,7 +112,8 @@ class Armor(Equipment):
 
     def __init__(self) -> None:
         super().__init__()
-        self.armor_type = ""
+        self.armor_type = "helmet"
+        self.icon_id = choice(items_id["helmets"])
 
 
 class Consumables(Item):
@@ -91,7 +126,7 @@ class Consumables(Item):
 
     def use(self, c: Character) -> None:
         if self.bonus:
-            c.heal(c.max_health//2)
+            c.heal(c.max_health // 2)
         print("pouf")
 
 

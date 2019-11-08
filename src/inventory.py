@@ -12,7 +12,7 @@
 """
 
 from __future__ import annotations
-from src.item import Equipment
+from src.item import *
 
 
 class Inventory:
@@ -53,10 +53,18 @@ class Inventory:
         """
         if isinstance(item, Equipment):
             if item in self.items:
-                # TODO
-                self.items[self.items.index(item)] = None
+                if isinstance(item, Armor):
+                    if item.armor_type == "helmet":
+                        self.helmet, self.items[self.items.index(item)] = \
+                            self.items[self.items.index(item)], self.helmet
+                elif isinstance(item, Weapon):
+                    self.weapon, self.items[self.items.index(item)] = \
+                        self.items[self.items.index(item)], self.weapon
+
         else:
             return 1
+
+        # recalcule de l'armure dans le player
 
     def use(self, cons: Consumables, car: Character):
         if cons in self.items:
@@ -74,7 +82,12 @@ class Inventory:
         @summary dit si l'inventaire est plein
         @return : bool
         """
-        return len(self.items) == self.max_size
+        i = 0
+        while i < self.max_size:
+            i += 1
+            if self.items[i] is None :
+                return False
+        return True
 
     def append(self, item: Item):
         """
@@ -85,17 +98,7 @@ class Inventory:
             i = 0
             while self.items[i] is not None:
                 i += 1
-
-        if item.item_type == "weapon":
-            print(item.item_type)
-        elif item.item_type == "armor":
-            print(item.item_type)
-        elif item.item_type == "jewel":
-            print(item.item_type)
-        elif item.item_type == "consumable":
-            print(item.item_type)
-        elif item.item_type == "spellbook":
-            print(item.item_type)
+            self.items[i] = item
 
     def equip_consumable(self, c: Consumables, pos: int):
         """
