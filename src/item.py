@@ -88,7 +88,7 @@ class Weapon(Equipment):
         78: 15
     }
 
-    def __init__(self, type: str= None) -> None:
+    def __init__(self, type: str = None) -> None:
         super().__init__()
         if type is None:
             self.equipment_type = choice(self.static_equipment_type)
@@ -101,11 +101,17 @@ class Weapon(Equipment):
         self.random_icon()
 
         if self.equipment_type == "weapon":
+            self.prix = self.swordDamage[self.icon_id]*100
+            # 5% chance of parry
+            self.block_chance = 0.05
             self.damage = self.swordDamage[self.icon_id]
         else:
+            self.prix = 100
             self.damage = 1
+            # 30% chance of parry
+            self.block_chance = 0.3
+
         self.precision = 0.95
-        self.block_chance = 0.10
 
     def random_icon(self):
         if self.equipment_type == "weapon":
@@ -130,25 +136,38 @@ class Armor(Equipment):
     def __init__(self) -> None:
         super().__init__()
         self.equipment_type = choice(self.static_equipment_type)
-        self.random_icon()
-
+        self.prix = 1
         self.value = 1
+        self.random_equipement()
 
-    def random_icon(self):
+    def random_equipement(self):
         if self.equipment_type == "helmet":
             self.icon_id = choice(items_id["helmets"])
+            self.value = 2
+            self.prix = randint(150, 200)
         elif self.equipment_type == "chest":
             self.icon_id = choice(items_id["chests"])
+            self.value = 5
+            self.prix = randint(500, 1000)
         elif self.equipment_type == "legs":
             self.icon_id = choice(items_id["legs"])
+            self.value = 3
+            self.prix = randint(300, 500)
         elif self.equipment_type == "boots":
             self.icon_id = choice(items_id["boots"])
+            self.value = 2
+            self.prix = randint(50, 100)
         elif self.equipment_type == "gloves":
             self.icon_id = choice(items_id["gloves"])
+            self.value = 2
         elif self.equipment_type == "amulet":
             self.icon_id = choice(items_id["amulets"])
+            self.value = 1
+            self.prix = randint(50, 100)
         elif self.equipment_type == "ring":
             self.icon_id = choice(items_id["rings"])
+            self.value = 1
+            self.prix = randint(50, 100)
 
 
 class Consumables(Item):

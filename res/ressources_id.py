@@ -23,7 +23,7 @@ items_id = {
     "gloves": [44, 49, 54, 59, 64, 69],
 
     "amulets": [18, 19],
-    "rings": [0],
+    "rings": [93],
 
     "spellbooks": [70, 71, 72, 73, 74, 75],
 

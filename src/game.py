@@ -25,6 +25,7 @@ class Game:
         self.view = View()
         self.map_surf: str = ""
         self.actual_battle = None
+        pygame.display.set_caption("Pyrogue : la commutativité de l’anneau")
 
     def dungeon_restart(self, reset):
         """
@@ -34,17 +35,17 @@ class Game:
         if reset:
             self.character = Character("Bob")
             self.actual_level = 0
+            # === TEST ===
+            self.character.inventory.weapon = Weapon("weapon")
+            self.character.inventory.append(Armor())
+            self.character.inventory.append(Weapon())
+            # === FIN  ===
 
         self.map = MapDungeon(15)
         self.actual_level += 1
         self.character.set_pos(0, 0)
         self.map_surf = self.map.disp_map(player=self.character)
-        # === TEST ===
-        self.character.inventory.weapon = Weapon("weapon")
         self.character.inventory.append(Consumables())
-        self.character.inventory.append(Armor())
-        self.character.inventory.append(Weapon())
-        # === FIN  ===
 
     def change_room(self):
         """

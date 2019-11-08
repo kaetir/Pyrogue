@@ -16,4 +16,8 @@ class Merchant(Character):
         print("Bonjour, tu en veux c'est de la bonne")
         self.icon_id = randint(0, len(merchants_id) - 1)
         for i in range(3):
-            self.inventory.items[i] = Consumables()
+            self.inventory.append(Consumables())
+        for i in range(3):
+            self.inventory.append(Armor())
+        for i in range(3):
+            self.inventory.append(Weapon())

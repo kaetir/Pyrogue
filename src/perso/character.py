@@ -21,7 +21,7 @@ from __future__ import annotations
 from random import randint, random
 from src.my_utils import fib_rec
 from src.inventory import Inventory
-#from src.item import Equipment
+# from src.item import Equipment
 
 import math
 
@@ -130,15 +130,15 @@ class Character:
         self.level += 1
         self.max_health += randint(1, self.level)
         self.health = self.max_health
-        #self.max_armor += randint(1, self.level)
+        # self.max_armor += randint(1, self.level)
         self.armor = self.max_armor
-        self.chance_of_dodge += random() / 10 if self.chance_of_dodge < 0.8 else 0.
-        self.chance_of_parry += random() / 10 if self.chance_of_parry < 0.8 else 0
-        self.chance_of_critical += random() / 3 if self.chance_of_parry < 0.8 else 0
+        self.chance_of_dodge += random() / 100 if self.chance_of_dodge < 0.3 else 0.
+        self.chance_of_parry += random() / 100 if self.chance_of_parry < 0.8 else 0.
+        self.chance_of_critical += random() / 10 if self.chance_of_critical < 0.5 else 0.
         self.max_mana += randint(1, self.level)
         self.mana = self.max_mana
-        self.damage_min += randint(1, self.level)
-        self.damage_max += randint(1, self.level)
+        self.damage_min += 1
+        self.damage_max += 2
 
     def take_damage(self, amount: int) -> bool:
         """
@@ -151,15 +151,25 @@ class Character:
         if random() < self.chance_of_dodge:
             print(self.name + " dodged")
             return True
+
         if random() < self.chance_of_parry:
-            print(self.name + " parry")
-            if self.armor - math.ceil(amount * 0.3) > 0:
-                self.armor, amount = self.armor - math.ceil(amount * 0.3), 0
+            print(self.name + " parry ")
+            if self.inventory.shield is not None:
+                # on a un bouclier
+                if self.armor - math.ceil(amount * 0.1) > 0:
+                    self.armor, amount = self.armor - math.ceil(amount * 0.1), 0
+                # on a pas de couclié on part avec l'épée
+                else:
+                    self.armor, amount = 0, math.ceil(amount * 0.1) - self.armor
             else:
-                self.armor, amount = 0, math.ceil(amount * 0.3) - self.armor
+                if self.armor - math.ceil(amount * 0.3) > 0:
+                    self.armor, amount = self.armor - math.ceil(amount * 0.3), 0
+                else:
+                    self.armor, amount = 0, math.ceil(amount * 0.3) - self.armor
             self.health -= (1 - self.armor) * amount
             return self.is_alive()
-        print(self.name + " prend dans le cul")
+
+        print(self.name, "prend ", amount, "dégats")
         if self.armor - amount > 0:
             self.armor, amount = self.armor - amount, 0
         else:
@@ -177,6 +187,8 @@ class Character:
         """
         if amount < self.damage_min:
             other.take_damage(self.damage_min)
+        elif amount >= self.damage_max:
+            other.take_damage(self.damage_max)
         else:
             other.take_damage(amount)
 
@@ -205,20 +217,23 @@ class Character:
 
         # recalcule de l'armure
         self.armor = 0
-        if self.inventory.helmet is not None:
-            self.armor += self.inventory.helmet.value
-        if self.inventory.chest is not None:
-            self.armor += self.inventory.chest.value
-        if self.inventory.legs is not None:
-            self.armor += self.inventory.legs.value
-        if self.inventory.boots is not None:
-            self.armor += self.inventory.boots.value
-        if self.inventory.gloves is not None:
-            self.armor += self.inventory.gloves.value
-        if self.inventory.ring is not None:
-            self.armor += self.inventory.ring.value
-        if self.inventory.amulet is not None:
-            self.armor += self.inventory.amulet.value
+        armor = [self.inventory.helmet,
+                 self.inventory.chest,
+                 self.inventory.legs,
+                 self.inventory.boots,
+                 self.inventory.gloves,
+                 self.inventory.ring,
+                 self.inventory.amulet]
+        for p in armor:
+            if p is not None:
+                self.armor += p.value
+
+        self.chance_of_parry = 0
+        if self.inventory.shield is not None:
+            self.chance_of_parry += self.inventory.shield.block_chance
+        if self.inventory.weapon is not None:
+            self.chance_of_parry += self.inventory.weapon.block_chance
+
         self.max_armor = self.armor
 
         return True
@@ -232,7 +247,7 @@ class Character:
     def sell(self, item, merchant):
         pass
 
-    def heal(self, amount: int)-> None:
+    def heal(self, amount: int) -> None:
         """
         @summary rend de la vie au perso
         @param amount: la quantité
