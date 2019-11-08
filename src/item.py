@@ -16,6 +16,7 @@
 from __future__ import annotations
 from random import randint, random, choice
 from res.ressources_id import items_id
+from src.perso.character import Character
 
 
 class Item:
@@ -50,54 +51,61 @@ class Equipment(Item):
 
     def __init__(self) -> None:
         super().__init__()
-        item_type: str = "equipment"
-        print(item_type)
 
 
 class Weapon(Equipment):
-    item_type = "weapon"
     """ emplacement : 
     weapon, shield
     """
-    damage: int = 1
-    precission: float = 0.99
+
+    static_equipment_type = ["weapon", "shield"]
 
     def __init__(self) -> None:
         super().__init__()
-        sword = choice(items_id["swords"])
+        self.equipment_type = choice(self.static_equipment_type)
+        self.random_icon()
+
+        self.precision = 0.95
+        self.block_chance = 0.10
+
+    def random_icon(self):
+        if self.equipment_type == "weapon":
+            self.icon_id = choice(items_id["swords"])
+        elif self.equipment_type == "shield":
+            self.icon_id = choice(items_id["shields"])
+
         swordDamage = {
             10: 3,
             11: 3,
-            12: 3,
             13: 3,
+            12: 3,
             14: 3,
             15: 3,
             16: 3,
             17: 6,
-            20: 3,
             21: 3,
+            20: 3,
             22: 3,
-            23: 3,
             24: 3,
+            23: 3,
             25: 3,
             26: 3,
-            27: 6,
-            30: 3,
             31: 3,
-            32: 3,
+            30: 3,
+            27: 6,
             33: 3,
-            34: 6,
-            35: 8,
-            36: 3,
-            37: 3,
-            78: 15
+            32: 3,
         }
-
-        self.icon_id = sword
+            78: 15
+            37: 3,
+            36: 3,
+            35: 8,
+            34: 6,
+    def __init__(self) -> None:
+        super().__init__()
         self.damage = swordDamage[sword]
-
     def hit(self) -> int:
-        if random() > self.precission:
+        if random() > self.precision:
             return self.damage
         return 0
 
@@ -108,13 +116,30 @@ class Armor(Equipment):
     helmet, chest, legs, boots, gloves
     """
 
-    value: int = 1
+    static_equipment_type = ["helmet", "chest", "legs", "boots", "gloves", "amulet", "ring"]
 
     def __init__(self) -> None:
         super().__init__()
-        self.armor_type = "helmet"
-        self.icon_id = choice(items_id["helmets"])
+        self.equipment_type = choice(self.static_equipment_type)
+        self.random_icon()
 
+        self.armor = 1
+
+    def random_icon(self):
+        if self.equipment_type == "helmet":
+            self.icon_id = choice(items_id["helmets"])
+        elif self.equipment_type == "chest":
+            self.icon_id = choice(items_id["chests"])
+        elif self.equipment_type == "legs":
+            self.icon_id = choice(items_id["legs"])
+        elif self.equipment_type == "boots":
+            self.icon_id = choice(items_id["boots"])
+        elif self.equipment_type == "gloves":
+            self.icon_id = choice(items_id["gloves"])
+        elif self.equipment_type == "amulet":
+            self.icon_id = choice(items_id["amulets"])
+        elif self.equipment_type == "ring":
+            self.icon_id = choice(items_id["rings"])
 
 class Consumables(Item):
     item_type = "consumable"

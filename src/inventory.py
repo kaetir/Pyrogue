@@ -13,6 +13,7 @@
 
 from __future__ import annotations
 from src.item import *
+from src.perso.character import *
 
 
 class Inventory:
@@ -108,11 +109,9 @@ class Inventory:
         @return:
         """
         if c in self.items:
-            print(c)
             self.active_comsumable[pos], self.items[self.items.index(c)] = c, self.active_comsumable[pos]
             return 0
-        else:
-            return 1
+        return 1
 
     def equip_spellbook(self, sb: SpellBook, pos: int):
         """
@@ -121,5 +120,7 @@ class Inventory:
         @param pos: la pos dans la barre des équipable
         @return:
         """
-        # TODO
-        return 0
+        if sb in self.items:
+            self.active_spells[pos], self.items[self.items.index(sb)] = sb, self.active_spells[pos]
+            return 0
+        return 1
