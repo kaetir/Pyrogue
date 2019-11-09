@@ -46,6 +46,23 @@ class Inventory:
         # LA THUNE
         self.money: int = 0
 
+    def __getitem__(self, item: Item) -> Optional[Item, None]:
+        """
+        @summary surcharge de [] pour recherché un item
+        @return: Item
+        """
+        if item in self.items:
+            return self.items[self.items.index(item)]
+        else:
+            return None
+
+    def __setitem__(self, item: Item, value: Item) -> None:
+        """
+        @summary surcharge de [] pour set un item
+        @return: Item
+        """
+        self.items[self.items.index(item)] = value
+
     def equip(self, item: Equipment):
         """
         @summary equipe un objet et l'enleve de l'inventaire si il est dedans
@@ -54,23 +71,23 @@ class Inventory:
         """
         if item in self.items:
             if item.equipment_type == "helmet":
-                self.helmet, self.items[self.items.index(item)] = item, self.helmet
+                self.helmet, self[item] = item, self.helmet
             elif item.equipment_type == "chest":
-                self.chest, self.items[self.items.index(item)] = item, self.chest
+                self.chest, self[item] = item, self.chest
             elif item.equipment_type == "legs":
-                self.legs, self.items[self.items.index(item)] = item, self.legs
+                self.legs, self[item] = item, self.legs
             elif item.equipment_type == "boots":
-                self.boots, self.items[self.items.index(item)] = item, self.boots
+                self.boots, self[item] = item, self.boots
             elif item.equipment_type == "gloves":
-                self.gloves, self.items[self.items.index(item)] = item, self.gloves
+                self.gloves, self[item] = item, self.gloves
             elif item.equipment_type == "amulet":
-                self.amulet, self.items[self.items.index(item)] = item, self.amulet
+                self.amulet, self[item] = item, self.amulet
             elif item.equipment_type == "ring":
-                self.ring, self.items[self.items.index(item)] = item, self.ring
+                self.ring, self[item] = item, self.ring
             elif item.equipment_type == "weapon":
-                self.weapon, self.items[self.items.index(item)] = item, self.weapon
+                self.weapon, self[item] = item, self.weapon
             elif item.equipment_type == "shield":
-                self.shield, self.items[self.items.index(item)] = item, self.shield
+                self.shield, self[item] = item, self.shield
             else:
                 return 0
         return 1
@@ -79,13 +96,13 @@ class Inventory:
 
     def use(self, cons: Consumables, car: Character):
         if cons in self.items:
-            self.items[self.items.index(cons)] = None
+            self[cons] = None
             cons.use(car)
         return 0
 
     def throw(self, item: Item) -> bool:
         if item in self.items:
-            self.items[self.items.index(item)] = None
+            self[item] = None
         return 0
 
     def is_full(self):
@@ -96,7 +113,7 @@ class Inventory:
         i = 0
         while i < self.max_size:
             i += 1
-            if self.items[i] is None :
+            if self.items[i] is None:
                 return False
         return True
 
@@ -119,7 +136,7 @@ class Inventory:
         @return:
         """
         if c in self.items:
-            self.active_comsumable[pos], self.items[self.items.index(c)] = c, self.active_comsumable[pos]
+            self.active_comsumable[pos], self[c] = c, self.active_comsumable[pos]
             return 0
         return 1
 
@@ -131,6 +148,6 @@ class Inventory:
         @return:
         """
         if sb in self.items:
-            self.active_spells[pos], self.items[self.items.index(sb)] = sb, self.active_spells[pos]
+            self.active_spells[pos], self[sb] = sb, self.active_spells[pos]
             return 0
         return 1

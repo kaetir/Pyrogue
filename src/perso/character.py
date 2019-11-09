@@ -238,14 +238,26 @@ class Character:
 
         return True
 
-    def buy(self, item: Item, merchant: Merchant):
+    def buy(self, item: Item, merchant: Merchant) -> None:
+        """
+        @summary achete un objet a un marchant
+        @param item: l'objet a acheté dans l'inventaire du marchant
+        @param merchant: le marchant avec qui on traid
+        """
         if self.inventory.money >= item.prix:
             merchant.inventory.items[merchant.inventory.items.index(item)] = None
             self.inventory.append(item)
             self.inventory.money -= item.prix
 
-    def sell(self, item, merchant):
-        pass
+    def sell(self, item: Item, merchant: Merchant) -> None:
+        """
+        @summary vend un objet a un marchant
+        @param item: l'objet a vendre dans l'inventaire du joueur
+        @param merchant: le marchant avec qui on traid
+        """
+        self.inventory.items[self.inventory.items.index(item)] = None
+        merchant.inventory.append(item)
+        self.inventory.money += int(item.prix * 0.9)
 
     def heal(self, amount: int) -> None:
         """

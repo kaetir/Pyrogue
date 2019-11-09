@@ -145,11 +145,11 @@ class Game:
                                 hud_cursor = 0
                                 self.dungeon_restart(False)  # Sans RESET
                             elif hud_cursor == 3 and current_room.merchant is not None:
-                                # LES SOLDES
+                                # Mode achat
                                 game_area = 6
                                 inventory_cursor = [0, 0]
                             elif hud_cursor == 4 and current_room.merchant is not None:
-                                # LES SOLDES #2
+                                # Mode vente
                                 game_area = 7
                                 inventory_cursor = [0, 0]
 
@@ -251,14 +251,15 @@ class Game:
                                     game_area = 1
                             elif isinstance(current_item, Consumables):
                                 if hud_cursor == 0:
-                                    active_cursor = [0, 1]
+                                    active_cursor = [0 if None not in self.character.inventory.active_comsumable else
+                                                     self.character.inventory.active_comsumable.index(None), 1]
                                     game_area = 5
                                 elif hud_cursor == 1:
                                     self.character.inventory.throw(current_item)
                                     game_area = 1
                                 elif hud_cursor == 2:
                                     if isinstance(current_item, Consumables):
-                                        if current_item.bonus == True:
+                                        if current_item.bonus:
                                             self.character.inventory.use(current_item, self.character)
                                             game_area = 1
 
@@ -337,8 +338,13 @@ class Game:
                 # Inventory
                 if game_area == 1 or game_area == 7:
                     self.view.print_inventory(self.character, inventory_cursor)
+                    if self.character.inventory.items[inventory_cursor[1]*8+inventory_cursor[0]] is not None:
+                        self.view.print_description(
+                            self.character.inventory.items[inventory_cursor[1]*8+inventory_cursor[0]])
                 elif game_area == 6:
                     self.view.print_inventory(current_room.merchant, inventory_cursor)
+                    self.view.print_description(
+                        current_room.merchant.inventory.items[inventory_cursor[1] * 8 + inventory_cursor[0]])
                 # HUD Right Cases
                 if game_area == 1:
                     if isinstance(current_item, Equipment) or isinstance(current_item, SpellBook):

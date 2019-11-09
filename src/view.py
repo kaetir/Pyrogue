@@ -45,6 +45,8 @@ class View:
     active_tab = None
     active_equipment = None
     items_tiles = None
+    description_tiles = None
+
     # Assets Monsters
     monsters = []
     # Assets Merchants
@@ -84,6 +86,7 @@ class View:
         self.active_tab = load_tile_table("res/inventory/active_tab.png", 1, 1)
         self.active_equipment = load_tile_table("res/inventory/active_equipment.png", 1, 1)
         self.items_tiles = load_tile_table("res/inventory/items.png", 10, 11)
+        self.description_tiles = load_tile_table("res/hud/description.png", 1, 1)
 
         # Assets Monsters
         self.monsters.append(pygame.image.load("res/enemies/druid.png").convert_alpha())
@@ -370,7 +373,7 @@ class View:
             pygame.transform.scale(self.items_tiles[icon_id], (int(item_width), int(item_height))),
             (int(self.wwidth * 0.77 + 7 * size_width * 4 / tempx + 3 * item_width),
              int(self.wheight * 0.30 + 5 * size_width * 4 / tempx + 2 * item_height)))
-        # Weapon
+        # Shield
         if char.inventory.shield is None:
             icon_id = items_id["no_shield"]
         else:
@@ -398,7 +401,13 @@ class View:
         @summary Affiche la description d'un objet par dessus la carte
         @param item: Objet dont on note la description
         """
-        # TODO
+        tempx, tempy = self.description_tiles[0].get_size()
+        size_width, size_height = int(self.wheight * 0.30 * tempx / tempy), int(self.wheight * 0.30)
+        self.window.blit(pygame.transform.scale(self.description_tiles[0], (size_width, size_height)),
+                         (int(self.wwidth * (0.55 + 0.45 / 2) - size_width / 2), 0))
+        if item is not None:
+            self.print_gold(item.prix, int(self.wwidth * (0.55 + 0.45 / 2) - size_width / 4), 15, False)
+        # TODO les différents types d'objets
 
     def resize_event(self, event):
         """
@@ -512,9 +521,10 @@ class View:
         tempx, tempy = self.items_tiles[items_id["gold"]].get_size()
         size_width, size_height = self.wheight * 0.07 * tempx / tempy, self.wheight * 0.07
 
-        self.window.blit(pygame.transform.scale(self.items_tiles[items_id["gold"]], (int(size_width), int(size_height))),
-                         (int(x - size_width if not limited else x - size_width / 2),
-                         int(y if not limited else y - size_height)))
+        self.window.blit(
+            pygame.transform.scale(self.items_tiles[items_id["gold"]], (int(size_width), int(size_height))),
+            (int(x - size_width if not limited else x - size_width / 2),
+             int(y if not limited else y - size_height)))
 
         price = int(price)
         unit = [".", "K", "M", "G", "T", "P", "E", "Z", "Y", "*"]
@@ -524,7 +534,7 @@ class View:
             if index_unit < len(unit) - 1:
                 index_unit += 1
 
-        self.print_text(str(price) + unit[index_unit], size_height*0.75, int(x), int(y), self.wwidth, limited)
+        self.print_text(str(price) + unit[index_unit], size_height * 0.75, int(x), int(y), self.wwidth, limited)
 
     def print_fillers(self, char, armoring=False, monster=False):
         """
