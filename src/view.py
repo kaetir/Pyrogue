@@ -420,6 +420,25 @@ class View:
         self.window = pygame.display.set_mode((width, height), RESIZABLE)
         self.wwidth, self.wheight = pygame.display.get_surface().get_size()
 
+    def print_cases_menu(self, cursor):
+        """
+        @summary Affiche l'HUD presentant les options du menu (Nouvelle partie, charger, Achievements...)
+        @param cursor : Curseur pointant la case active
+        """
+        tempx, tempy = self.cases_hud[0].get_size()
+        size_width, size_height = int(self.wwidth * 0.28), int(self.wwidth * 0.28 * tempy / tempx)
+
+        texts = ["Nouvelle Partie", "Charger Partie", "Succes", "Statistiques"]
+
+        for i in range(0, 4):
+            hovered = 1 if cursor == i else 0
+
+            self.window.blit(pygame.transform.scale(self.cases_hud[hovered + 2], (size_width, size_height)),
+                             (self.wwidth * 0.02, int(self.wheight * 0.20 + self.wheight * 0.15 * i)))
+            # On centre le texte sur la case et on met une taille maximale de 0 (comme on centre ca ne change rien)
+            self.print_text(texts[i], int(size_height // 3), size_width // 2 + self.wwidth * 0.02,
+                            int(self.wheight * 0.20 + self.wheight * 0.15 * i) + size_height // 4, 0, True)
+
     def print_case(self, cursor, position, text):
         """
         @summary Affiche une case de l'HUD

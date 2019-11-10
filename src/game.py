@@ -82,6 +82,7 @@ class Game:
         self.dungeon_restart(True)
 
         # Constantes Semi-Globales de l'instance de jeu
+        menu_cursor = 0
         hud_cursor = 0
         inventory_cursor = [0, 0]
         active_cursor = [0, 0]
@@ -90,335 +91,392 @@ class Game:
         reacJ, reacM = 0, 0 # les reaction des joueur ou mob apres une attaque  cf : tour
 
         # Boucle infinie
+        in_game = False
+        in_menu = True
         close = False
+
         while not close:
-            if not self.character.is_alive():  # Reset Global
-                self.dungeon_restart(True)
+            # boucle Infinie du menu
+            menu_area = 0
+            while in_menu:
+                for event in pygame.event.get():
+                    if event.type == QUIT:  # On quitte le jeu
+                        in_menu = False
+                        in_game = False
+                        close = True
+                    elif event.type == VIDEORESIZE:
+                        self.view.resize_event(event)
 
-                # Constantes Semi-Globales de l'instance de jeu
-                hud_cursor = 0
-                inventory_cursor = [0, 0]
-                active_cursor = [0, 0]
-                game_area = 0  # 0: En salle, 1: En inventaire, 2: En Combat
+                    elif event.type == KEYDOWN:  # On gere les boutons
+                        if event.key == K_ESCAPE:  # On quitte le jeu
+                            in_menu = False
+                            in_game = False
+                            close = True
 
-            px, py = self.character.get_pos()
-            current_room = self.map.get_room(px, py)
-            if game_area != 6 or current_room.merchant is None:  # Si nous ne sommes pas en mode Acheter
-                current_item = self.character.inventory.items[inventory_cursor[0] + inventory_cursor[1] * 8]
-            else:
-                current_item = current_room.merchant.inventory.items[inventory_cursor[0] + inventory_cursor[1] * 8]
+                        elif event.key == K_RETURN:
+                            if menu_cursor == 0:
+                                # Nouvelle Partie
+                                self.dungeon_restart(True)
+                                in_game = True
+                                in_menu = False
 
-            if game_area == 0 and current_room.is_exit():
-                max_hud_cursor = 3
-            elif game_area == 0 and current_room.merchant is not None:
-                max_hud_cursor = 4
-            elif game_area == 3 and isinstance(current_item, Equipment):
-                max_hud_cursor = 1
-            elif game_area == 3 and isinstance(current_item, Consumables):
-                max_hud_cursor = 2
-            else:
-                max_hud_cursor = 2
-
-            if current_room.enemy is not None and game_area != 2:
-                self.actual_battle = Battle(self.character, current_room.enemy)
-                game_area = 2
-                print("AU COMBAT")
-
-            # Treating Events
-            for event in pygame.event.get():
-                if event.type == QUIT:
-                    close = True
-                elif event.type == VIDEORESIZE:
-                    self.view.resize_event(event)
-
-                elif event.type == KEYDOWN:  # On gere les boutons
-                    if game_area == 0:  # Si on est en mode salles
-                        if event.key == K_RETURN:
-                            if hud_cursor == 1:
-                                # INVENTAIRE
-                                game_area = 1
-                                inventory_cursor = [0, 0]
-                            elif hud_cursor == 2:
-                                # TODO
-                                print("TODO Save")  # SAVE
-                            elif hud_cursor == 3 and current_room.is_exit():
-                                # CHANGEMENT DE DONJON
-                                hud_cursor = 0
-                                self.dungeon_restart(False)  # Sans RESET
-                            elif hud_cursor == 3 and current_room.merchant is not None:
-                                # Mode achat
-                                game_area = 6
-                                inventory_cursor = [0, 0]
-                            elif hud_cursor == 4 and current_room.merchant is not None:
-                                # Mode vente
-                                game_area = 7
-                                inventory_cursor = [0, 0]
+                            elif menu_cursor == 1:
+                                # Charge une partie
+                                pass
 
                         elif event.key == K_UP:  # Fleche du haut
-                            if hud_cursor > 0:
-                                hud_cursor -= 1
-                            # Si nous sommes sur la case de mouvement, on change de salle (si possible)
-                            elif hud_cursor == 0:
-                                self.change_room()
+                            if menu_cursor > 0:
+                                menu_cursor -= 1
                         elif event.key == K_DOWN:  # Fleche du bas
-                            if hud_cursor < max_hud_cursor:
-                                hud_cursor += 1
+                            if menu_cursor < 3:
+                                menu_cursor += 1
 
-                        # Si nous sommes sur la case_HUD (0) de mouvement et que nous effectuons une rotation
-                        elif event.key == K_RIGHT and hud_cursor == 0:
-                            self.character.set_orientation((self.character.get_orientation() + 1) % 4)
-                            self.map_surf = self.map.disp_map(player=self.character)
-                        elif event.key == K_LEFT and hud_cursor == 0:
-                            self.character.set_orientation((self.character.get_orientation() - 1) % 4)
-                            self.map_surf = self.map.disp_map(player=self.character)
+                # Printing
+                # Background
+                self.view.print_clear()
 
-                    # Si on est en mode Inventaire, ou Achat ou Vente
-                    elif game_area == 1 or game_area == 6 or game_area == 7:
-                        if event.key == K_RETURN:
-                            # Action avec l'objet du curseur, on passe en action inventaire
-                            # Si objet -> menu contextuel de celui-ci
-                            if game_area == 1 and current_item is not None:
-                                game_area = 3
-                                hud_cursor = 0
-                            # Si pas d'objet, on echange avec un consommable
-                            elif game_area == 1 and current_item is None:
-                                active_cursor = [0, 1]
-                                game_area = 5
-                            # On achete l'objet vise
-                            elif game_area == 6 and current_item is not None and current_room.merchant is not None:
-                                self.character.buy(current_item, current_room.merchant)
-                            # On vend l'objet vise
-                            elif game_area == 7 and current_item is not None and current_room.merchant is not None:
-                                self.character.sell(current_item, current_room.merchant)
+                # Cases
+                self.view.print_cases_menu(menu_cursor)
 
-                        elif event.key == K_ESCAPE:
-                            # On quitte l'inventaire
-                            inventory_cursor = [0, 0]
-                            if game_area == 6:
-                                hud_cursor = 3
-                            elif game_area == 7:
-                                hud_cursor = 4
-                            else:
-                                hud_cursor = 1
-                            game_area = 0
+                pygame.display.flip()
 
-                        elif event.key == K_UP:  # Fleche du haut
-                            if inventory_cursor[1] > 0:
-                                inventory_cursor[1] -= 1
-                        elif event.key == K_DOWN:  # Fleche du bas
-                            if inventory_cursor[1] < max_inventory_cursor[1]:
-                                inventory_cursor[1] += 1
-                        elif event.key == K_RIGHT:  # Fleche de droite
-                            if inventory_cursor[0] < max_inventory_cursor[0]:
-                                inventory_cursor[0] += 1
-                        elif event.key == K_LEFT:  # Fleche de gauche
-                            if inventory_cursor[0] > 0:
-                                inventory_cursor[0] -= 1
-
-                    elif game_area == 2:  # Si on est en mode COMBAT
-                        if event.key == K_RETURN:
-                            if active_cursor == [0, 0]:  # Attaque Basique
-                                reacJ, reacM = self.actual_battle.tour(0)
-                            elif active_cursor[0] > 0 and active_cursor[1] == 0:  # Sorts
-                                if self.character.inventory.active_spells[active_cursor[0] - 1] is not None:
-                                    reacJ, reacM = self.actual_battle.tour(active_cursor[0])
-                            elif active_cursor[0] >= 0 and active_cursor[1] == 1:  # Consommables
-                                if self.character.inventory.active_comsumable[active_cursor[0]] is not None:
-                                    reacJ, reacM = self.actual_battle.tour(4 + active_cursor[0])
-
-                        elif event.key == K_UP:  # Fleche du haut
-                            if active_cursor[1] > 0:
-                                active_cursor[1] -= 1
-                        elif event.key == K_DOWN:  # Fleche du bas
-                            if active_cursor[1] < 1:
-                                active_cursor[1] += 1
-                        elif event.key == K_RIGHT:  # Fleche de droite
-                            if active_cursor[0] < 3:
-                                active_cursor[0] += 1
-                        elif event.key == K_LEFT:  # Fleche de gauche
-                            if active_cursor[0] > 0:
-                                active_cursor[0] -= 1
-
-                    elif game_area == 3:  # Mode Objet d'inventaire
-                        if event.key == K_RETURN:
-                            if isinstance(current_item, Equipment):
-                                if hud_cursor == 0:
-                                    self.character.equip(current_item)
-                                elif hud_cursor == 1:
-                                    self.character.inventory.throw(current_item)
-                                game_area = 1
-                            elif isinstance(current_item, SpellBook):
-                                if hud_cursor == 0:
-                                    active_cursor = [1, 0]
-                                    game_area = 4
-                                elif hud_cursor == 1:
-                                    self.character.inventory.throw(current_item)
-                                    game_area = 1
-                            elif isinstance(current_item, Consumables):
-                                if hud_cursor == 0:
-                                    active_cursor = [0 if None not in self.character.inventory.active_comsumable else
-                                                     self.character.inventory.active_comsumable.index(None), 1]
-                                    game_area = 5
-                                elif hud_cursor == 1:
-                                    self.character.inventory.throw(current_item)
-                                    game_area = 1
-                                elif hud_cursor == 2:
-                                    if isinstance(current_item, Consumables):
-                                        if current_item.bonus:
-                                            self.character.inventory.use(current_item, self.character)
-                                            game_area = 1
-
-                        elif event.key == K_ESCAPE:
-                            # On quitte l'interface gerant les objets d'inventaire
-                            game_area = 1
-
-                        elif event.key == K_UP:  # Fleche du haut
-                            if hud_cursor > 0:
-                                hud_cursor -= 1
-                        elif event.key == K_DOWN:  # Fleche du bas
-                            if hud_cursor < max_hud_cursor:
-                                hud_cursor += 1
-
-                    elif game_area == 4:  # Mode Objet d'inventaire -> Sorts Barre Active
-                        if event.key == K_RETURN:
-                            self.character.inventory.equip_spellbook(current_item, active_cursor[0] - 1)
-                            active_cursor = [0, 0]
-                            game_area = 1  # On retourne a l'inventaire
-
-                        elif event.key == K_ESCAPE:
-                            # On quitte l'interface gerant la barre active
-                            game_area = 3
-
-                        elif event.key == K_RIGHT:  # Fleche de droite
-                            if active_cursor[0] < 3:
-                                active_cursor[0] += 1
-                        elif event.key == K_LEFT:  # Fleche de gauche
-                            if active_cursor[0] > 1:
-                                active_cursor[0] -= 1
-
-                    elif game_area == 5:  # Mode Objet d'inventaire -> Consommables Barre Active
-                        if event.key == K_RETURN:
-                            self.character.inventory.equip_consumable(current_item, active_cursor[0])
-                            active_cursor = [0, 0]
-                            game_area = 1  # On retourne a l'inventaire
-
-                        elif event.key == K_ESCAPE:
-                            # On quitte l'interface gerant la barre active
-                            if current_item is None:
-                                # Si on, est arrive ici depuis l'inventaire pour desequiper un consommable
-                                game_area = 1
-                            else:  #Sinon qu'on cherchait a en equiper un
-                                game_area = 3
-
-                        elif event.key == K_RIGHT:  # Fleche de droite
-                            if active_cursor[0] < 3:
-                                active_cursor[0] += 1
-                        elif event.key == K_LEFT:  # Fleche de gauche
-                            if active_cursor[0] > 0:
-                                active_cursor[0] -= 1
+                # Ticking
+                clock.tick(30)
 
 
-            # Calculating New sprites and Printing
-            px, py = self.character.get_pos()
-            current_room = self.map.get_room(px, py)
-            # Background
-            self.view.print_clear()
-
-            if game_area == 0:
-                # Room
-                self.view.print_room(current_room, self.character)
-                # Map
-                self.view.print_map(self.map_surf)
-                # HUD Right Cases
-                if current_room.is_exit():
-                    self.view.print_cases_hud(hud_cursor, 1)
-                elif current_room.merchant is not None:
-                    self.view.print_cases_hud(hud_cursor, 2)
-                    # Merchant
-                    self.view.print_character(current_room.merchant)
+            # Boucle Infinie du jeu
+            game_area = 0
+            hud_cursor = 0
+            inventory_cursor = [0, 0]
+            active_cursor = [0, 0]
+            while in_game:
+                px, py = self.character.get_pos()
+                current_room = self.map.get_room(px, py)
+                if game_area != 6 or current_room.merchant is None:  # Si nous ne sommes pas en mode Acheter
+                    current_item = self.character.inventory.items[inventory_cursor[0] + inventory_cursor[1] * 8]
                 else:
-                    self.view.print_cases_hud(hud_cursor, 0)
-                # HUD Active Tab
-                self.view.print_active_tab(self.character)
-                # HUD Fillers
-                self.view.print_fillers(self.character)
+                    current_item = current_room.merchant.inventory.items[inventory_cursor[0] + inventory_cursor[1] * 8]
 
-            elif game_area == 1 or game_area == 6 or game_area == 7:
-                # Inventory
-                if game_area == 1 or game_area == 7:
-                    self.view.print_inventory(self.character, inventory_cursor)
-                    if self.character.inventory.items[inventory_cursor[1]*8+inventory_cursor[0]] is not None:
+                if game_area == 0 and current_room.is_exit():
+                    max_hud_cursor = 3
+                elif game_area == 0 and current_room.merchant is not None:
+                    max_hud_cursor = 4
+                elif game_area == 3 and isinstance(current_item, Equipment):
+                    max_hud_cursor = 1
+                elif game_area == 3 and isinstance(current_item, Consumables):
+                    max_hud_cursor = 2
+                else:
+                    max_hud_cursor = 2
+
+                if current_room.enemy is not None and game_area != 2:
+                    self.actual_battle = Battle(self.character, current_room.enemy)
+                    game_area = 2
+                    print("AU COMBAT")
+
+                # Treating Events
+                for event in pygame.event.get():
+                    if event.type == QUIT:
+                        in_menu = False
+                        in_game = False
+                        close = True
+                    elif event.type == VIDEORESIZE:
+                        self.view.resize_event(event)
+
+                    elif event.type == KEYDOWN:  # On gere les boutons
+                        if game_area == 0:  # Si on est en mode salles
+                            if event.key == K_ESCAPE:  # Retour a l'ecran d'accueil
+                                in_game = False
+                                in_menu = True
+                                # TODO Save ?
+                            elif event.key == K_RETURN:
+                                if hud_cursor == 1:
+                                    # INVENTAIRE
+                                    game_area = 1
+                                    inventory_cursor = [0, 0]
+                                elif hud_cursor == 2:
+                                    # TODO
+                                    print("TODO Save")  # SAVE
+                                elif hud_cursor == 3 and current_room.is_exit():
+                                    # CHANGEMENT DE DONJON
+                                    hud_cursor = 0
+                                    self.dungeon_restart(False)  # Sans RESET
+                                elif hud_cursor == 3 and current_room.merchant is not None:
+                                    # Mode achat
+                                    game_area = 6
+                                    inventory_cursor = [0, 0]
+                                elif hud_cursor == 4 and current_room.merchant is not None:
+                                    # Mode vente
+                                    game_area = 7
+                                    inventory_cursor = [0, 0]
+
+                            elif event.key == K_UP:  # Fleche du haut
+                                if hud_cursor > 0:
+                                    hud_cursor -= 1
+                                # Si nous sommes sur la case de mouvement, on change de salle (si possible)
+                                elif hud_cursor == 0:
+                                    self.change_room()
+                            elif event.key == K_DOWN:  # Fleche du bas
+                                if hud_cursor < max_hud_cursor:
+                                    hud_cursor += 1
+
+                            # Si nous sommes sur la case_HUD (0) de mouvement et que nous effectuons une rotation
+                            elif event.key == K_RIGHT and hud_cursor == 0:
+                                self.character.set_orientation((self.character.get_orientation() + 1) % 4)
+                                self.map_surf = self.map.disp_map(player=self.character)
+                            elif event.key == K_LEFT and hud_cursor == 0:
+                                self.character.set_orientation((self.character.get_orientation() - 1) % 4)
+                                self.map_surf = self.map.disp_map(player=self.character)
+
+                        # Si on est en mode Inventaire, ou Achat ou Vente
+                        elif game_area == 1 or game_area == 6 or game_area == 7:
+                            if event.key == K_RETURN:
+                                # Action avec l'objet du curseur, on passe en action inventaire
+                                # Si objet -> menu contextuel de celui-ci
+                                if game_area == 1 and current_item is not None:
+                                    game_area = 3
+                                    hud_cursor = 0
+                                # Si pas d'objet, on echange avec un consommable
+                                elif game_area == 1 and current_item is None:
+                                    active_cursor = [0, 1]
+                                    game_area = 5
+                                # On achete l'objet vise
+                                elif game_area == 6 and current_item is not None and current_room.merchant is not None:
+                                    self.character.buy(current_item, current_room.merchant)
+                                # On vend l'objet vise
+                                elif game_area == 7 and current_item is not None and current_room.merchant is not None:
+                                    self.character.sell(current_item, current_room.merchant)
+
+                            elif event.key == K_ESCAPE:
+                                # On quitte l'inventaire
+                                inventory_cursor = [0, 0]
+                                if game_area == 6:
+                                    hud_cursor = 3
+                                elif game_area == 7:
+                                    hud_cursor = 4
+                                else:
+                                    hud_cursor = 1
+                                game_area = 0
+
+                            elif event.key == K_UP:  # Fleche du haut
+                                if inventory_cursor[1] > 0:
+                                    inventory_cursor[1] -= 1
+                            elif event.key == K_DOWN:  # Fleche du bas
+                                if inventory_cursor[1] < max_inventory_cursor[1]:
+                                    inventory_cursor[1] += 1
+                            elif event.key == K_RIGHT:  # Fleche de droite
+                                if inventory_cursor[0] < max_inventory_cursor[0]:
+                                    inventory_cursor[0] += 1
+                            elif event.key == K_LEFT:  # Fleche de gauche
+                                if inventory_cursor[0] > 0:
+                                    inventory_cursor[0] -= 1
+
+                        elif game_area == 2:  # Si on est en mode COMBAT
+                            if event.key == K_RETURN:
+                                if active_cursor == [0, 0]:  # Attaque Basique
+                                    reacJ, reacM = self.actual_battle.tour(0)
+                                elif active_cursor[0] > 0 and active_cursor[1] == 0:  # Sorts
+                                    if self.character.inventory.active_spells[active_cursor[0] - 1] is not None:
+                                        reacJ, reacM = self.actual_battle.tour(active_cursor[0])
+                                elif active_cursor[0] >= 0 and active_cursor[1] == 1:  # Consommables
+                                    if self.character.inventory.active_comsumable[active_cursor[0]] is not None:
+                                        reacJ, reacM = self.actual_battle.tour(4 + active_cursor[0])
+
+                            elif event.key == K_UP:  # Fleche du haut
+                                if active_cursor[1] > 0:
+                                    active_cursor[1] -= 1
+                            elif event.key == K_DOWN:  # Fleche du bas
+                                if active_cursor[1] < 1:
+                                    active_cursor[1] += 1
+                            elif event.key == K_RIGHT:  # Fleche de droite
+                                if active_cursor[0] < 3:
+                                    active_cursor[0] += 1
+                            elif event.key == K_LEFT:  # Fleche de gauche
+                                if active_cursor[0] > 0:
+                                    active_cursor[0] -= 1
+
+                        elif game_area == 3:  # Mode Objet d'inventaire
+                            if event.key == K_RETURN:
+                                if isinstance(current_item, Equipment):
+                                    if hud_cursor == 0:
+                                        self.character.equip(current_item)
+                                    elif hud_cursor == 1:
+                                        self.character.inventory.throw(current_item)
+                                    game_area = 1
+                                elif isinstance(current_item, SpellBook):
+                                    if hud_cursor == 0:
+                                        active_cursor = [1, 0]
+                                        game_area = 4
+                                    elif hud_cursor == 1:
+                                        self.character.inventory.throw(current_item)
+                                        game_area = 1
+                                elif isinstance(current_item, Consumables):
+                                    if hud_cursor == 0:
+                                        active_cursor = [0 if None not in self.character.inventory.active_comsumable else
+                                                         self.character.inventory.active_comsumable.index(None), 1]
+                                        game_area = 5
+                                    elif hud_cursor == 1:
+                                        self.character.inventory.throw(current_item)
+                                        game_area = 1
+                                    elif hud_cursor == 2:
+                                        if isinstance(current_item, Consumables):
+                                            if current_item.bonus:
+                                                self.character.inventory.use(current_item, self.character)
+                                                game_area = 1
+
+                            elif event.key == K_ESCAPE:
+                                # On quitte l'interface gerant les objets d'inventaire
+                                game_area = 1
+
+                            elif event.key == K_UP:  # Fleche du haut
+                                if hud_cursor > 0:
+                                    hud_cursor -= 1
+                            elif event.key == K_DOWN:  # Fleche du bas
+                                if hud_cursor < max_hud_cursor:
+                                    hud_cursor += 1
+
+                        elif game_area == 4:  # Mode Objet d'inventaire -> Sorts Barre Active
+                            if event.key == K_RETURN:
+                                self.character.inventory.equip_spellbook(current_item, active_cursor[0] - 1)
+                                active_cursor = [0, 0]
+                                game_area = 1  # On retourne a l'inventaire
+
+                            elif event.key == K_ESCAPE:
+                                # On quitte l'interface gerant la barre active
+                                game_area = 3
+
+                            elif event.key == K_RIGHT:  # Fleche de droite
+                                if active_cursor[0] < 3:
+                                    active_cursor[0] += 1
+                            elif event.key == K_LEFT:  # Fleche de gauche
+                                if active_cursor[0] > 1:
+                                    active_cursor[0] -= 1
+
+                        elif game_area == 5:  # Mode Objet d'inventaire -> Consommables Barre Active
+                            if event.key == K_RETURN:
+                                self.character.inventory.equip_consumable(current_item, active_cursor[0])
+                                active_cursor = [0, 0]
+                                game_area = 1  # On retourne a l'inventaire
+
+                            elif event.key == K_ESCAPE:
+                                # On quitte l'interface gerant la barre active
+                                if current_item is None:
+                                    # Si on, est arrive ici depuis l'inventaire pour desequiper un consommable
+                                    game_area = 1
+                                else:  #Sinon qu'on cherchait a en equiper un
+                                    game_area = 3
+
+                            elif event.key == K_RIGHT:  # Fleche de droite
+                                if active_cursor[0] < 3:
+                                    active_cursor[0] += 1
+                            elif event.key == K_LEFT:  # Fleche de gauche
+                                if active_cursor[0] > 0:
+                                    active_cursor[0] -= 1
+
+
+                # Calculating New sprites and Printing
+                px, py = self.character.get_pos()
+                current_room = self.map.get_room(px, py)
+                # Background
+                self.view.print_clear()
+
+                if game_area == 0:
+                    # Room
+                    self.view.print_room(current_room, self.character)
+                    # Map
+                    self.view.print_map(self.map_surf)
+                    # HUD Right Cases
+                    if current_room.is_exit():
+                        self.view.print_cases_hud(hud_cursor, 1)
+                    elif current_room.merchant is not None:
+                        self.view.print_cases_hud(hud_cursor, 2)
+                        # Merchant
+                        self.view.print_character(current_room.merchant)
+                    else:
+                        self.view.print_cases_hud(hud_cursor, 0)
+                    # HUD Active Tab
+                    self.view.print_active_tab(self.character)
+                    # HUD Fillers
+                    self.view.print_fillers(self.character)
+
+                elif game_area == 1 or game_area == 6 or game_area == 7:
+                    # Inventory
+                    if game_area == 1 or game_area == 7:
+                        self.view.print_inventory(self.character, inventory_cursor)
+                        if self.character.inventory.items[inventory_cursor[1]*8+inventory_cursor[0]] is not None:
+                            self.view.print_description(
+                                self.character.inventory.items[inventory_cursor[1]*8+inventory_cursor[0]])
+                    elif game_area == 6:
+                        self.view.print_inventory(current_room.merchant, inventory_cursor)
                         self.view.print_description(
-                            self.character.inventory.items[inventory_cursor[1]*8+inventory_cursor[0]])
-                elif game_area == 6:
-                    self.view.print_inventory(current_room.merchant, inventory_cursor)
-                    self.view.print_description(
-                        current_room.merchant.inventory.items[inventory_cursor[1] * 8 + inventory_cursor[0]])
-                # HUD Right Cases
-                if game_area == 1:
+                            current_room.merchant.inventory.items[inventory_cursor[1] * 8 + inventory_cursor[0]])
+                    # HUD Right Cases
+                    if game_area == 1:
+                        if isinstance(current_item, Equipment) or isinstance(current_item, SpellBook):
+                            self.view.print_cases_hud(-1, 3)  # Si Equipement ou Sort
+                        elif isinstance(current_item, Consumables):
+                            self.view.print_cases_hud(-1, 4)  # Si Consommable
+                    # HUD Active Tab
+                    self.view.print_active_tab(self.character)
+                    # Description
+                    # TODO
+                    # HUD Fillers
+                    self.view.print_fillers(self.character)
+
+                elif game_area == 2:
+                    # Room
+                    self.view.print_room(current_room, self.character)
+                    # Monster
+                    self.view.print_character(current_room.enemy)
+                    # HUD Active Tab
+                    self.view.print_active_tab(self.character, active_cursor)
+                    # Description
+                    # TODO
+                    # HUD Fillers
+                    self.view.print_fillers(self.character, True)
+                    self.view.print_fillers(current_room.enemy, True, True) # Monstre
+                    # Test Fin Combat
+                    if self.actual_battle.is_ended():
+                        game_area = 0
+                        current_room.enemy = None
+                        self.actual_battle = None
+
+                elif game_area == 3:
+                    # Objet Inventaire
+                    self.view.print_inventory(self.character, inventory_cursor)
+                    # HUD Right Cases
+                    if isinstance(current_item, Equipment) or isinstance(current_item, SpellBook):
+                        self.view.print_cases_hud(hud_cursor, 3)  # Si Equipement ou Sort
+                    elif isinstance(current_item, Consumables):
+                        self.view.print_cases_hud(hud_cursor, 4)  # Si Consommable
+                    # HUD Active Tab
+                    self.view.print_active_tab(self.character)
+                    # Description
+                    # TODO
+                    # HUD Fillers
+                    self.view.print_fillers(self.character)
+
+                elif game_area == 4 or game_area == 5:
+                    # Objet d'inventaire -> Sorts Barre Active
+                    self.view.print_inventory(self.character, inventory_cursor)
+                    # HUD Right Cases
                     if isinstance(current_item, Equipment) or isinstance(current_item, SpellBook):
                         self.view.print_cases_hud(-1, 3)  # Si Equipement ou Sort
                     elif isinstance(current_item, Consumables):
                         self.view.print_cases_hud(-1, 4)  # Si Consommable
-                # HUD Active Tab
-                self.view.print_active_tab(self.character)
-                # Description
-                # TODO
-                # HUD Fillers
-                self.view.print_fillers(self.character)
+                    # HUD Active Tab
+                    self.view.print_active_tab(self.character, active_cursor)
+                    # Description
+                    # TODO
+                    # HUD Fillers
+                    self.view.print_fillers(self.character)
 
-            elif game_area == 2:
-                # Room
-                self.view.print_room(current_room, self.character)
-                # Monster
-                self.view.print_character(current_room.enemy)
-                # HUD Active Tab
-                self.view.print_active_tab(self.character, active_cursor)
-                # Description
-                # TODO
-                # HUD Fillers
-                self.view.print_fillers(self.character, True)
-                self.view.print_fillers(current_room.enemy, True, True) # Monstre
-                # Test Fin Combat
-                if self.actual_battle.is_ended():
-                    game_area = 0
-                    current_room.enemy = None
-                    self.actual_battle = None
+                # HUD Active Equipment
+                self.view.print_active_equipment(self.character)
 
-            elif game_area == 3:
-                # Objet Inventaire
-                self.view.print_inventory(self.character, inventory_cursor)
-                # HUD Right Cases
-                if isinstance(current_item, Equipment) or isinstance(current_item, SpellBook):
-                    self.view.print_cases_hud(hud_cursor, 3)  # Si Equipement ou Sort
-                elif isinstance(current_item, Consumables):
-                    self.view.print_cases_hud(hud_cursor, 4)  # Si Consommable
-                # HUD Active Tab
-                self.view.print_active_tab(self.character)
-                # Description
-                # TODO
-                # HUD Fillers
-                self.view.print_fillers(self.character)
+                pygame.display.flip()
 
-            elif game_area == 4 or game_area == 5:
-                # Objet d'inventaire -> Sorts Barre Active
-                self.view.print_inventory(self.character, inventory_cursor)
-                # HUD Right Cases
-                if isinstance(current_item, Equipment) or isinstance(current_item, SpellBook):
-                    self.view.print_cases_hud(-1, 3)  # Si Equipement ou Sort
-                elif isinstance(current_item, Consumables):
-                    self.view.print_cases_hud(-1, 4)  # Si Consommable
-                # HUD Active Tab
-                self.view.print_active_tab(self.character, active_cursor)
-                # Description
-                # TODO
-                # HUD Fillers
-                self.view.print_fillers(self.character)
+                if not self.character.is_alive():  # On quitte la partie #DEAD
+                    in_game = False
 
-            # HUD Active Equipment
-            self.view.print_active_equipment(self.character)
-
-            pygame.display.flip()
-
-            # Ticking
-            clock.tick(30)
+                # Ticking
+                clock.tick(30)
