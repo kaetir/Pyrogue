@@ -160,6 +160,7 @@ class Armor(Equipment):
         elif self.equipment_type == "gloves":
             self.icon_id = choice(items_id["gloves"])
             self.value = 2
+            self.prix = randint(50, 100)
         elif self.equipment_type == "amulet":
             self.icon_id = choice(items_id["amulets"])
             self.value = 1

@@ -13,7 +13,7 @@ from src.item import *
 class Merchant(Character):
     def __init__(self) -> None:
         super().__init__("Merchant")
-        print("Bonjour, tu en veux c'est de la bonne")
+        # print("Bonjour, tu en veux c'est de la bonne")
         self.icon_id = randint(0, len(merchants_id) - 1)
         for i in range(3):
             self.inventory.append(Consumables())

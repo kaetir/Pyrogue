@@ -187,8 +187,6 @@ class Character:
         """
         if amount < self.damage_min:
             other.take_damage(self.damage_min)
-        elif amount >= self.damage_max:
-            other.take_damage(self.damage_max)
         else:
             other.take_damage(amount)
 
@@ -255,7 +253,7 @@ class Character:
         @param item: l'objet a vendre dans l'inventaire du joueur
         @param merchant: le marchant avec qui on traid
         """
-        self.inventory.items[self.inventory.items.index(item)] = None
+        self.inventory[item] = None
         merchant.inventory.append(item)
         self.inventory.money += int(item.prix * 0.9)
 
@@ -269,3 +267,12 @@ class Character:
             self.health = self.max_health
         else:
             self.health += amount
+
+    def use(self, cons: Consumables, m: Monster = None) -> bool:
+        if cons is not None and cons in Inventory:
+            if cons.bonus:
+                self.inventory.use(cons, self)
+            else:
+                self.inventory.use(cons, m)
+            return True
+        return False

@@ -95,15 +95,27 @@ class Inventory:
         # recalcule de l'armure dans le player
 
     def use(self, cons: Consumables, car: Character):
+        """
+        @summary fait usage d'un consomable sur un personnage
+        @param cons:
+        @param car:
+        @return:
+        """
         if cons in self.items:
             self[cons] = None
             cons.use(car)
         return 0
 
     def throw(self, item: Item) -> bool:
+        """
+        @summary jete un item en le retirant de l'inventaire
+        @param item: l'item a jeter
+        @return: bool : True si l'item a été trouvé et jeté
+        """
         if item in self.items:
             self[item] = None
-        return 0
+            return True
+        return  False
 
     def is_full(self):
         """
