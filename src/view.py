@@ -69,6 +69,11 @@ class View:
         pygame.font.init()
 
         self.load_assets()
+        self.parallax_scaled = []
+
+        class tmp:
+            size = (800, 450)
+        self.resize_event(tmp())
 
     def load_assets(self):
         """
@@ -430,6 +435,9 @@ class View:
             height = (width * 9) // 16
         self.window = pygame.display.set_mode((width, height), RESIZABLE)
         self.wwidth, self.wheight = pygame.display.get_surface().get_size()
+        self.parallax_scaled = []
+        for i in range(0, len(self.parallax)):
+            self.parallax_scaled.append(pygame.transform.scale(self.parallax[i], (self.wwidth, self.wheight)))
 
     def print_parallax_background(self, position):
         """
@@ -438,9 +446,11 @@ class View:
         """
         tempx, tempy = self.cases_hud[0].get_size()
         coeff = tempx / tempy * self.wwidth * 0.0001
-        for i in range(0, len(self.parallax)):
-            self.window.blit(pygame.transform.scale(self.parallax[i], (self.wwidth, self.wheight)), (int(0 - (i * coeff * position % self.wwidth)), 0))
-            self.window.blit(pygame.transform.scale(self.parallax[i], (self.wwidth, self.wheight)), (int(self.wwidth - (i * coeff * position % self.wwidth)), 0))
+        for i in range(0, len(self.parallax_scaled)):
+            self.window.blit(self.parallax_scaled[i],
+                             (int(0 - (i * coeff * position % self.wwidth)), 0))
+            self.window.blit(self.parallax_scaled[i],
+                             (int(self.wwidth - (i * coeff * position % self.wwidth)), 0))
 
     def print_cases_menu(self, cursor):
         """

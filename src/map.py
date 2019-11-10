@@ -154,7 +154,7 @@ class MapDungeon:
         if player is not None:
             m = ["^", ">", "v", "<"][player.get_orientation()]
             size_cursor = ax.get_ylim()[1] - ax.get_ylim()[0]
-            ax.scatter(player.position[0], player.position[1], s=(10 - size_cursor) * 100, c="#5555ff",
+            ax.scatter(player.position[0], player.position[1], s=(10 - size_cursor) * 100, c="#21ff58",
                        marker=m, zorder=3)
 
         # sauvegarde du graph
