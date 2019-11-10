@@ -479,6 +479,7 @@ class Game:
 
                 if not self.character.is_alive():  # On quitte la partie #DEAD
                     in_game = False
+                    in_menu = True
 
                 # Ticking
                 clock.tick(30)
