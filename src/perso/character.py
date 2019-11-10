@@ -140,17 +140,20 @@ class Character:
         self.damage_min += 1
         self.damage_max += 2
 
-    def take_damage(self, amount: int) -> bool:
+    def take_damage(self, amount: int) -> int:
         """
         @summary fait prendre des dégats au joueur,
         @summary on calcul ses chances de dodge et de parry a partir de 2 nombres aléatoires
         @summary on déduit les dégats de parade
         @param : int le nombre de degat que le joueur va prendre
-        @return si le joueur est vivant -> true = alive
+        @return : int l'action que le joueur a fait
+                    1 - dodged
+                    2 - parry
+                    3 - DANS LE CUL
         """
         if random() < self.chance_of_dodge:
             print(self.name + " dodged")
-            return True
+            return 1
 
         if random() < self.chance_of_parry:
             print(self.name + " parry ")
@@ -167,7 +170,7 @@ class Character:
                 else:
                     self.armor, amount = 0, math.ceil(amount * 0.3) - self.armor
             self.health -= (1 - self.armor) * amount
-            return self.is_alive()
+            return 2
 
         print(self.name, "prend ", amount, "dégats")
         if self.armor - amount > 0:
@@ -176,19 +179,19 @@ class Character:
             self.armor, amount = 0, amount - self.armor
 
         self.health -= (1 - self.armor) * amount
-        return self.is_alive()
+        return 3
 
-    def inflict_damage(self, other: Character, amount: int) -> None:
+    def inflict_damage(self, other: Character, amount: int) -> int:
         """
         @summary fait prendre a un autre perso des dégats infligé par nous
         @summary on ne calcule pas les dégats ici parce qu'ils dépendent de si c'est un sort ou une attaque
         @param : Character l'autre perso a qui on veut en mettre sur le visage
-        @param : int le nombre de dégats qu'on lui met sur le visage
+        @param : int action du connard
         """
         if amount < self.damage_min:
-            other.take_damage(self.damage_min)
+            return other.take_damage(self.damage_min)
         else:
-            other.take_damage(amount)
+            return other.take_damage(amount)
 
     def print(self) -> None:
         """

@@ -87,6 +87,7 @@ class Game:
         active_cursor = [0, 0]
         max_inventory_cursor = [8 - 1, 6 - 1]
         game_area = 0  # 0: En salle, 1: En inventaire, 2: En Combat, 3: Action Objet Inventaire
+        reacJ, reacM = 0, 0 # les reaction des joueur ou mob apres une attaque  cf : tour
 
         # Boucle infinie
         close = False
@@ -213,13 +214,13 @@ class Game:
                     elif game_area == 2:  # Si on est en mode COMBAT
                         if event.key == K_RETURN:
                             if active_cursor == [0, 0]:  # Attaque Basique
-                                self.actual_battle.tour(0)
+                                reacJ, reacM = self.actual_battle.tour(0)
                             elif active_cursor[0] > 0 and active_cursor[1] == 0:  # Sorts
                                 if self.character.inventory.active_spells[active_cursor[0] - 1] is not None:
-                                    self.actual_battle.tour(active_cursor[0])
+                                    reacJ, reacM = self.actual_battle.tour(active_cursor[0])
                             elif active_cursor[0] >= 0 and active_cursor[1] == 1:  # Consommables
                                 if self.character.inventory.active_comsumable[active_cursor[0]] is not None:
-                                    self.actual_battle.tour(4 + active_cursor[0])
+                                    reacJ, reacM = self.actual_battle.tour(4 + active_cursor[0])
 
                         elif event.key == K_UP:  # Fleche du haut
                             if active_cursor[1] > 0:

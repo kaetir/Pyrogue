@@ -54,16 +54,24 @@ class Battle:
         for i in range(self.c.level-1):
             self.m.level_up()
 
-    def tour(self, action: int) -> None:
+    def tour(self, action: int) -> Tuple[int, int]:
         """
         @summary fait effectué les actions choisies par les perso
         @param action: int action effectué par le joueur
+        @return rc, rm : reaction du joueur et reaction monstre
+                0 - RIEN
+                1 - dodged
+                2 - parry
+                3 - DANS LE CUL
         """
         # ataque de base
+        rc = 0
+        rm = 0
         if action == 0:
             # TODO precision de l'arme
-            self.c.inflict_damage(self.m,
-                                  self.c.inventory.weapon.damage if self.c.inventory.weapon is not None else 1)
+            dc = self.c.inventory.weapon.damage if self.c.inventory.weapon is not None else 1
+            rm = self.c.inflict_damage(self.m, dc)
+
         # spell
         elif action < 4:
             action -= 1
@@ -82,8 +90,11 @@ class Battle:
             self.c.inventory.active_comsumable[action] = None
 
         if self.m.is_alive():
-            self.m.inflict_damage(self.c, random.randint(self.m.damage_min, self.m.damage_max))
+            dm = random.randint(self.m.damage_min, self.m.damage_max)
+            rc = self.m.inflict_damage(self.c, dm)
 
         print("-------------------")
         self.c.print()
         self.m.print()
+
+        return rc, rm
