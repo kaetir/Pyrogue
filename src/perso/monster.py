@@ -21,7 +21,7 @@ class Monster(Character):
 
     def level_up(self) -> None:
         super().level_up()
-        self.max_armor += randint(1, self.level)
+        self.max_armor += randint(0, 2)
         self.armor = self.max_armor
         self.damage_min += 1
 
