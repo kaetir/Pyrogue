@@ -404,13 +404,8 @@ class Game:
                     # Inventory
                     if game_area == 1 or game_area == 7:
                         self.view.print_inventory(self.character, inventory_cursor)
-                        if self.character.inventory.items[inventory_cursor[1]*8+inventory_cursor[0]] is not None:
-                            self.view.print_description(
-                                self.character.inventory.items[inventory_cursor[1]*8+inventory_cursor[0]])
                     elif game_area == 6:
                         self.view.print_inventory(current_room.merchant, inventory_cursor)
-                        self.view.print_description(
-                            current_room.merchant.inventory.items[inventory_cursor[1] * 8 + inventory_cursor[0]])
                     # HUD Right Cases
                     if game_area == 1:
                         if isinstance(current_item, Equipment) or isinstance(current_item, SpellBook):
@@ -420,7 +415,7 @@ class Game:
                     # HUD Active Tab
                     self.view.print_active_tab(self.character)
                     # Description
-                    # TODO
+                    self.view.print_description(current_item)
                     # HUD Fillers
                     self.view.print_fillers(self.character)
 
@@ -453,7 +448,7 @@ class Game:
                     # HUD Active Tab
                     self.view.print_active_tab(self.character)
                     # Description
-                    # TODO
+                    self.view.print_description(current_item)
                     # HUD Fillers
                     self.view.print_fillers(self.character)
 
@@ -468,7 +463,7 @@ class Game:
                     # HUD Active Tab
                     self.view.print_active_tab(self.character, active_cursor)
                     # Description
-                    # TODO
+                    self.view.print_description(current_item)
                     # HUD Fillers
                     self.view.print_fillers(self.character)
 

@@ -421,6 +421,7 @@ class View:
         size_width, size_height = int(self.wheight * 0.30 * tempx / tempy), int(self.wheight * 0.30)
         self.window.blit(pygame.transform.scale(self.description_tiles[0], (size_width, size_height)),
                          (int(self.wwidth * (0.55 + 0.45 / 2) - size_width / 2), 0))
+
         if item is not None:
             self.print_gold(item.prix, int(self.wwidth * (0.55 + 0.45 / 2) - size_width / 4), 15, False)
         # TODO les différents types d'objets
