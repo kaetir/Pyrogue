@@ -29,6 +29,7 @@ class Battle:
         else:
             self.m = m
         self.c = c
+        self.start()
 
         print("======= AU COMBAT =======")
         self.c.print()
@@ -50,7 +51,7 @@ class Battle:
         """
         @summary levelup du mob
         """
-        for i in range(self.c.level):
+        for i in range(self.c.level-1):
             self.m.level_up()
 
     def tour(self, action: int) -> None:
