@@ -54,7 +54,7 @@ class Battle:
         for i in range(self.c.level-1):
             self.m.level_up()
 
-    def tour(self, action: int) -> Tuple[int, int]:
+    def tour(self, action: int):
         """
         @summary fait effectué les actions choisies par les perso
         @param action: int action effectué par le joueur

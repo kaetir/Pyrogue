@@ -176,15 +176,19 @@ class Game:
                     elif game_area == 1 or game_area == 6 or game_area == 7:
                         if event.key == K_RETURN:
                             # Action avec l'objet du curseur, on passe en action inventaire
-                            # Si pas d'objet, on reste en mode inventaire
+                            # Si objet -> menu contextuel de celui-ci
                             if game_area == 1 and current_item is not None:
                                 game_area = 3
                                 hud_cursor = 0
+                            # Si pas d'objet, on echange avec un consommable
+                            elif game_area == 1 and current_item is None:
+                                active_cursor = [0, 1]
+                                game_area = 5
                             # On achete l'objet vise
-                            if game_area == 6 and current_item is not None and current_room.merchant is not None:
+                            elif game_area == 6 and current_item is not None and current_room.merchant is not None:
                                 self.character.buy(current_item, current_room.merchant)
                             # On vend l'objet vise
-                            if game_area == 7 and current_item is not None and current_room.merchant is not None:
+                            elif game_area == 7 and current_item is not None and current_room.merchant is not None:
                                 self.character.sell(current_item, current_room.merchant)
 
                         elif event.key == K_ESCAPE:
@@ -300,7 +304,11 @@ class Game:
 
                         elif event.key == K_ESCAPE:
                             # On quitte l'interface gerant la barre active
-                            game_area = 3
+                            if current_item is None:
+                                # Si on, est arrive ici depuis l'inventaire pour desequiper un consommable
+                                game_area = 1
+                            else:  #Sinon qu'on cherchait a en equiper un
+                                game_area = 3
 
                         elif event.key == K_RIGHT:  # Fleche de droite
                             if active_cursor[0] < 3:
