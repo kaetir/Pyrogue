@@ -1,0 +1,16 @@
+{
+  "character" : "SerializedCharacter",
+  "mob" : "Serializedob",
+  "coups" : [
+    {
+      "coupId" : 0
+      "coupMob": 0,
+      "coupJoueur" : 0
+    },
+    {
+      "coupId" : 1
+      "coupMob": 1,
+      "coupJoueur" : 3
+    }
+  ]
+}

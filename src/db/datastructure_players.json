@@ -1,0 +1,9 @@
+{
+  "identity" : "macadresse",
+  "achievement" : {
+    "100 mob" : false
+  },
+  "stats" : {
+    "mob_killed" : 0
+  }
+}
