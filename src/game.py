@@ -98,6 +98,7 @@ class Game:
         while not close:
             # boucle Infinie du menu
             menu_area = 0
+            parallax_position = 0
             while in_menu:
                 for event in pygame.event.get():
                     if event.type == QUIT:  # On quitte le jeu
@@ -133,7 +134,8 @@ class Game:
 
                 # Printing
                 # Background
-                self.view.print_clear()
+                parallax_position += 1
+                self.view.print_parallax_background(parallax_position)
 
                 # Cases
                 self.view.print_cases_menu(menu_cursor)

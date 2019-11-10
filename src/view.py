@@ -47,6 +47,9 @@ class View:
     items_tiles = None
     description_tiles = None
 
+    # Assets Parallax
+    parallax = []
+
     # Assets Monsters
     monsters = []
     # Assets Merchants
@@ -87,6 +90,14 @@ class View:
         self.active_equipment = load_tile_table("res/inventory/active_equipment.png", 1, 1)
         self.items_tiles = load_tile_table("res/inventory/items.png", 10, 11)
         self.description_tiles = load_tile_table("res/hud/description.png", 1, 1)
+
+        # Assets Parallax
+        self.parallax.append(pygame.image.load("res/menu/parallax/background0.png").convert_alpha())
+        self.parallax.append(pygame.image.load("res/menu/parallax/background1.png").convert_alpha())
+        self.parallax.append(pygame.image.load("res/menu/parallax/background2.png").convert_alpha())
+        self.parallax.append(pygame.image.load("res/menu/parallax/background3.png").convert_alpha())
+        self.parallax.append(pygame.image.load("res/menu/parallax/background4.png").convert_alpha())
+        self.parallax.append(pygame.image.load("res/menu/parallax/background5.png").convert_alpha())
 
         # Assets Monsters
         self.monsters.append(pygame.image.load("res/enemies/druid.png").convert_alpha())
@@ -419,6 +430,17 @@ class View:
             height = (width * 9) // 16
         self.window = pygame.display.set_mode((width, height), RESIZABLE)
         self.wwidth, self.wheight = pygame.display.get_surface().get_size()
+
+    def print_parallax_background(self, position):
+        """
+        @summary Affiche le fond style parallax
+        @param position : index du parallax
+        """
+        tempx, tempy = self.cases_hud[0].get_size()
+        coeff = tempx / tempy * self.wwidth * 0.0001
+        for i in range(0, len(self.parallax)):
+            self.window.blit(pygame.transform.scale(self.parallax[i], (self.wwidth, self.wheight)), (int(0 - (i * coeff * position % self.wwidth)), 0))
+            self.window.blit(pygame.transform.scale(self.parallax[i], (self.wwidth, self.wheight)), (int(self.wwidth - (i * coeff * position % self.wwidth)), 0))
 
     def print_cases_menu(self, cursor):
         """
