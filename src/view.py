@@ -637,7 +637,7 @@ class View:
                 pygame.transform.scale(self.fills_tubes[0], (int(size_width_tubes), int(size_height_tubes))), (
                     int(startx + size_width_main),
                     int(starty + coef * (
-                            self.wheight * 0.01 + (5 * size_height_main / 16) * i) + size_height_main / 16)))
+                            self.wheight * 0.01) + (5 * size_height_main / 16) * i + size_height_main / 16)))
 
         # Fills Filler
         size_height_filler = size_height_tubes * 14 / 16
@@ -652,7 +652,7 @@ class View:
                     int(startx + size_width_main), int(starty + coef * (self.wheight * 0.01) + size_height_main / 16 + (
                             5 * size_height_main / 16) * i + size_height_main / 64)))
 
-        # Fills Filler
+        # Fills Tips
         size_width_tips, size_height_tips = size_width_main * 32 / 84, size_height_main * 20 / 64
         for i in range(0, 3):
             if armoring and i == 2:  # On saute le 2 pour afficher l'armure (3)
