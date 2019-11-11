@@ -386,6 +386,8 @@ class Game:
                     self.view.print_room(current_room, self.character)
                     # Map
                     self.view.print_map(self.map_surf)
+                    # Game Infos
+                    self.view.print_game_infos(self.character, self.actual_level)
                     # HUD Right Cases
                     if current_room.is_exit():
                         self.view.print_cases_hud(hud_cursor, 1)

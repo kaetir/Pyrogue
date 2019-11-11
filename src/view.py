@@ -164,10 +164,12 @@ class View:
                         text_temp_printable = text_temp
                     else:  # sinon on ajoute le mot depassant a la ligne d'apres
                         splitted_text.insert(0, splitted_temp[len(splitted_temp) - 1])
+                else:
+                    text_temp_printable = text_temp
 
                 text_surface = font.render(text_temp_printable, 0, (255, 255, 255))
                 self.window.blit(text_surface, (x, y + pos_height))
-                pos_height += max_height
+                pos_height += int(max_height/1.4)
 
     def print_clear(self):
         """
@@ -410,7 +412,17 @@ class View:
         tempx, tempy = surf.get_size()
         size_width, size_height = int(self.wheight * 0.30 * tempx / tempy), int(self.wheight * 0.30)
         self.window.blit(pygame.transform.scale(surf, (size_width, size_height)),
-                         (int(self.wwidth * (0.55 + 0.45 / 2) - size_width / 2), 0))
+                         (int(self.wwidth * 0.55), 0))
+
+    def print_game_infos(self, char, actual_level):
+        """
+        @summary Affiche le niveau du joueur et l'etage du donjon
+        @param char: Personnage
+        """
+        self.print_text("Etage  : " + str(actual_level), self.wheight * 0.05, int(self.wwidth * 0.78),
+                        int(self.wheight * 0.02), int(self.wwidth * 0.22))
+        self.print_text("Niveau : " + str(char.level), self.wheight * 0.05, int(self.wwidth * 0.78),
+                        int(self.wheight * 0.16), int(self.wwidth * 0.22))
 
     def print_description(self, item: Item) -> None:
         """

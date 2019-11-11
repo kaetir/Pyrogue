@@ -51,6 +51,7 @@ class Character:
         # Utiles pour le personnage Principal
         self.orientation = 0  # % 4 : orientation du personnage dans la salle
         self.position = [0, 0]  # position du personnage sur la carte
+        self.dungeon_level: int = 0
 
         # INVENTAIRES
         self.inventory = Inventory()  # Rempli d'items
