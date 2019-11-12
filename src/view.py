@@ -8,15 +8,20 @@ from src.item import Item
 from res.ressources_id import *
 
 
-def load_tile_table(filename, nbx: int, nby: int):
+def load_tile_table(filename, nbx: int, nby: int, colorkey=None):
     """
     @summary Charge un spritesheet selon une image et le nombre de sprites
     @param filename : nom du fichier
     @param nbx : nombre de sprites horizontaux
     @param nby : nombre de sprites verticaux
+    @param colorkey : charge une image non transparente en transformant une couleur transparente
     @return : un tableau de surfaces contenant les sprites
     """
-    image = pygame.image.load(filename).convert_alpha()
+    if colorkey is not None:
+        image = pygame.image.load(filename).convert()
+        image.set_colorkey(colorkey)
+    else:
+        image = pygame.image.load(filename).convert_alpha()
     image_width, image_height = image.get_size()
     tile_table = []
 
@@ -46,6 +51,7 @@ class View:
     active_equipment = None
     items_tiles = None
     description_tiles = None
+    hud_icons = None
 
     # Assets Parallax
     parallax = []
@@ -95,6 +101,7 @@ class View:
         self.active_equipment = load_tile_table("res/inventory/active_equipment.png", 1, 1)
         self.items_tiles = load_tile_table("res/inventory/items.png", 10, 11)
         self.description_tiles = load_tile_table("res/hud/description.png", 1, 1)
+        self.hud_icons = load_tile_table("res/hud/hud_icons.png", 3, 1, (255, 0, 255))
 
         # Assets Parallax
         self.parallax.append(pygame.image.load("res/menu/parallax/background0.png").convert_alpha())
@@ -210,6 +217,10 @@ class View:
             self.window.blit(pygame.transform.scale(self.ceiling_tiles[7], (size_width, size_height)), (0, 0))
 
     def print_character(self, char):
+        """
+        @summary Affiche Un personnage (monstre / Marchand)
+        @param char : personnage a afficher
+        """
         tempx, tempy = self.monsters[0].get_size()  # Les monstres ont la meme taille niveau sprite
         size_width, size_height = int(self.wwidth * 0.55), int(self.wwidth * 0.55 * tempy / tempx)
 
@@ -222,6 +233,34 @@ class View:
             return  # Inconnu, on quitte sans afficher
 
         self.window.blit(pygame.transform.scale(sprite[char.icon_id], (size_width, size_height)), (0, 0))
+
+    def print_reaction_icon(self, reaction, opacity, is_character=False):
+        """
+        @summary Affiche une icone de reaction
+        @param reaction : reaction a afficher
+        @param opacity : opacite de la reaction
+        @param is_character : doit-on l'afficher sur le personnage principal?
+        """
+
+        if reaction >= 1:
+            if is_character:
+                tempx, tempy = self.wall_tiles[0].get_size()
+                starty = self.wwidth * 0.55 * tempy / tempx
+
+                temp_surf = pygame.transform.scale(self.hud_icons[(reaction - 1) % len(self.hud_icons)],
+                         (int(self.wwidth * 0.10), int(self.wwidth * 0.10)))
+                temp_surf.set_alpha(int(opacity * 255))
+                self.window.blit(temp_surf, (self.wwidth * 0.02, int(starty + self.wheight * 0.05)))
+
+            else:
+                tempx, tempy = self.monsters[0].get_size()
+                size_width, size_height = int(self.wwidth * 0.55 / 2), int(self.wwidth * 0.55 * tempy / tempx / 2)
+
+                temp_surf = pygame.transform.scale(self.hud_icons[(reaction - 1) % len(self.hud_icons)],
+                                                   (size_width, size_width))
+                temp_surf.set_alpha(int(opacity * 255))
+                self.window.blit(temp_surf, (size_width//2, size_height - size_width//2))
+
 
     def print_inventory(self, char, cursor):
         """

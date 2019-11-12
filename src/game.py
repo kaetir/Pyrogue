@@ -88,6 +88,7 @@ class Game:
         active_cursor = [0, 0]
         max_inventory_cursor = [8 - 1, 6 - 1]
         game_area = 0  # 0: En salle, 1: En inventaire, 2: En Combat, 3: Action Objet Inventaire
+        reac_fading = 0
         reacJ, reacM = 0, 0 # les reaction des joueur ou mob apres une attaque  cf : tour
 
         # Boucle infinie
@@ -151,6 +152,7 @@ class Game:
             hud_cursor = 0
             inventory_cursor = [0, 0]
             active_cursor = [0, 0]
+            reac_fading = 0
             while in_game:
                 px, py = self.character.get_pos()
                 current_room = self.map.get_room(px, py)
@@ -276,12 +278,15 @@ class Game:
                             if event.key == K_RETURN:
                                 if active_cursor == [0, 0]:  # Attaque Basique
                                     reacJ, reacM = self.actual_battle.tour(0)
+                                    reac_fading = 1
                                 elif active_cursor[0] > 0 and active_cursor[1] == 0:  # Sorts
                                     if self.character.inventory.active_spells[active_cursor[0] - 1] is not None:
                                         reacJ, reacM = self.actual_battle.tour(active_cursor[0])
+                                        reac_fading = 1
                                 elif active_cursor[0] >= 0 and active_cursor[1] == 1:  # Consommables
                                     if self.character.inventory.active_comsumable[active_cursor[0]] is not None:
                                         reacJ, reacM = self.actual_battle.tour(4 + active_cursor[0])
+                                        reac_fading = 1
 
                             elif event.key == K_UP:  # Fleche du haut
                                 if active_cursor[1] > 0:
@@ -433,11 +438,17 @@ class Game:
                     # HUD Fillers
                     self.view.print_fillers(self.character, True)
                     self.view.print_fillers(current_room.enemy, True, True) # Monstre
+                    # HUD Icons Reac
+                    if reac_fading > 0:
+                        self.view.print_reaction_icon(reacM, reac_fading)
+                        self.view.print_reaction_icon(reacJ, reac_fading, True)
+                        reac_fading -= 0.05
                     # Test Fin Combat
                     if self.actual_battle.is_ended():
                         game_area = 0
                         current_room.enemy = None
                         self.actual_battle = None
+                        reac_fading = 0
 
                 elif game_area == 3:
                     # Objet Inventaire
