@@ -389,6 +389,9 @@ class Game:
                 # Background
                 self.view.print_clear()
 
+                # HUD Active Equipment
+                self.view.print_active_equipment(self.character)
+
                 if game_area == 0:
                     # Room
                     self.view.print_room(current_room, self.character)
@@ -483,8 +486,6 @@ class Game:
                     # HUD Fillers
                     self.view.print_fillers(self.character)
 
-                # HUD Active Equipment
-                self.view.print_active_equipment(self.character)
 
                 pygame.display.flip()
 

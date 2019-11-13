@@ -244,13 +244,13 @@ class View:
 
         if reaction >= 1:
             if is_character:
-                tempx, tempy = self.wall_tiles[0].get_size()
-                starty = self.wwidth * 0.55 * tempy / tempx
+                tempx, tempy = self.active_equipment[0].get_size()
+                size_width = self.wwidth * 0.22
 
                 temp_surf = pygame.transform.scale(self.hud_icons[(reaction - 1) % len(self.hud_icons)],
-                         (int(self.wwidth * 0.10), int(self.wwidth * 0.10)))
+                         (int(size_width), int(size_width)))
                 temp_surf.set_alpha(int(opacity * 255))
-                self.window.blit(temp_surf, (self.wwidth * 0.02, int(starty + self.wheight * 0.05)))
+                self.window.blit(temp_surf, (int(self.wwidth * 0.77 - size_width//8), int(self.wheight * 0.30)))
 
             else:
                 tempx, tempy = self.monsters[0].get_size()
