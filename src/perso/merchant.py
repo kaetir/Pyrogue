@@ -21,3 +21,5 @@ class Merchant(Character):
             self.inventory.append(Armor())
         for i in range(3):
             self.inventory.append(Weapon())
+        for i in range(2):
+            self.inventory.append(SpellBook())

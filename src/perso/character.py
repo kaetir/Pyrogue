@@ -116,7 +116,7 @@ class Character:
         @summary On lui fait monter des nivreau si besoin et on lui ajoute le restant de l'xp
         @param : int nombre de points d'xp a donner au joueur
         """
-        while self.experience + amount > fib_rec(self.level) * 100:
+        while self.experience + amount >= fib_rec(self.level) * 100:
             amount -= fib_rec(self.level) * 100
             self.level_up()
 
@@ -192,6 +192,8 @@ class Character:
         if amount < self.damage_min:
             return other.take_damage(self.damage_min)
         else:
+            if random() < self.chance_of_critical:
+                return other.take_damage(amount * 2)
             return other.take_damage(amount)
 
     def print(self) -> None:
@@ -209,9 +211,11 @@ class Character:
         return self.health > 0
 
     def equip_spellbook(self, current_item, cursor) -> bool:
+        self.inventory.equip_spellbook(current_item, cursor)
         return True
 
     def equip_consumable(self, current_item, cursor: int) -> bool:
+        self.inventory.equip_consumable(current_item, cursor)
         return True
 
     def equip(self, item: Equipment):

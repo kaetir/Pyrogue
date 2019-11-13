@@ -5,7 +5,8 @@ from pymongo import MongoClient
 from pymongo.errors import *
 from uuid import getnode as get_mac
 
-#from src.perso.character import Character
+
+# from src.perso.character import Character
 
 
 def get_mac_hex() -> hex:
@@ -61,6 +62,21 @@ class PyrogueDB:
 
             self.saves_table.delete_many({"identity": get_mac_hex()})
             self.saves_table.insert_one(jason)
+
+        except ConnectionFailure:
+            return 1
+        except CursorNotFound:
+            return 2
+        return 0
+
+    def save_fight(self, player: Character, mob: Monster, coups: [coup]) -> int:
+        try:
+            jason = {
+                "character": player,
+                "mob": mob,
+                "coups": coups
+            }
+            self.fights_table.insert_one(jason)
 
         except ConnectionFailure:
             return 1

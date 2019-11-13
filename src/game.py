@@ -39,6 +39,7 @@ class Game:
             self.character.inventory.weapon = Weapon("weapon")
             self.character.inventory.append(Armor())
             self.character.inventory.append(Weapon())
+            self.character.inventory.append(SpellBook())
             # === FIN  ===
 
         self.map = MapDungeon(15)
@@ -71,6 +72,7 @@ class Game:
         if not self.map.get_room(px, py).is_discovered():
             self.map.get_room(px, py).discover()
             self.character.gain_xp(1)
+            self.character.mana += 1 if self.character.mana < self.character.max_mana else 0
         self.map_surf = self.map.disp_map(player=self.character)
 
     def start_game(self):
@@ -311,7 +313,8 @@ class Game:
                                     game_area = 1
                                 elif isinstance(current_item, SpellBook):
                                     if hud_cursor == 0:
-                                        active_cursor = [1, 0]
+                                        active_cursor = [1 if None not in self.character.inventory.active_spells else
+                                                         self.character.inventory.active_spells.index(None)+1, 0]
                                         game_area = 4
                                     elif hud_cursor == 1:
                                         self.character.inventory.throw(current_item)
@@ -360,7 +363,7 @@ class Game:
 
                         elif game_area == 5:  # Mode Objet d'inventaire -> Consommables Barre Active
                             if event.key == K_RETURN:
-                                self.character.inventory.equip_consumable(current_item, active_cursor[0])
+                                self.character.equip_consumable(current_item, active_cursor[0])
                                 active_cursor = [0, 0]
                                 game_area = 1  # On retourne a l'inventaire
 

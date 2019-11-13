@@ -18,6 +18,13 @@ from src.perso.monster import Monster
 import random
 
 
+class coup:
+    def __init__(self, id: int, coupJoueur: int, coupMob: int) -> None:
+        self.coupId: int = id
+        self.coupMob: int = coupMob
+        self.coupJoueur: int = coupJoueur
+
+
 class Battle:
     c: Character = None
     m: Monster = None
@@ -51,7 +58,7 @@ class Battle:
         """
         @summary levelup du mob
         """
-        for i in range(self.c.level-1):
+        for i in range(self.c.level - 1):
             self.m.level_up()
 
     def tour(self, action: int) -> [int, int]:

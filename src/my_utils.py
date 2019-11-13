@@ -18,7 +18,6 @@ def fib_rec(n):
                 a = b
                 b = c
             cpt += 1
-            print(fibo_const)
         return c
     # else:
     return fibo_const[n]

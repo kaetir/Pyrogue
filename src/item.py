@@ -88,20 +88,20 @@ class Weapon(Equipment):
         78: 15
     }
 
-    def __init__(self, type: str = None) -> None:
+    def __init__(self, type_equip: str = None) -> None:
         super().__init__()
-        if type is None:
+        if type_equip is None:
             self.equipment_type = choice(self.static_equipment_type)
         else:
-            if type in self.static_equipment_type:
-                self.equipment_type = type
+            if type_equip in self.static_equipment_type:
+                self.equipment_type = type_equip
             else:
                 self.equipment_type = choice(self.static_equipment_type)
 
         self.random_icon()
 
         if self.equipment_type == "weapon":
-            self.prix = self.swordDamage[self.icon_id]*100
+            self.prix = self.swordDamage[self.icon_id] * 100
             # 5% chance of parry
             self.block_chance = 0.05
             self.damage = self.swordDamage[self.icon_id]
@@ -182,13 +182,79 @@ class Consumables(Item):
     def use(self, c: Character) -> None:
         if self.bonus:
             c.heal(c.max_health // 2)
+            c.mana += 3 if c.mana + 3 <= c.max_mana else c.max_mana - 3
+
         print("pouf")
 
 
 class SpellBook(Item):
     item_type = "spellbook"
-    bonus: bool = True
+    bonus: bool = False
+    # TODO TROUVER UNE VALEUR CORRECTE
+    prix = randint(10, 100)
 
-    def use(self, source, destination) -> None:
-        print("mathémagie", self.icon_id)
-        print("{} use a spell on {}".format(source, destination))
+    IsBonus = {
+        70: False,  # poison
+        71: False,  # boom
+        72: False,  # skip
+        73: True,  # armorBoost
+        74: True,  # heal
+        75: True  # vol a la tire
+    }
+    costs = {
+        70: 1,  # poison
+        71: 1,  # boom
+        72: 0,  # skip
+        73: 5,  # armorBoost
+        74: 2,  # heal
+        75: 1  # vol a la tire
+    }
+
+    def __init__(self):
+        super().__init__()
+        self.random_spellbook()
+        self.cost = self.costs[self.icon_id]
+        self.bonus = self.IsBonus[self.icon_id]
+
+    def use(self, source: Character, destination: Monster) -> bool:
+        """
+        @summary utilise un spell de la source sur la destination si c'est un monstre et que le sort est un debuff
+        @param source: le joueur qui lance le sort
+        @param destination: le mob qui prend cher
+        @return: si le sort a pu etre lancé
+        """
+        if self.cost > source.mana:
+            return False
+        if self.icon_id != 71:
+            source.mana -= self.cost
+
+        if self.bonus:
+            # heal
+            if self.icon_id == 74:
+                source.health = source.max_health
+            # shield
+            elif self.icon_id == 73:
+                source.armor += 5
+            # vol a la tire
+            elif self.icon_id == 75:
+                source.inventory.money += randint(50, 100)
+                destination.take_damage(destination.max_health // 5)
+            print("mathémagie BONUS", self.icon_id)
+            print("{} use a spell on himself".format(source.name))
+        else:
+            # TODO states -> poison
+            if self.icon_id == 70:
+                destination.take_damage(destination.max_health // 3)
+            # Boom == INSTAKILL
+            if self.icon_id == 71:
+                source.mana = 0
+                destination.health = 0
+            # TODO skip turn
+            if self.icon_id == 72:
+                print("POUF")
+            print("mathémagie MALLUS", self.icon_id)
+            print("{} use a spell on {}".format(self.name, destination.name))
+        return True
+
+    def random_spellbook(self):
+        self.icon_id = choice(items_id["spellbooks"])
