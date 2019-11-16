@@ -501,7 +501,7 @@ class View:
         for i in range(0, len(self.parallax_scaled)):
             self.window.blit(self.parallax_scaled[i], (int(0 - (i * coeff * position % self.wwidth)), 0))
 
-    def print_cases_menu(self, cursor):
+    def print_cases_menu(self, cursor, in_game=False):
         """
         @summary Affiche l'HUD presentant les options du menu (Nouvelle partie, charger, Achievements...)
         @param cursor : Curseur pointant la case active
@@ -509,7 +509,7 @@ class View:
         tempx, tempy = self.cases_hud[0].get_size()
         size_width, size_height = int(self.wwidth * 0.28), int(self.wwidth * 0.28 * tempy / tempx)
 
-        texts = ["Nouvelle Partie", "Charger Partie", "Succes", "Statistiques"]
+        texts = ["Nouvelle Partie", "Charger Partie", "Succes", "Statistiques"] if not in_game else ["Continuer", "Sauvegarder", "Succes", "Statistiques"]
 
         for i in range(0, 4):
             hovered = 1 if cursor == i else 0
