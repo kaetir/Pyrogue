@@ -23,15 +23,15 @@ class Inventory:
 
         # Rempli d'items
         self.max_size: int = 6 * 8
-        self.items: list[Item] = [None] * self.max_size
+        self.items: list[Optional[Item, None]] = [None] * self.max_size
 
         # les consumables sont stoké
         # max size 4
-        self.active_comsumable: list[Consumables] = [None, None, None, None]
+        self.active_comsumable: list[Optional[Consumables, None]] = [None, None, None, None]
 
         # Les speels sont tous dans des speels book et on en actives certain
         # max size 3
-        self.active_spells: list[SpellBook] = [None, None, None]
+        self.active_spells: list[Optional[SpellBook, None]] = [None, None, None]
 
         self.helmet = None
         self.chest = None
@@ -56,12 +56,13 @@ class Inventory:
         else:
             return None
 
-    def __setitem__(self, item: Item, value: Item) -> None:
+    def __setitem__(self, item: Item, value: Optional[Item, None]) -> None:
         """
         @summary surcharge de [] pour set un item
         @return: Item
         """
-        self.items[self.items.index(item)] = value
+        if item in self.items:
+            self.items[self.items.index(item)] = value
 
     def equip(self, item: Equipment):
         """
@@ -115,7 +116,7 @@ class Inventory:
         if item in self.items:
             self[item] = None
             return True
-        return  False
+        return False
 
     def is_full(self):
         """

@@ -1,7 +1,6 @@
 import pygame
 from pygame.constants import QUIT, VIDEORESIZE, KEYDOWN, K_UP, K_DOWN, K_RIGHT, K_LEFT, K_RETURN, K_ESCAPE
 
-
 from src.view import View
 from src.perso.character import Character
 from src.map import MapDungeon
@@ -85,13 +84,9 @@ class Game:
 
         # Constantes Semi-Globales de l'instance de jeu
         menu_cursor = 0
-        hud_cursor = 0
-        inventory_cursor = [0, 0]
-        active_cursor = [0, 0]
         max_inventory_cursor = [8 - 1, 6 - 1]
-        game_area = 0  # 0: En salle, 1: En inventaire, 2: En Combat, 3: Action Objet Inventaire
-        reac_fading = 0
-        reacJ, reacM = 0, 0 # les reaction des joueur ou mob apres une attaque  cf : tour
+        # game_area =  0: En salle, 1: En inventaire, 2: En Combat, 3: Action Objet Inventaire
+        reac_j, reac_m = 0, 0  # les reaction des joueur ou mob apres une attaque  cf : tour
 
         # Boucle infinie
         in_game = False
@@ -100,7 +95,6 @@ class Game:
 
         while not close:
             # boucle Infinie du menu
-            menu_area = 0
             parallax_position = 0
             while in_menu:
                 for event in pygame.event.get():
@@ -147,7 +141,6 @@ class Game:
 
                 # Ticking
                 clock.tick(30)
-
 
             # Boucle Infinie du jeu
             game_area = 0
@@ -279,16 +272,16 @@ class Game:
                         elif game_area == 2:  # Si on est en mode COMBAT
                             if event.key == K_RETURN:
                                 if active_cursor == [0, 0]:  # Attaque Basique
-                                    reacJ, reacM = self.actual_battle.tour(0)
-                                    reac_fading = 1 if reacJ != 0 and reacM != 0 else 0
+                                    reac_j, reac_m = self.actual_battle.tour(0)
+                                    reac_fading = 1 if reac_j != 0 and reac_m != 0 else 0
                                 elif active_cursor[0] > 0 and active_cursor[1] == 0:  # Sorts
                                     if self.character.inventory.active_spells[active_cursor[0] - 1] is not None:
-                                        reacJ, reacM = self.actual_battle.tour(active_cursor[0])
-                                        reac_fading = 1 if reacJ != 0 and reacM != 0 else 0
+                                        reac_j, reac_m = self.actual_battle.tour(active_cursor[0])
+                                        reac_fading = 1 if reac_j != 0 and reac_m != 0 else 0
                                 elif active_cursor[0] >= 0 and active_cursor[1] == 1:  # Consommables
                                     if self.character.inventory.active_comsumable[active_cursor[0]] is not None:
-                                        reacJ, reacM = self.actual_battle.tour(4 + active_cursor[0])
-                                        reac_fading = 1 if reacJ != 0 and reacM != 0 else 0
+                                        reac_j, reac_m = self.actual_battle.tour(4 + active_cursor[0])
+                                        reac_fading = 1 if reac_j != 0 and reac_m != 0 else 0
 
                             elif event.key == K_UP:  # Fleche du haut
                                 if active_cursor[1] > 0:
@@ -314,15 +307,16 @@ class Game:
                                 elif isinstance(current_item, SpellBook):
                                     if hud_cursor == 0:
                                         active_cursor = [1 if None not in self.character.inventory.active_spells else
-                                                         self.character.inventory.active_spells.index(None)+1, 0]
+                                                         self.character.inventory.active_spells.index(None) + 1, 0]
                                         game_area = 4
                                     elif hud_cursor == 1:
                                         self.character.inventory.throw(current_item)
                                         game_area = 1
                                 elif isinstance(current_item, Consumables):
                                     if hud_cursor == 0:
-                                        active_cursor = [0 if None not in self.character.inventory.active_comsumable else
-                                                         self.character.inventory.active_comsumable.index(None), 1]
+                                        active_cursor = [
+                                            0 if None not in self.character.inventory.active_comsumable else
+                                            self.character.inventory.active_comsumable.index(None), 1]
                                         game_area = 5
                                     elif hud_cursor == 1:
                                         self.character.inventory.throw(current_item)
@@ -372,7 +366,7 @@ class Game:
                                 if current_item is None:
                                     # Si on, est arrive ici depuis l'inventaire pour desequiper un consommable
                                     game_area = 1
-                                else:  #Sinon qu'on cherchait a en equiper un
+                                else:  # Sinon qu'on cherchait a en equiper un
                                     game_area = 3
 
                             elif event.key == K_RIGHT:  # Fleche de droite
@@ -381,7 +375,6 @@ class Game:
                             elif event.key == K_LEFT:  # Fleche de gauche
                                 if active_cursor[0] > 0:
                                     active_cursor[0] -= 1
-
 
                 # Calculating New sprites and Printing
                 px, py = self.character.get_pos()
@@ -443,11 +436,11 @@ class Game:
                     # TODO
                     # HUD Fillers
                     self.view.print_fillers(self.character, True)
-                    self.view.print_fillers(current_room.enemy, True, True) # Monstre
+                    self.view.print_fillers(current_room.enemy, True, True)  # Monstre
                     # HUD Icons Reac
                     if reac_fading > 0:
-                        self.view.print_reaction_icon(reacM, reac_fading)
-                        self.view.print_reaction_icon(reacJ, reac_fading, True)
+                        self.view.print_reaction_icon(reac_m, reac_fading)
+                        self.view.print_reaction_icon(reac_j, reac_fading, True)
                         reac_fading -= 0.05
                     # Test Fin Combat
                     if self.actual_battle.is_ended():
@@ -485,7 +478,6 @@ class Game:
                     self.view.print_description(current_item)
                     # HUD Fillers
                     self.view.print_fillers(self.character)
-
 
                 pygame.display.flip()
 

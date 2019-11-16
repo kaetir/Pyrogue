@@ -19,8 +19,8 @@ import random
 
 
 class Coup:
-    def __init__(self, id: int, coup_joueur: int, coup_mob: int) -> None:
-        self.coupId: int = id
+    def __init__(self, c_id: int, coup_joueur: int, coup_mob: int) -> None:
+        self.coupId: int = c_id
         self.coupMob: int = coup_mob
         self.coupJoueur: int = coup_joueur
 
@@ -87,8 +87,6 @@ class Battle:
 
             if not self.c.inventory.active_spells[action].use(self.c, self.m):
                 return 0, 0
-
-
 
         # consumable
         elif action < 8:
