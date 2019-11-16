@@ -10,6 +10,7 @@ from src.item import *
 from src.item import Weapon
 from src.db.db import PyrogueDB
 
+
 class Game:
     view = None
     map = None
@@ -18,9 +19,6 @@ class Game:
     db = PyrogueDB()
 
     def __init__(self) -> None:
-        # Initialisation de la bibliotheque Pygame
-        # pygame.init()
-        # cassé ne pas faire LOL
 
         self.view = View()
         self.map_surf: str = ""

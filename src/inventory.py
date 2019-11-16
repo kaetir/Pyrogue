@@ -123,7 +123,7 @@ class Inventory:
         @summary dit si l'inventaire est plein
         @return : bool
         """
-        return None in self.items
+        return None not in self.items
 
     def append(self, item: Item):
         """
