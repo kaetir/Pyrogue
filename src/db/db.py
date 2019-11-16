@@ -86,7 +86,7 @@ class PyrogueDB:
         print("fight saved")
         return 0
 
-    def load(self) -> int:
+    def load(self) -> Optional[int, [Any]]:
         try:
             for s in self.saves_table.find({"identity": get_mac_hex()}):
                 return pickle.loads(s["player"]), pickle.loads(s["map"]), s["actual_level"]

@@ -135,6 +135,7 @@ class Game:
                             elif menu_cursor == 1 and not current_game:
                                 # Charge une partie
                                 self.character, self.map, self.actual_level = self.db.load()
+                                self.map_surf = self.map.disp_map(player=self.character)
                                 in_game = True
                                 in_menu = False
 
