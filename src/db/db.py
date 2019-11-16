@@ -4,6 +4,7 @@ import json
 from pymongo import MongoClient
 from pymongo.errors import *
 from uuid import getnode as get_mac
+import pickle
 
 
 # from src.perso.character import Character
@@ -72,9 +73,9 @@ class PyrogueDB:
     def save_fight(self, player: Character, mob: Monster, coups: [coup]) -> int:
         try:
             jason = {
-                "character": player,
-                "mob": mob,
-                "coups": coups
+                "character": pickle.dumps(player),
+                "mob": pickle.dumps(mob),
+                "coups": pickle.dumps(coups)
             }
             self.fights_table.insert_one(jason)
 
@@ -82,6 +83,7 @@ class PyrogueDB:
             return 1
         except CursorNotFound:
             return 2
+        print("fight saved")
         return 0
 
     def load(self) -> int:
@@ -98,6 +100,12 @@ class PyrogueDB:
 if __name__ == '__main__':
     my = PyrogueDB()
     # my.save("map", "toitoine")
-    my.save_stats_and_achievement("moi")
+    # my.save_stats_and_achievement("moi")
 
     my.load()
+
+    for f in my.fights_table.find({}):
+        print(pickle.loads(f["character"]))
+        print(pickle.loads(f["mob"]))
+        [print(str(c)) for c in pickle.loads(f["coups"])]
+        print("================================")
