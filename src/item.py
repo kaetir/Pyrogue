@@ -1,13 +1,13 @@
 """
 - There is two different kind of objects
 ·         Equipment:
-			o   Weapon, that can increases damage and raises characteristics
-			o   Armor, raises armor points and characteristics
-			o   Jewels. Those can be equipped in different equipment slots (
-				 2 slots for weapon: hand left and hand right,
-				 2 for jewels,
-				 5 for armor: head, chest, pants, arms, legs),
-				raising stats or granting power.
+            o   Weapon, that can increases damage and raises characteristics
+            o   Armor, raises armor points and characteristics
+            o   Jewels. Those can be equipped in different equipment slots (
+                 2 slots for weapon: hand left and hand right,
+                 2 for jewels,
+                 5 for armor: head, chest, pants, arms, legs),
+                raising stats or granting power.
 ·         consumables: that can be used and disappears upon use, and help the player or inflict damage
 - Objects have a value of gold, and equipments have a minimum level to equip them.
 
@@ -16,7 +16,7 @@
 from __future__ import annotations
 from random import randint, random, choice
 from res.ressources_id import items_id
-from src.perso.character import Character
+#from src.perso.character import Character
 
 
 class Item:
@@ -55,8 +55,8 @@ class Equipment(Item):
 
 class Weapon(Equipment):
     """ emplacement :
-	weapon, shield
-	"""
+    weapon, shield
+    """
 
     static_equipment_type = ["weapon", "shield"]
 
@@ -200,7 +200,7 @@ class Armor(Equipment):
             # nique la gramaire
             self.icon_id = choice(items_id[self.equipment_type])
             self.value = self.values[self.equipment_type][self.icon_id]
-        self.prix = self.value * 100 + randint(-int(self.value * 0.2), int(self.value * 0.2))
+        self.prix = self.value * 100 + randint(-int(self.value * 20), int(self.value * 20))
 
 
 class Consumables(Item):
@@ -211,7 +211,7 @@ class Consumables(Item):
         super().__init__()
         self.icon_id = choice(items_id["sandwichs"])
 
-    def use(self, c: Character) -> None:
+    def use(self, c) -> None:
         if self.bonus:
             c.heal(c.max_health // 2)
             c.mana += 3 if c.mana + 3 <= c.max_mana else c.max_mana - c.mana
@@ -256,13 +256,13 @@ class SpellBook(Item):
         self.bonus = self.IsBonus[self.icon_id]
         self.prix = randint(self.costsGold[self.icon_id][0], self.costsGold[self.icon_id][1])
 
-    def use(self, source: Character, destination: Monster) -> bool:
+    def use(self, source, destination) -> bool:
         """
-		@summary utilise un spell de la source sur la destination si c'est un monstre et que le sort est un debuff
-		@param source: le joueur qui lance le sort
-		@param destination: le mob qui prend cher
-		@return: si le sort a pu etre lancé
-		"""
+        @summary utilise un spell de la source sur la destination si c'est un monstre et que le sort est un debuff
+        @param source: le joueur qui lance le sort
+        @param destination: le mob qui prend cher
+        @return: si le sort a pu etre lancé
+        """
         if self.cost > source.mana:
             return False
         source.mana -= self.cost
@@ -273,7 +273,7 @@ class SpellBook(Item):
                 source.health = source.max_health
             # shield
             elif self.icon_id == 73:
-                source.armor += 5
+                source.armor += source.level * 2
             # vol a la tire
             elif self.icon_id == 75:
                 source.inventory.money += randint(25, 50)

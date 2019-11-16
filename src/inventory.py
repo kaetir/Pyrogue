@@ -123,12 +123,7 @@ class Inventory:
         @summary dit si l'inventaire est plein
         @return : bool
         """
-        i = 0
-        while i < self.max_size:
-            i += 1
-            if self.items[i] is None:
-                return False
-        return True
+        return None in self.items
 
     def append(self, item: Item):
         """

@@ -21,7 +21,6 @@ from __future__ import annotations
 from random import randint, random
 from src.my_utils import fib_rec
 from src.inventory import Inventory
-# from src.item import Equipment
 
 import math
 
