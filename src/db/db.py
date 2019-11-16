@@ -5,9 +5,7 @@ from pymongo import MongoClient
 from pymongo.errors import *
 from uuid import getnode as get_mac
 import pickle
-
-
-# from src.perso.character import Character
+import threading
 
 
 def get_mac_hex() -> hex:
@@ -77,7 +75,9 @@ class PyrogueDB:
                 "mob": pickle.dumps(mob),
                 "coups": pickle.dumps(coups)
             }
-            self.fights_table.insert_one(jason)
+            # threading for no slowing
+            download_thread = threading.Thread(target=self.fights_table.insert_one, args=[jason])
+            download_thread.start()
 
         except ConnectionFailure:
             return 1
