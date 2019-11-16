@@ -85,6 +85,7 @@ class Game:
         # Constantes Semi-Globales de l'instance de jeu
         menu_cursor = 0
         max_inventory_cursor = [8 - 1, 6 - 1]
+        current_game = False
         # game_area =  0: En salle, 1: En inventaire, 2: En Combat, 3: Action Objet Inventaire
         reac_j, reac_m = 0, 0  # les reaction des joueur ou mob apres une attaque  cf : tour
 
@@ -112,15 +113,24 @@ class Game:
                             close = True
 
                         elif event.key == K_RETURN:
-                            if menu_cursor == 0:
+                            if menu_cursor == 0 and not current_game:
                                 # Nouvelle Partie
                                 self.dungeon_restart(True)
                                 in_game = True
                                 in_menu = False
 
-                            elif menu_cursor == 1:
+                            elif menu_cursor == 0 and current_game:
+                                # Continue la partie
+                                in_game = True
+                                in_menu = False
+
+                            elif menu_cursor == 1 and not current_game:
                                 # Charge une partie
-                                pass
+                                pass #TODO
+
+                            elif menu_cursor == 1 and not current_game:
+                                # Sauvegarde la partie en cours
+                                pass#TODO
 
                         elif event.key == K_UP:  # Fleche du haut
                             if menu_cursor > 0:
@@ -135,7 +145,7 @@ class Game:
                 self.view.print_parallax_background(parallax_position)
 
                 # Cases
-                self.view.print_cases_menu(menu_cursor)
+                self.view.print_cases_menu(menu_cursor, current_game)
 
                 pygame.display.flip()
 
@@ -149,6 +159,7 @@ class Game:
             active_cursor = [0, 0]
             reac_fading = 0
             while in_game:
+                current_game = True
                 px, py = self.character.get_pos()
                 current_room = self.map.get_room(px, py)
                 if game_area != 6 or current_room.merchant is None:  # Si nous ne sommes pas en mode Acheter
@@ -482,6 +493,7 @@ class Game:
                 pygame.display.flip()
 
                 if not self.character.is_alive():  # On quitte la partie #DEAD
+                    current_game = False
                     in_game = False
                     in_menu = True
 
