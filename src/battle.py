@@ -18,11 +18,11 @@ from src.perso.monster import Monster
 import random
 
 
-class coup:
-    def __init__(self, id: int, coupJoueur: int, coupMob: int) -> None:
+class Coup:
+    def __init__(self, id: int, coup_joueur: int, coup_mob: int) -> None:
         self.coupId: int = id
-        self.coupMob: int = coupMob
-        self.coupJoueur: int = coupJoueur
+        self.coupMob: int = coup_mob
+        self.coupJoueur: int = coup_joueur
 
 
 class Battle:
