@@ -182,7 +182,7 @@ class Consumables(Item):
     def use(self, c: Character) -> None:
         if self.bonus:
             c.heal(c.max_health // 2)
-            c.mana += 3 if c.mana + 3 <= c.max_mana else c.max_mana - 3
+            c.mana += 3 if c.mana + 3 <= c.max_mana else c.max_mana - c.mana
 
         print("pouf")
 
