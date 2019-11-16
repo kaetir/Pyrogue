@@ -190,8 +190,6 @@ class Consumables(Item):
 class SpellBook(Item):
     item_type = "spellbook"
     bonus: bool = False
-    # TODO TROUVER UNE VALEUR CORRECTE
-    prix = randint(10, 100)
 
     IsBonus = {
         70: False,  # poison
@@ -210,11 +208,21 @@ class SpellBook(Item):
         75: 1  # vol a la tire
     }
 
+    costsGold = {
+        70: [150, 300],  # poison
+        71: [300, 1000],  # boom
+        72: [1, 1],      # skip
+        73: [100, 200],  # armorBoost
+        74: [200, 400],  # heal
+        75: [200, 400]  # vol a la tire
+    }
+
     def __init__(self):
         super().__init__()
         self.random_spellbook()
         self.cost = self.costs[self.icon_id]
         self.bonus = self.IsBonus[self.icon_id]
+        self.prix = randint(self.costsGold[self.icon_id][0], self.costsGold[self.icon_id][1])
 
     def use(self, source: Character, destination: Monster) -> bool:
         """
@@ -225,8 +233,7 @@ class SpellBook(Item):
         """
         if self.cost > source.mana:
             return False
-        if self.icon_id != 71:
-            source.mana -= self.cost
+        source.mana -= self.cost
 
         if self.bonus:
             # heal
@@ -237,7 +244,7 @@ class SpellBook(Item):
                 source.armor += 5
             # vol a la tire
             elif self.icon_id == 75:
-                source.inventory.money += randint(50, 100)
+                source.inventory.money += randint(25, 50)
                 destination.take_damage(destination.max_health // 5)
             print("mathémagie BONUS", self.icon_id)
             print("{} use a spell on himself".format(source.name))
@@ -245,15 +252,16 @@ class SpellBook(Item):
             # TODO states -> poison
             if self.icon_id == 70:
                 destination.take_damage(destination.max_health // 3)
-            # Boom == INSTAKILL
+            # Boom == massdamage
             if self.icon_id == 71:
+                destination.health -= source.mana * 3
                 source.mana = 0
-                destination.health = 0
             # TODO skip turn
             if self.icon_id == 72:
                 print("POUF")
             print("mathémagie MALLUS", self.icon_id)
             print("{} use a spell on {}".format(self.name, destination.name))
+
         return True
 
     def random_spellbook(self):

@@ -15,11 +15,11 @@ class Merchant(Character):
         super().__init__("Merchant")
         # print("Bonjour, tu en veux c'est de la bonne")
         self.icon_id = randint(0, len(merchants_id) - 1)
-        for i in range(3):
+        for i in range(randint(0, 6)):
             self.inventory.append(Consumables())
-        for i in range(3):
+        for i in range(randint(0, 6)):
             self.inventory.append(Armor())
-        for i in range(3):
+        for i in range(randint(0, 3)):
             self.inventory.append(Weapon())
-        for i in range(2):
+        for i in range(randint(0, 2)):
             self.inventory.append(SpellBook())

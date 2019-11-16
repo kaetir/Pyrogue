@@ -75,20 +75,29 @@ class Battle:
         rc = 0
         rm = 0
         if action == 0:
-            # TODO precision de l'arme
             dc = self.c.inventory.weapon.damage if self.c.inventory.weapon is not None else 1
             rm = self.c.inflict_damage(self.m, dc)
 
         # spell
         elif action < 4:
             action -= 1
-            # TODO verif spell
-            self.c.inventory.active_spells[action].use(self.c, self.m)
+            # verif spell
+            if self.c.inventory.active_spells[action] is None:
+                return 0, 0
+
+            if not self.c.inventory.active_spells[action].use(self.c, self.m):
+                return 0, 0
+
+
 
         # consumable
         elif action < 8:
-            # TODO verif consumable
             action %= 4
+
+            # verif consumable
+            if self.c.inventory.active_comsumable[action] is None:
+                return 0, 0
+
             if self.c.inventory.active_comsumable[action].bonus:
                 self.c.inventory.active_comsumable[action].use(self.c)
             else:
