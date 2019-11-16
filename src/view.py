@@ -693,7 +693,7 @@ class View:
         # Fills Filler
         size_height_filler = size_height_tubes * 14 / 16
         for i in range(0, 3):
-            size_width_filler = percentages[i] * size_width_tubes
+            size_width_filler = min(percentages[i] * size_width_tubes, size_width_tubes)
             if armoring and i == 2:  # On saute le 2 pour afficher l'armure (3)
                 index = 3
             else:

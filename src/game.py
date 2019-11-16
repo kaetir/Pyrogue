@@ -280,15 +280,15 @@ class Game:
                             if event.key == K_RETURN:
                                 if active_cursor == [0, 0]:  # Attaque Basique
                                     reacJ, reacM = self.actual_battle.tour(0)
-                                    reac_fading = 1
+                                    reac_fading = 1 if reacJ != 0 and reacM != 0 else 0
                                 elif active_cursor[0] > 0 and active_cursor[1] == 0:  # Sorts
                                     if self.character.inventory.active_spells[active_cursor[0] - 1] is not None:
                                         reacJ, reacM = self.actual_battle.tour(active_cursor[0])
-                                        reac_fading = 1
+                                        reac_fading = 1 if reacJ != 0 and reacM != 0 else 0
                                 elif active_cursor[0] >= 0 and active_cursor[1] == 1:  # Consommables
                                     if self.character.inventory.active_comsumable[active_cursor[0]] is not None:
                                         reacJ, reacM = self.actual_battle.tour(4 + active_cursor[0])
-                                        reac_fading = 1
+                                        reac_fading = 1 if reacJ != 0 and reacM != 0 else 0
 
                             elif event.key == K_UP:  # Fleche du haut
                                 if active_cursor[1] > 0:
