@@ -184,7 +184,7 @@ class Consumables(Item):
             c.heal(c.max_health // 2)
             c.mana += 3 if c.mana + 3 <= c.max_mana else c.max_mana - c.mana
 
-        print("pouf")
+        print("Yummmy !!!!🥪")
 
 
 class SpellBook(Item):
