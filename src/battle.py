@@ -43,7 +43,7 @@ class Battle:
             self.m = Monster()
         else:
             self.m = m
-        coups: [Coup] = []
+        self.coups: [Coup] = []
         self.c = c
         self.start()
         self.nb_tour: int = 0

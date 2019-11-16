@@ -53,12 +53,12 @@ class PyrogueDB:
             return 2
         return 0
 
-    def save(self, carte: str, player: Character) -> int:
+    def save(self, game) -> int:
         try:
             jason = {"identity": get_mac_hex(),
-                     "character": player,
-                     "map": carte,
-                     "achievement": ["TODO"]
+                     "player": pickle.dumps(game.character),
+                     "map": pickle.dumps(game.map),
+                     "actual_level": game.actual_level
                      }
 
             self.saves_table.delete_many({"identity": get_mac_hex()})
@@ -89,7 +89,7 @@ class PyrogueDB:
     def load(self) -> int:
         try:
             for s in self.saves_table.find({"identity": get_mac_hex()}):
-                print(s)
+                return pickle.loads(s["player"]), pickle.loads(s["map"]), s["actual_level"]
         except ConnectionFailure:
             return 1
         except CursorNotFound:

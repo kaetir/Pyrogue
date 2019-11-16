@@ -8,13 +8,14 @@ from src.battle import Battle
 from src.item import *
 
 from src.item import Weapon
-
+from src.db.db import PyrogueDB
 
 class Game:
     view = None
     map = None
     character = None
     actual_level = 0
+    db = PyrogueDB()
 
     def __init__(self) -> None:
         # Initialisation de la bibliotheque Pygame
@@ -97,6 +98,15 @@ class Game:
         while not close:
             # boucle Infinie du menu
             parallax_position = 0
+            """
+            #     #  #######  #     #  #     # 
+            ##   ##  #        ##    #  #     # 
+            # # # #  #        # #   #  #     # 
+            #  #  #  #####    #  #  #  #     # 
+            #     #  #        #   # #  #     # 
+            #     #  #        #    ##  #     # 
+            #     #  #######  #     #   #####  
+            """
             while in_menu:
                 for event in pygame.event.get():
                     if event.type == QUIT:  # On quitte le jeu
@@ -126,11 +136,13 @@ class Game:
 
                             elif menu_cursor == 1 and not current_game:
                                 # Charge une partie
-                                pass #TODO
+                                self.character, self.map, self.actual_level = self.db.load()
+                                in_game = True
+                                in_menu = False
 
                             elif menu_cursor == 1 and not current_game:
                                 # Sauvegarde la partie en cours
-                                pass#TODO
+                                self.db.save(self)
 
                         elif event.key == K_UP:  # Fleche du haut
                             if menu_cursor > 0:
@@ -158,6 +170,16 @@ class Game:
             inventory_cursor = [0, 0]
             active_cursor = [0, 0]
             reac_fading = 0
+            """
+            ###    #     #        #####        #       #     #    ####### 
+             #     ##    #       #     #      # #      ##   ##    #       
+             #     # #   #       #           #   #     # # # #    #       
+             #     #  #  #       #  ####    #     #    #  #  #    #####   
+             #     #   # #       #     #    #######    #     #    #       
+             #     #    ##       #     #    #     #    #     #    #       
+            ###    #     #        #####     #     #    #     #    ####### 
+                                                                            
+            """
             while in_game:
                 current_game = True
                 px, py = self.character.get_pos()
@@ -204,8 +226,8 @@ class Game:
                                     game_area = 1
                                     inventory_cursor = [0, 0]
                                 elif hud_cursor == 2:
-                                    # TODO
-                                    print("TODO Save")  # SAVE
+                                    self.db.save(self)
+                                    print("Saving ...")  # SAVE
                                 elif hud_cursor == 3 and current_room.is_exit():
                                     # CHANGEMENT DE DONJON
                                     hud_cursor = 0
