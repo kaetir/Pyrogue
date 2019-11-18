@@ -486,18 +486,18 @@ class View:
         tempx, tempy = self.description_tiles[0].get_size()
         size_width, size_height = int(self.wheight * 0.60 * tempx / tempy), int(self.wheight * 0.90)
         self.window.blit(pygame.transform.scale(self.description_tiles[0], (size_width, size_height)),
-                         (int(self.wwidth * (0.7) - size_width / 2), self.wheight//40))
+                         (int(self.wwidth * 0.7 - size_width / 2), self.wheight // 40))
         if title is not None:
-            self.print_text(title, 20,
-                            self.wwidth // 100 * 45,
+            self.print_text(title, size_height//15,
+                            int(self.wwidth * 0.7 - size_width // 2 + size_width // 20),
                             self.wheight // 20 * 2,
                             self.wwidth // 2)
 
         if isinstance(dicttoprint, dict):
             for i, m in enumerate(dicttoprint):
-                self.print_text(m + " : " + dicttoprint[m], 12,
+                self.print_text(m + " : " + dicttoprint[m], size_height // 25,
                                 self.wwidth//100 * 48,
-                                self.wheight//20 * (4+i),
+                                self.wheight // 7 + size_height // 21 * (1+i),
                                 self.wwidth//2)
 
     def resize_event(self, event):

@@ -185,7 +185,9 @@ class Game:
 
                 # Stats
                 elif menu_cursor == 3:
-                    self.view.print_info_on_menu({"Stats": "OVERKILL"}, "Stats")
+                    self.view.print_info_on_menu({"Stats": "OVERKILL",
+                                                  "DEGATS": "OVERKILL",
+                                                  "MOBS": "OVERKILL"}, "Stats")
 
 
                 pygame.display.flip()
