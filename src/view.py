@@ -79,6 +79,7 @@ class View:
 
         class tmp:
             size = (800, 450)
+
         self.resize_event(tmp())
 
     def load_assets(self):
@@ -176,7 +177,7 @@ class View:
 
                 text_surface = font.render(text_temp_printable, 0, (255, 255, 255))
                 self.window.blit(text_surface, (x, y + pos_height))
-                pos_height += int(max_height/1.4)
+                pos_height += int(max_height / 1.4)
 
     def print_clear(self):
         """
@@ -248,9 +249,9 @@ class View:
                 size_width = self.wwidth * 0.22
 
                 temp_surf = pygame.transform.scale(self.hud_icons[(reaction - 1) % len(self.hud_icons)],
-                         (int(size_width), int(size_width)))
+                                                   (int(size_width), int(size_width)))
                 temp_surf.set_alpha(int(opacity * 255))
-                self.window.blit(temp_surf, (int(self.wwidth * 0.77 - size_width//8), int(self.wheight * 0.30)))
+                self.window.blit(temp_surf, (int(self.wwidth * 0.77 - size_width // 8), int(self.wheight * 0.30)))
 
             else:
                 tempx, tempy = self.monsters[0].get_size()
@@ -259,8 +260,7 @@ class View:
                 temp_surf = pygame.transform.scale(self.hud_icons[(reaction - 1) % len(self.hud_icons)],
                                                    (size_width, size_width))
                 temp_surf.set_alpha(int(opacity * 255))
-                self.window.blit(temp_surf, (size_width//2, size_height - size_width//2))
-
+                self.window.blit(temp_surf, (size_width // 2, size_height - size_width // 2))
 
     def print_inventory(self, char, cursor):
         """
@@ -477,6 +477,29 @@ class View:
             self.print_gold(item.prix, int(self.wwidth * (0.55 + 0.45 / 2) - size_width / 4), 15, False)
         # TODO les différents types d'objets
 
+    def print_info_on_menu(self, dicttoprint: dict, title: str = None) -> None:
+        """
+        @summary Affiche la description d'un objet par dessus la carte
+        @param dicttoprint: dictionnaire des infos a afficher
+        @param title: Titre éventuel
+        """
+        tempx, tempy = self.description_tiles[0].get_size()
+        size_width, size_height = int(self.wheight * 0.60 * tempx / tempy), int(self.wheight * 0.90)
+        self.window.blit(pygame.transform.scale(self.description_tiles[0], (size_width, size_height)),
+                         (int(self.wwidth * (0.7) - size_width / 2), self.wheight//40))
+        if title is not None:
+            self.print_text(title, 20,
+                            self.wwidth // 100 * 45,
+                            self.wheight // 20 * 2,
+                            self.wwidth // 2)
+
+        if isinstance(dicttoprint, dict):
+            for i, m in enumerate(dicttoprint):
+                self.print_text(m + " : " + dicttoprint[m], 12,
+                                self.wwidth//100 * 48,
+                                self.wheight//20 * (4+i),
+                                self.wwidth//2)
+
     def resize_event(self, event):
         """
         @summary fonction gerant la modification de la taille de la fenetre de jeu
@@ -489,7 +512,7 @@ class View:
         self.wwidth, self.wheight = pygame.display.get_surface().get_size()
         self.parallax_scaled = []
         for i in range(0, len(self.parallax)):
-            self.parallax_scaled.append(pygame.transform.scale(self.parallax[i], (self.wwidth*2, self.wheight)))
+            self.parallax_scaled.append(pygame.transform.scale(self.parallax[i], (self.wwidth * 2, self.wheight)))
 
     def print_parallax_background(self, position):
         """
@@ -505,11 +528,15 @@ class View:
         """
         @summary Affiche l'HUD presentant les options du menu (Nouvelle partie, charger, Achievements...)
         @param cursor : Curseur pointant la case active
+        @param in_game: ??? # TODO
         """
         tempx, tempy = self.cases_hud[0].get_size()
         size_width, size_height = int(self.wwidth * 0.28), int(self.wwidth * 0.28 * tempy / tempx)
 
-        texts = ["Nouvelle Partie", "Charger Partie", "Succes", "Statistiques"] if not in_game else ["Continuer", "Sauvegarder", "Succes", "Statistiques"]
+        texts = ["Nouvelle Partie", "Charger Partie", "Succes", "Statistiques"] if not in_game else ["Continuer",
+                                                                                                     "Sauvegarder",
+                                                                                                     "Succes",
+                                                                                                     "Statistiques"]
 
         for i in range(0, 4):
             hovered = 1 if cursor == i else 0

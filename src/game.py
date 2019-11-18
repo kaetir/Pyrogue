@@ -38,7 +38,7 @@ class Game:
             self.character.inventory.append(Armor())
             self.character.inventory.append(Weapon())
             self.character.inventory.append(SpellBook())
-            # === FIN  ===
+            # === FIN  ===time.sleep(2
 
         self.map = MapDungeon(15)
         self.actual_level += 1
@@ -92,6 +92,7 @@ class Game:
         in_game = False
         in_menu = True
         close = False
+        bdd_error = False
 
         while not close:
             # boucle Infinie du menu
@@ -134,10 +135,15 @@ class Game:
 
                             elif menu_cursor == 1 and not current_game:
                                 # Charge une partie
-                                self.character, self.map, self.actual_level = self.db.load()
-                                self.map_surf = self.map.disp_map(player=self.character)
-                                in_game = True
-                                in_menu = False
+                                tmp = self.db.load()
+                                if not isinstance(tmp, int):
+                                    self.character, self.map, self.actual_level = self.db.load()
+                                    self.map_surf = self.map.disp_map(player=self.character)
+                                    in_game = True
+                                    in_menu = False
+                                else:
+                                    print("Erreur de connection a la BDD")
+                                    bdd_error = True
 
                             elif menu_cursor == 1 and not current_game:
                                 # Sauvegarde la partie en cours
@@ -146,17 +152,41 @@ class Game:
                         elif event.key == K_UP:  # Fleche du haut
                             if menu_cursor > 0:
                                 menu_cursor -= 1
+                                bdd_error = False
                         elif event.key == K_DOWN:  # Fleche du bas
                             if menu_cursor < 3:
                                 menu_cursor += 1
-
-                # Printing
+                                bdd_error = False
+                """                
+                ####            #            #       #
+                #   #                        #
+                #   #  # ##    ##    # ##   ####    ##    # ##    ## #
+                ####   ##  #    #    ##  #   #       #    ##  #  #  #
+                #      #        #    #   #   #       #    #   #   ##
+                #      #        #    #   #   #  #    #    #   #  #
+                #      #       ###   #   #    ##    ###   #   #   ###
+                                                                #   #
+                                                                ###
+                """
                 # Background
                 parallax_position += 1
                 self.view.print_parallax_background(parallax_position)
 
                 # Cases
                 self.view.print_cases_menu(menu_cursor, current_game)
+
+                # BDD error
+                if bdd_error:
+                    self.view.print_info_on_menu({"Erreur bdd": str(tmp)}, "ALED LA BDD A EXPLOSE")
+
+                # Succes
+                if menu_cursor == 2:
+                    self.view.print_info_on_menu({"WHAOU": "WHAT A GAME"}, "Succes")
+
+                # Stats
+                elif menu_cursor == 3:
+                    self.view.print_info_on_menu({"Stats": "OVERKILL"}, "Stats")
+
 
                 pygame.display.flip()
 
@@ -203,8 +233,15 @@ class Game:
                     self.actual_battle = Battle(self.character, current_room.enemy)
                     game_area = 2
                     print("AU COMBAT")
-
-                # Treating Events
+                """
+                ###                      #     #                      ####                     #
+                 #                       #                            #                        #
+                 #    ###    ##    ###  ###   ##    ###    ###        ###   # #    ##   ###   ###    ###
+                 #    #  #  # ##  #  #   #     #    #  #  #  #        #     # #   # ##  #  #   #    ##
+                 #    #     ##    # ##   #     #    #  #   ##         #     # #   ##    #  #   #      ##
+                 #    #      ##    # #    ##  ###   #  #  #           ####   #     ##   #  #    ##  ###
+                                                           ###
+                """
                 for event in pygame.event.get():
                     if event.type == QUIT:
                         in_menu = False
@@ -408,6 +445,18 @@ class Game:
                                 if active_cursor[0] > 0:
                                     active_cursor[0] -= 1
 
+
+                """                
+                ####            #            #       #
+                #   #                        #
+                #   #  # ##    ##    # ##   ####    ##    # ##    ## #
+                ####   ##  #    #    ##  #   #       #    ##  #  #  #
+                #      #        #    #   #   #       #    #   #   ##
+                #      #        #    #   #   #  #    #    #   #  #
+                #      #       ###   #   #    ##    ###   #   #   ###
+                                                                #   #
+                                                                ###
+                """
                 # Calculating New sprites and Printing
                 px, py = self.character.get_pos()
                 current_room = self.map.get_room(px, py)
