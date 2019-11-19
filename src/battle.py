@@ -15,6 +15,7 @@
 from src.perso.character import Character
 from src.perso.monster import Monster
 from src.db.db import PyrogueDB
+from src.stats_and_achievement import Achiever
 
 import random
 
@@ -62,6 +63,9 @@ class Battle:
             self.c.armor = self.c.max_armor
             self.c.inventory.money += random.randint(20, 100)
 
+            Achiever.stats["Mobs tués"] += 1
+            Achiever.achievements["100 mobs kills"] = Achiever.stats["Mobs tués"] >= 100
+            Achiever.achievements["1000 mobs kills"] = Achiever.stats["Mobs tués"] >= 1000
             db = PyrogueDB()
             db.save_fight(self.c, self.m, self.coups)
             return True

@@ -21,6 +21,7 @@ from __future__ import annotations
 from random import randint, random
 from src.my_utils import fib_rec
 from src.inventory import Inventory
+from src.stats_and_achievement import Achiever
 
 import math
 
@@ -253,6 +254,7 @@ class Character:
             merchant.inventory.items[merchant.inventory.items.index(item)] = None
             self.inventory.append(item)
             self.inventory.money -= item.prix
+            Achiever.stats["Money dépensés"] += item.prix
 
     def sell(self, item: Item, merchant: Merchant) -> None:
         """

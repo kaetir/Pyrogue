@@ -69,6 +69,8 @@ class Game:
 
         self.character.set_pos(px, py)
         if not self.map.get_room(px, py).is_discovered():
+            Achiever.stats["Room découvertes"] += 1
+            Achiever.achievements["100 Rooms discovered"] = Achiever.stats["Room découvertes"] >= 100
             self.map.get_room(px, py).discover()
             self.character.gain_xp(1)
             self.character.mana += 1 if self.character.mana < self.character.max_mana else 0
@@ -123,6 +125,7 @@ class Game:
                             close = True
 
                         elif event.key == K_RETURN:
+                            Achiever.stats, Achiever.achievements = self.db.load_stats_and_achievement()
                             if menu_cursor == 0 and not current_game:
                                 # Nouvelle Partie
                                 self.dungeon_restart(True)
@@ -256,6 +259,7 @@ class Game:
                                 in_game = False
                                 in_menu = True
                                 # TODO Save ?
+                                self.db.save_stats_and_achievement(Achiever.stats, Achiever.achievements)
                             elif event.key == K_RETURN:
                                 if hud_cursor == 1:
                                     # INVENTAIRE
@@ -291,9 +295,11 @@ class Game:
                             elif event.key == K_RIGHT and hud_cursor == 0:
                                 self.character.set_orientation((self.character.get_orientation() + 1) % 4)
                                 self.map_surf = self.map.disp_map(player=self.character)
+                                Achiever.stats["Rotations"] += 1
                             elif event.key == K_LEFT and hud_cursor == 0:
                                 self.character.set_orientation((self.character.get_orientation() - 1) % 4)
                                 self.map_surf = self.map.disp_map(player=self.character)
+                                Achiever.stats["Rotations"] += 1
 
                         # Si on est en mode Inventaire, ou Achat ou Vente
                         elif game_area == 1 or game_area == 6 or game_area == 7:

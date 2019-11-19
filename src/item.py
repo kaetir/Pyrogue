@@ -219,7 +219,7 @@ class Consumables(Item):
 
         print("Yummmy !!!!🥪")
         Achiever.stats["Sandwichs mangés"] += 1
-
+        Achiever.achievements["Tu es gros timoté"] = Achiever.stats["Sandwichs mangés"] >= 100
 
 class SpellBook(Item):
     item_type = "spellbook"

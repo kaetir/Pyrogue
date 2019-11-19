@@ -4,6 +4,7 @@ import json
 from pymongo import MongoClient
 from pymongo.errors import *
 from uuid import getnode as get_mac
+from src.stats_and_achievement import Achiever
 import pickle
 import threading
 
@@ -46,7 +47,9 @@ class PyrogueDB:
                 "achievement": achievements,
                 "stats": stats
             }
-            self.players_table.find({"identity": get_mac_hex()}, jason)
+            if self.connected:
+                self.players_table.delete_many({"identity": get_mac_hex()})
+                self.players_table.insert_one(jason)
 
         except ConnectionFailure:
             self.connected = False
@@ -55,6 +58,26 @@ class PyrogueDB:
             self.connected = False
             return 2
         return 0
+
+    def load_stats_and_achievement(self):
+        """
+        @summary: load the stats and the achievment of the player from the db
+        @summary: if not responding sending a new one
+        @return:
+        """
+        try:
+            for j in self.players_table.find({"identity": get_mac_hex()}):
+                if isinstance(j, dict):
+                    return j["stats"], j["achievement"]
+
+        except ConnectionFailure:
+            self.connected = False
+            return Achiever.stats, Achiever.achievements
+        except CursorNotFound:
+            self.connected = False
+            return Achiever.stats, Achiever.achievements
+
+        return Achiever.stats, Achiever.achievements
 
     def save(self, game) -> int:
         try:
@@ -110,10 +133,6 @@ class PyrogueDB:
 
 if __name__ == '__main__':
     my = PyrogueDB()
-    # my.save("map", "toitoine")
-    # my.save_stats_and_achievement("moi")
-
-    my.load()
 
     for f in my.fights_table.find({}).limit(10):
         print(pickle.loads(f["character"]))

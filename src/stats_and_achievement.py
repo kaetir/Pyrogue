@@ -12,7 +12,8 @@ class Achiever:
     achievements = {
         "100 mobs kills": False,
         "1000 mobs kills": False,
-        "100 Rooms discovered": False
+        "100 Rooms discovered": False,
+        "Tu es gros timoté": False
     }
 
     def __init__(self) -> None:
