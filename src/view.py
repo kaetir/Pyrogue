@@ -475,6 +475,11 @@ class View:
 
         if item is not None:
             self.print_gold(item.prix, int(self.wwidth * (0.55 + 0.45 / 2) - size_width / 4), 15, False)
+        """if isinstance(item, Armor):
+            self.window.blit(pygame.transform.scale(self.description_tiles[0], (size_width, size_height)),
+                             (int(self.wwidth * (0.55 + 0.45 / 2) - size_width / 2), 0))
+            self.print_text()
+        """
         # TODO les différents types d'objets
 
     def print_info_on_menu(self, dicttoprint: dict, title: str = None) -> None:
@@ -495,7 +500,7 @@ class View:
 
         if isinstance(dicttoprint, dict):
             for i, m in enumerate(dicttoprint):
-                self.print_text(m + " : " + dicttoprint[m], size_height // 25,
+                self.print_text(m + " : " + str(dicttoprint[m]), size_height // 25,
                                 self.wwidth//100 * 48,
                                 self.wheight // 7 + size_height // 21 * (1+i),
                                 self.wwidth//2)

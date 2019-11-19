@@ -9,6 +9,7 @@ from src.item import *
 
 from src.item import Weapon
 from src.db.db import PyrogueDB
+from src.stats_and_achievement import Achiever
 
 
 class Game:
@@ -181,14 +182,11 @@ class Game:
 
                 # Succes
                 if menu_cursor == 2:
-                    self.view.print_info_on_menu({"WHAOU": "WHAT A GAME"}, "Succes")
+                    self.view.print_info_on_menu(Achiever.achievements, "Succes")
 
                 # Stats
                 elif menu_cursor == 3:
-                    self.view.print_info_on_menu({"Stats": "OVERKILL",
-                                                  "DEGATS": "OVERKILL",
-                                                  "MOBS": "OVERKILL"}, "Stats")
-
+                    self.view.print_info_on_menu(Achiever.stats, "Stats")
 
                 pygame.display.flip()
 
@@ -203,7 +201,7 @@ class Game:
             reac_fading = 0
             """
             ###    #     #        #####        #       #     #    ####### 
-             #     ##    #       #     #      # #      ##   ##    #       
+             #     ##    #       #     #      # #      ##   ##    #         
              #     # #   #       #           #   #     # # # #    #       
              #     #  #  #       #  ####    #     #    #  #  #    #####   
              #     #   # #       #     #    #######    #     #    #       
@@ -446,7 +444,6 @@ class Game:
                             elif event.key == K_LEFT:  # Fleche de gauche
                                 if active_cursor[0] > 0:
                                     active_cursor[0] -= 1
-
 
                 """                
                 ####            #            #       #

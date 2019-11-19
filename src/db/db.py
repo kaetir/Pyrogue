@@ -7,6 +7,8 @@ from uuid import getnode as get_mac
 import pickle
 import threading
 
+connected = True
+
 
 def get_mac_hex() -> hex:
     """
@@ -16,11 +18,13 @@ def get_mac_hex() -> hex:
 
 
 class PyrogueDB:
+    global connected
 
     def __init__(self) -> None:
         """
         @summary connecteur db distante mongo
         """
+
         self.client = MongoClient('trustme.ovh', 27017)
         self.db = self.client['pyrogue']
 
@@ -29,25 +33,26 @@ class PyrogueDB:
             self.players_table = self.db["players"]
             self.fights_table = self.db["fights"]
 
+            self.connected = True
+
         except ConnectionFailure:
             print("ConnectionFailure")
+            self.connected = False
 
-    def save_stats_and_achievement(self, player: Character):
-        # TODO
+    def save_stats_and_achievement(self, stats: dict, achievements: dict):
         try:
-            for p in self.players_table.find({"identity": get_mac_hex()}):
-                print(p)
-                if p["identity"] == get_mac_hex():
-                    achievements = p["achievement"]
-                    stats = p["stats"]
-                    for achiev in achievements:
-                        print(achiev)
-                    for stat in stats:
-                        print(stat)
+            jason = {
+                "identity": get_mac_hex(),
+                "achievement": achievements,
+                "stats": stats
+            }
+            self.players_table.find({"identity": get_mac_hex()}, jason)
 
         except ConnectionFailure:
+            self.connected = False
             return 1
         except CursorNotFound:
+            self.connected = False
             return 2
         return 0
 
@@ -63,8 +68,10 @@ class PyrogueDB:
             self.saves_table.insert_one(jason)
 
         except ConnectionFailure:
+            self.connected = False
             return 1
         except CursorNotFound:
+            self.connected = False
             return 2
         return 0
 
@@ -80,8 +87,10 @@ class PyrogueDB:
             download_thread.start()
 
         except ConnectionFailure:
+            self.connected = False
             return 1
         except CursorNotFound:
+            self.connected = False
             return 2
         print("fight saved")
         return 0
@@ -91,8 +100,10 @@ class PyrogueDB:
             for s in self.saves_table.find({"identity": get_mac_hex()}):
                 return pickle.loads(s["player"]), pickle.loads(s["map"]), s["actual_level"]
         except ConnectionFailure:
+            self.connected = False
             return 1
         except CursorNotFound:
+            self.connected = False
             return 2
         return 0
 
@@ -104,7 +115,7 @@ if __name__ == '__main__':
 
     my.load()
 
-    for f in my.fights_table.find({}):
+    for f in my.fights_table.find({}).limit(10):
         print(pickle.loads(f["character"]))
         print(pickle.loads(f["mob"]))
         [print(str(c)) for c in pickle.loads(f["coups"])]

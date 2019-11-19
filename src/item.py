@@ -18,6 +18,7 @@ from random import randint, random, choice
 from res.ressources_id import items_id
 #from src.perso.character import Character
 
+from src.stats_and_achievement import Achiever
 
 class Item:
     def __init__(self):
@@ -217,6 +218,7 @@ class Consumables(Item):
             c.mana += 3 if c.mana + 3 <= c.max_mana else c.max_mana - c.mana
 
         print("Yummmy !!!!🥪")
+        Achiever.stats["Sandwichs mangés"] += 1
 
 
 class SpellBook(Item):
