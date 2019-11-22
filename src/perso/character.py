@@ -22,6 +22,7 @@ from random import randint, random
 from src.my_utils import fib_rec
 from src.inventory import Inventory
 from src.stats_and_achievement import Achiever
+from src.item import Equipment
 
 import math
 
