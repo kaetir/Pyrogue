@@ -16,9 +16,10 @@
 from __future__ import annotations
 from random import randint, random, choice
 from res.ressources_id import items_id
-#from src.perso.character import Character
+# from src.perso.character import Character
 
 from src.stats_and_achievement import Achiever
+
 
 class Item:
     def __init__(self):
@@ -220,6 +221,7 @@ class Consumables(Item):
         print("Yummmy !!!!🥪")
         Achiever.stats["Sandwichs mangés"] += 1
         Achiever.achievements["Tu es gros timoté"] = Achiever.stats["Sandwichs mangés"] >= 100
+
 
 class SpellBook(Item):
     item_type = "spellbook"

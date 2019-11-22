@@ -88,7 +88,10 @@ class PyrogueDB:
                      }
 
             self.saves_table.delete_many({"identity": get_mac_hex()})
-            self.saves_table.insert_one(jason)
+            # threading for no slowing
+            download_thread = threading.Thread(target=self.saves_table.insert_one,
+                                               args=[jason])
+            download_thread.start()
 
         except ConnectionFailure:
             self.connected = False

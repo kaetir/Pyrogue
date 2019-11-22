@@ -187,7 +187,7 @@ class Character:
         @summary fait prendre a un autre perso des dégats infligé par nous
         @summary on ne calcule pas les dégats ici parce qu'ils dépendent de si c'est un sort ou une attaque
         @param : Character l'autre perso a qui on veut en mettre sur le visage
-        @param : int action du connard
+        @param : int dégats du connard
         """
         if amount < self.damage_min:
             return other.take_damage(self.damage_min)
