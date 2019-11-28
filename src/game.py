@@ -372,14 +372,14 @@ class Game:
                                     active_cursor[0] -= 1
 
                         elif game_area == 3:  # Mode Objet d'inventaire
-                            if event.key == K_RETURN:
-                                if isinstance(current_item, Equipment):
+                            if event.key == K_RETURN:  # Selection d'un objet
+                                if isinstance(current_item, Equipment):  # Equipement
                                     if hud_cursor == 0:
                                         self.character.equip(current_item)
                                     elif hud_cursor == 1:
                                         self.character.inventory.throw(current_item)
                                     game_area = 1
-                                elif isinstance(current_item, SpellBook):
+                                elif isinstance(current_item, SpellBook):  # Sort
                                     if hud_cursor == 0:
                                         active_cursor = [1 if None not in self.character.inventory.active_spells else
                                                          self.character.inventory.active_spells.index(None) + 1, 0]
@@ -387,7 +387,7 @@ class Game:
                                     elif hud_cursor == 1:
                                         self.character.inventory.throw(current_item)
                                         game_area = 1
-                                elif isinstance(current_item, Consumables):
+                                elif isinstance(current_item, Consumables):  # Consommable
                                     if hud_cursor == 0:
                                         active_cursor = [
                                             0 if None not in self.character.inventory.active_comsumable else
