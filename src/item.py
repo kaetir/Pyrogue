@@ -284,14 +284,12 @@ class SpellBook(Item):
             print("mathémagie BONUS", self.icon_id)
             print("{} use a spell on himself".format(source.name))
         else:
-            # TODO states -> poison
             if self.icon_id == 70:
                 destination.take_damage(destination.max_health // 3)
             # Boom == massdamage
             if self.icon_id == 71:
                 destination.health -= source.mana * 3
                 source.mana = 0
-            # TODO skip turn
             if self.icon_id == 72:
                 print("POUF")
             print("mathémagie MALLUS", self.icon_id)
