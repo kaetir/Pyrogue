@@ -199,7 +199,6 @@ class Armor(Equipment):
             self.icon_id = choice(items_id[self.equipment_type + "s"])
             self.value = self.values[self.equipment_type + "s"][self.icon_id]
         else:
-            # nique la gramaire
             self.icon_id = choice(items_id[self.equipment_type])
             self.value = self.values[self.equipment_type][self.icon_id]
         self.prix = self.value * 100 + randint(-int(self.value * 20), int(self.value * 20))

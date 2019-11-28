@@ -458,10 +458,12 @@ class View:
         @summary Affiche le niveau du joueur et l'etage du donjon
         @param char: Personnage
         """
-        self.print_text("Etage  : " + str(actual_level), self.wheight * 0.05, int(self.wwidth * 0.78),
-                        int(self.wheight * 0.02), int(self.wwidth * 0.22))
-        self.print_text("Niveau : " + str(char.level), self.wheight * 0.05, int(self.wwidth * 0.78),
-                        int(self.wheight * 0.16), int(self.wwidth * 0.22))
+        self.print_text("Pseudo  : " + str(char.name), self.wheight * 0.04, int(self.wwidth * 0.78),
+                        int(self.wheight * 0.01), int(self.wwidth * 0.22))
+        self.print_text("Etage  : " + str(actual_level), self.wheight * 0.04, int(self.wwidth * 0.78),
+                        int(self.wheight * 0.11), int(self.wwidth * 0.22))
+        self.print_text("Niveau : " + str(char.level), self.wheight * 0.04, int(self.wwidth * 0.78),
+                        int(self.wheight * 0.20), int(self.wwidth * 0.22))
 
     def print_description(self, item: Item) -> None:
         """
@@ -481,6 +483,14 @@ class View:
             self.print_text()
         """
         # TODO les différents types d'objets
+
+    def print_pseudo_max_size(self, pseudo):
+        """
+        @summary Affiche le pseudo de la personne au milieu de l'ecran
+        @param pseudo: pseudo a afficher
+        """
+        self.print_text(pseudo, self.wheight // 20, self.wwidth // 2, self.wheight // 2, self.wwidth, True)
+        self.print_text("Entrez votre Pseudo", self.wheight // 10, self.wwidth // 2, self.wheight // 4, self.wwidth, True)
 
     def print_info_on_menu(self, dicttoprint: dict, title: str = None) -> None:
         """

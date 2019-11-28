@@ -1,5 +1,7 @@
 import pygame
-from pygame.constants import QUIT, VIDEORESIZE, KEYDOWN, K_UP, K_DOWN, K_RIGHT, K_LEFT, K_RETURN, K_ESCAPE
+from pygame.constants import *
+
+import string
 
 from src.view import View
 from src.perso.character import Character
@@ -26,13 +28,14 @@ class Game:
         self.actual_battle = None
         pygame.display.set_caption("Pyrogue : la commutativité de l’anneau")
 
-    def dungeon_restart(self, reset):
+    def dungeon_restart(self, reset, name="Bob"):
         """
         @summary Regenere un dongeon en remettant toutes nos variables necessaire a 0
         @param reset: (si True on remet le personnage a nu et le donjon a 1)
+        @param name: nom du personnage, et de la sauvegarde
         """
         if reset:
-            self.character = Character("Bob")
+            self.character = Character(name)
             self.actual_level = 0
             # === TEST ===
             self.character.inventory.weapon = Weapon("weapon")
@@ -100,6 +103,8 @@ class Game:
         while not close:
             # boucle Infinie du menu
             parallax_position = 0
+            name_typer = -1  # -1 sur le menu, 0 on tape le pseudo, 1 on a valide le pseudo
+            name = ""
             """
             #     #  #######  #     #  #     # 
             ##   ##  #        ##    #  #     # 
@@ -119,7 +124,28 @@ class Game:
                         self.view.resize_event(event)
 
                     elif event.type == KEYDOWN:  # On gere les boutons
-                        if event.key == K_ESCAPE:  # On quitte le jeu
+                        if name_typer == 0:  # On entre en nouvelle partie
+                            if event.key == K_RETURN:
+                                if len(name) > 1:  # Nous avons un nom convenable, on lance
+                                    name_typer = 1
+                                    self.dungeon_restart(True, name)
+                                    in_game = True
+                                    in_menu = False
+                            elif event.key == K_ESCAPE:
+                                name_typer = -1  # On quitte sans lancer le jeu
+
+                                # On gere l'alphabet
+                            elif event.unicode in string.ascii_letters:
+                                if len(name) < 40:
+                                    name += event.unicode
+                            elif event.key == K_BACKSPACE:
+                                name = name[:-1]
+                        elif name_typer == 1:
+                            self.dungeon_restart(True, name)
+                            in_game = True
+                            in_menu = False
+
+                        elif event.key == K_ESCAPE:  # On quitte le jeu
                             in_menu = False
                             in_game = False
                             close = True
@@ -128,9 +154,7 @@ class Game:
                             Achiever.stats, Achiever.achievements = self.db.load_stats_and_achievement()
                             if menu_cursor == 0 and not current_game:
                                 # Nouvelle Partie
-                                self.dungeon_restart(True)
-                                in_game = True
-                                in_menu = False
+                                name_typer = 0
 
                             elif menu_cursor == 0 and current_game:
                                 # Continue la partie
@@ -172,24 +196,29 @@ class Game:
                                                                 #   #
                                                                 ###
                 """
-                # Background
-                parallax_position += 1
-                self.view.print_parallax_background(parallax_position)
+                if name_typer == -1:
+                    # Background
+                    parallax_position += 1
+                    self.view.print_parallax_background(parallax_position)
 
-                # Cases
-                self.view.print_cases_menu(menu_cursor, current_game)
+                    # Cases
+                    self.view.print_cases_menu(menu_cursor, current_game)
 
-                # BDD error
-                if bdd_error:
-                    self.view.print_info_on_menu({"Erreur bdd": str(tmp)}, "ALED LA BDD A EXPLOSE")
+                    # BDD error
+                    if bdd_error:
+                        self.view.print_info_on_menu({"Erreur bdd": str(tmp)}, "ALED LA BDD A EXPLOSE")
 
-                # Succes
-                if menu_cursor == 2:
-                    self.view.print_info_on_menu(Achiever.achievements, "Succes")
+                    # Succes
+                    if menu_cursor == 2:
+                        self.view.print_info_on_menu(Achiever.achievements, "Succes")
 
-                # Stats
-                elif menu_cursor == 3:
-                    self.view.print_info_on_menu(Achiever.stats, "Stats")
+                    # Stats
+                    elif menu_cursor == 3:
+                        self.view.print_info_on_menu(Achiever.stats, "Stats")
+
+                else:
+                    self.view.print_clear()
+                    self.view.print_pseudo_max_size(name)
 
                 pygame.display.flip()
 
@@ -258,7 +287,6 @@ class Game:
                             if event.key == K_ESCAPE:  # Retour a l'ecran d'accueil
                                 in_game = False
                                 in_menu = True
-                                # TODO Save ?
                                 self.db.save_stats_and_achievement(Achiever.stats, Achiever.achievements)
                             elif event.key == K_RETURN:
                                 if hud_cursor == 1:
