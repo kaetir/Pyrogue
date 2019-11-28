@@ -533,7 +533,7 @@ class View:
         """
         @summary Affiche l'HUD presentant les options du menu (Nouvelle partie, charger, Achievements...)
         @param cursor : Curseur pointant la case active
-        @param in_game: ??? # TODO
+        @param in_game: Si nous sommes dans une partie en cours
         """
         tempx, tempy = self.cases_hud[0].get_size()
         size_width, size_height = int(self.wwidth * 0.28), int(self.wwidth * 0.28 * tempy / tempx)
