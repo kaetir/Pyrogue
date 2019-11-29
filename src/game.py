@@ -295,7 +295,7 @@ class Game:
                                     inventory_cursor = [0, 0]
                                 elif hud_cursor == 2:
                                     self.db.save(self)
-                                    print("Saving ...")  # SAVE
+                                    # SAVE
                                 elif hud_cursor == 3 and current_room.is_exit():
                                     # CHANGEMENT DE DONJON
                                     hud_cursor = 0

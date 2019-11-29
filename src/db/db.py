@@ -25,8 +25,8 @@ class PyrogueDB:
         """
         @summary connecteur db distante mongo
         """
-
-        self.client = MongoClient('trustme.ovh', 27017)
+        # serverSelectionTimeoutMS=500 Faut une bonne co mais ca freeze plus le jeu pendant 10s 
+        self.client = MongoClient('trustme.ovh', 27017, serverSelectionTimeoutMS=500)
         self.db = self.client['pyrogue']
 
         try:
@@ -92,7 +92,7 @@ class PyrogueDB:
             download_thread = threading.Thread(target=self.saves_table.insert_one,
                                                args=[jason])
             download_thread.start()
-
+            print("Saving ...")
         except ConnectionFailure:
             self.connected = False
             return 1
