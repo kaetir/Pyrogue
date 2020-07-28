@@ -12,8 +12,8 @@
 """
 
 from __future__ import annotations
-from src.perso.character import *
-from src.item import *
+from perso.character import *
+from item import *
 
 
 class Inventory:

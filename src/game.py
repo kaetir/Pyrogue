@@ -3,15 +3,15 @@ from pygame.constants import *
 
 import string
 
-from src.view import View
-from src.perso.character import Character
-from src.map import MapDungeon
-from src.battle import Battle
-from src.item import *
+from view import View
+from perso.character import Character
+from map import MapDungeon
+from battle import Battle
+from item import *
 
-from src.item import Weapon
-from src.db.db import PyrogueDB
-from src.stats_and_achievement import Achiever
+from item import Weapon
+from db.db import PyrogueDB
+from stats_and_achievement import Achiever
 
 
 class Game:

@@ -12,13 +12,14 @@
 - Objects have a value of gold, and equipments have a minimum level to equip them.
 
 """
-
 from __future__ import annotations
+import sys
+sys.path.append('..')
 from random import randint, random, choice
 from res.ressources_id import items_id
 # from src.perso.character import Character
 
-from src.stats_and_achievement import Achiever
+from stats_and_achievement import Achiever
 
 
 class Item:

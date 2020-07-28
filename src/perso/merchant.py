@@ -5,9 +5,9 @@
 
 
 """
-from src.perso.character import Character
+from perso.character import Character
 from res.ressources_id import merchants_id
-from src.item import *
+from item import *
 
 
 class Merchant(Character):
